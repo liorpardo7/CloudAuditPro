@@ -29,6 +29,8 @@ const AUDIT_STEPS = [
   { key: 'Network', label: 'Scanning Network', icon: LayoutDashboard, fun: 'Mapping your network...' },
   { key: 'Security', label: 'Scanning Security', icon: Shield, fun: 'Reviewing IAM & policies...' },
   { key: 'Cost', label: 'Scanning Cost', icon: FileText, fun: 'Crunching the numbers...' },
+  { key: 'BigQueryStale', label: 'Scanning BigQuery Stale Partitioning', icon: Clock, fun: 'Checking partition freshness...' },
+  { key: 'BigQueryUDF', label: 'Scanning Deprecated SQL UDFs', icon: FileText, fun: 'Looking for deprecated UDFs...' },
   { key: 'Finalizing', label: 'Finalizing', icon: CheckCircle2, fun: 'Wrapping up...' },
 ]
 
@@ -56,7 +58,9 @@ function AuditPageContent() {
     storage: true,
     network: true,
     security: true,
-    cost: true
+    cost: true,
+    bigqueryStale: true,
+    bigqueryUdf: true
   })
   const [isLoading, setIsLoading] = React.useState(false)
   const [progressOpen, setProgressOpen] = React.useState(false)
@@ -248,6 +252,32 @@ function AuditPageContent() {
                   }
                 />
                 <Label htmlFor="cost">Cost Management</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="bigqueryStale"
+                  checked={selectedServices.bigqueryStale}
+                  onCheckedChange={(checked) =>
+                    setSelectedServices((prev) => ({
+                      ...prev,
+                      bigqueryStale: checked as boolean
+                    }))
+                  }
+                />
+                <Label htmlFor="bigqueryStale">BigQuery: Stale Partitioning</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="bigqueryUdf"
+                  checked={selectedServices.bigqueryUdf}
+                  onCheckedChange={(checked) =>
+                    setSelectedServices((prev) => ({
+                      ...prev,
+                      bigqueryUdf: checked as boolean
+                    }))
+                  }
+                />
+                <Label htmlFor="bigqueryUdf">BigQuery: Deprecated SQL UDFs</Label>
               </div>
             </div>
             <Button

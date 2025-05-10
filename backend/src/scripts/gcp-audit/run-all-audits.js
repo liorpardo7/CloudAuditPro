@@ -10,7 +10,8 @@ const auditScripts = [
   'security-audit.js',
   'cost-audit.js',
   'data-protection-audit.js',
-  'compliance-validator.js'
+  'compliance-validator.js',
+  'bigquery-audit.js'
 ];
 
 const auditResults = {
