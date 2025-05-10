@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getJobStatus } from '../store'
+import fs from 'fs'
+import path from 'path'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -11,6 +13,28 @@ export async function GET(request: Request) {
 
   const status = getJobStatus(jobId)
   if (!status) {
+    // Try to return results if the results file exists
+    let auditResults = null
+    let bigqueryResults = null
+    try {
+      const auditPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/audit-suite-results.json')
+      const bigqueryPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/bigquery-audit-results.json')
+      if (fs.existsSync(auditPath)) {
+        auditResults = JSON.parse(fs.readFileSync(auditPath, 'utf8'))
+      }
+      if (fs.existsSync(bigqueryPath)) {
+        bigqueryResults = JSON.parse(fs.readFileSync(bigqueryPath, 'utf8'))
+      }
+    } catch (err) {
+      console.error('Error reading audit results:', err)
+    }
+    if (auditResults || bigqueryResults) {
+      return NextResponse.json({
+        status: 'completed',
+        auditResults,
+        bigqueryResults
+      })
+    }
     return NextResponse.json({ error: 'Job not found' }, { status: 404 })
   }
 
@@ -23,6 +47,7 @@ export async function GET(request: Request) {
       'Scanning Network',
       'Scanning Security',
       'Scanning Cost',
+      'Scanning BigQuery',
       'Finalizing'
     ]
     const elapsed = Date.now() - status.started
@@ -36,5 +61,26 @@ export async function GET(request: Request) {
     })
   }
 
-  return NextResponse.json(status)
+  // When job is complete, include audit results
+  let auditResults = null
+  let bigqueryResults = null
+  try {
+    const auditPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/audit-suite-results.json')
+    const bigqueryPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/bigquery-audit-results.json')
+    if (fs.existsSync(auditPath)) {
+      auditResults = JSON.parse(fs.readFileSync(auditPath, 'utf8'))
+    }
+    if (fs.existsSync(bigqueryPath)) {
+      bigqueryResults = JSON.parse(fs.readFileSync(bigqueryPath, 'utf8'))
+    }
+  } catch (err) {
+    // Log and ignore errors for now
+    console.error('Error reading audit results:', err)
+  }
+
+  return NextResponse.json({
+    ...status,
+    auditResults,
+    bigqueryResults
+  })
 } 
