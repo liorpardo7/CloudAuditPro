@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { spawn } from 'child_process'
+import { updateJobStatus } from '../store'
 
 // In-memory job status for demo
 const jobStatus: Record<string, { status: string, started: number, error?: string }> = {}
@@ -23,8 +24,13 @@ export async function POST(request: Request) {
   const script = CATEGORY_TO_SCRIPT[cat] || CATEGORY_TO_SCRIPT['all']
   const jobId = `job_${projectId}_${cat}_${Date.now()}`
 
-  // Mark job as running
-  jobStatus[jobId] = { status: 'running', started: Date.now() }
+  // Initialize job status
+  updateJobStatus(jobId, { 
+    status: 'running', 
+    started: Date.now(),
+    currentStep: 'Starting audit...',
+    progress: 0
+  })
 
   // Spawn the audit script (simulate for now)
   // In production, use the correct working directory and env
@@ -35,16 +41,13 @@ export async function POST(request: Request) {
   })
 
   proc.on('exit', (code) => {
-    jobStatus[jobId].status = code === 0 ? 'completed' : 'error'
-    if (code !== 0) {
-      jobStatus[jobId].error = `Script exited with code ${code}`
-    }
+    updateJobStatus(jobId, {
+      status: code === 0 ? 'completed' : 'error',
+      error: code !== 0 ? `Script exited with code ${code}` : undefined
+    })
   })
 
   proc.unref()
 
   return NextResponse.json({ jobId })
-}
-
-// Export jobStatus for status route (in-memory demo)
-export { jobStatus } 
+} 

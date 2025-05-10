@@ -1,6 +1,7 @@
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { AuditValidator } = require('./audit-validator');
 
 const auditScripts = [
   'compute-audit.js',
@@ -8,13 +9,21 @@ const auditScripts = [
   'networking-audit.js',
   'security-audit.js',
   'cost-audit.js',
-  'data-protection-audit.js'
+  'data-protection-audit.js',
+  'compliance-validator.js'
 ];
 
 const auditResults = {
   timestamp: new Date().toISOString(),
   projectId: 'dba-inventory-services-prod',
-  audits: {}
+  audits: {},
+  summary: {
+    total: 0,
+    passed: 0,
+    failed: 0,
+    notImplemented: 0,
+    notApplicable: 0
+  }
 };
 
 // Load service account credentials
@@ -84,33 +93,64 @@ async function runAudit(scriptName) {
 }
 
 async function runAllAudits() {
-  console.log('Starting GCP Audit Suite...');
-  console.log('Project: dba-inventory-services-prod');
-  console.log('Timestamp:', new Date().toISOString());
-  console.log('==========================================');
-
-  for (const script of auditScripts) {
-    await runAudit(script);
-    console.log('\n==========================================');
-  }
-
-  // Save overall results
-  const resultsPath = path.join(__dirname, 'audit-suite-results.json');
-  fs.writeFileSync(resultsPath, JSON.stringify(auditResults, null, 2));
+  console.log('Starting comprehensive GCP audit...');
+  const validator = new AuditValidator();
   
-  console.log('\nAudit Suite Summary:');
-  console.log('==========================================');
-  Object.entries(auditResults.audits).forEach(([script, result]) => {
-    const icon = result.status === 'success' ? '✓' : result.status === 'partial' ? '⚠' : '✗';
-    console.log(`${icon} ${script}: ${result.status}`);
-    if (result.error) {
-      console.log(`  Error: ${result.error}`);
+  try {
+    // Initialize the validator
+    await validator.initialize();
+    
+    // Run all audit scripts
+    for (const script of auditScripts) {
+      console.log(`\nRunning ${script}...`);
+      try {
+        const result = await runAudit(script);
+        const parsedResult = JSON.parse(result);
+        auditResults.audits[script] = parsedResult;
+        
+        // Update summary
+        auditResults.summary.total += parsedResult.summary?.total || 0;
+        auditResults.summary.passed += parsedResult.summary?.passed || 0;
+        auditResults.summary.failed += parsedResult.summary?.failed || 0;
+        auditResults.summary.notImplemented += parsedResult.summary?.notImplemented || 0;
+        auditResults.summary.notApplicable += parsedResult.summary?.notApplicable || 0;
+        
+        console.log(`✓ ${script} completed successfully`);
+      } catch (error) {
+        console.error(`✗ Error in ${script}:`, error);
+        auditResults.audits[script] = {
+          error: error.message,
+          status: 'failed'
+        };
+      }
     }
-  });
-  console.log('\nDetailed results saved to:', resultsPath);
+    
+    // Add validator results
+    const validatorResults = await validator.validateAll();
+    auditResults.validator = validatorResults;
+    
+    // Calculate overall pass rate
+    auditResults.summary.passRate = 
+      `${((auditResults.summary.passed / auditResults.summary.total) * 100).toFixed(2)}%`;
+    
+    // Save results
+    const resultsPath = path.join(__dirname, 'audit-suite-results.json');
+    fs.writeFileSync(resultsPath, JSON.stringify(auditResults, null, 2));
+    
+    console.log('\nAudit completed successfully!');
+    console.log('Results saved to:', resultsPath);
+    console.log('\nSummary:');
+    console.log(`Total Checks: ${auditResults.summary.total}`);
+    console.log(`Passed: ${auditResults.summary.passed}`);
+    console.log(`Failed: ${auditResults.summary.failed}`);
+    console.log(`Pass Rate: ${auditResults.summary.passRate}`);
+    
+    return auditResults;
+  } catch (error) {
+    console.error('Error running audits:', error);
+    throw error;
+  }
 }
 
-runAllAudits().catch(error => {
-  console.error('Fatal error in audit suite:', error);
-  process.exit(1);
-}); 
+// Run the audits
+runAllAudits().catch(console.error); 
