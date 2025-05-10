@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-05-04T03:41:21.603Z",
+  "projectId": "dba-inventory-services-prod",
+  "serviceAccount": "costtesting@dba-inventory-services-prod.iam.gserviceaccount.com",
+  "permissions": {
+    "compute": {
+      "status": "success",
+      "message": "Compute Engine API access verified"
+    },
+    "storage": {
+      "status": "success",
+      "message": "Cloud Storage API access verified"
+    },
+    "iam": {
+      "status": "success",
+      "message": "IAM API access verified"
+    },
+    "resourceManager": {
+      "status": "success",
+      "message": "Resource Manager API access verified"
+    },
+    "billing": {
+      "status": "success",
+      "message": "Billing API access verified"
+    },
+    "monitoring": {
+      "status": "success",
+      "message": "Monitoring API access verified"
+    },
+    "logging": {
+      "status": "success",
+      "message": "Logging API access verified"
+    }
+  }
+}

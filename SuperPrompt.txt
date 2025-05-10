@@ -1,0 +1,178 @@
+Act as a Senior Principal Software Engineer with 20+ years of experience in JavaScript/TypeScript development, React, Express.js, and cloud-based security architecture. Conduct a comprehensive audit of the CloudAuditPro platform with precision focused on modern Node.js and React applications.
+
+## Technology Stack Context
+- **Backend**: JavaScript (Node.js), Express.js v4.18.2
+- **Frontend**: TypeScript, React v18.2.0 (Create React App)
+- **Authentication**: JWT (jsonwebtoken v9.0.0), bcryptjs v2.4.3
+- **Security**: helmet v7.1.0, csurf v1.11.0, express-rate-limit v7.1.5, cookie-parser v1.4.6
+- **Cloud Services**: Google Cloud Storage v7.7.0, googleapis v129.0.0
+- **API Communication**: axios v1.6.2
+- **Logging**: winston v3.8.2
+- **Build Tools**: TypeScript v5.3.3 (frontend), v5.0.4 (backend dev dependency)
+- **Testing**: Jest v29.5.0
+
+## Audit Scope
+
+### 1. Frontend Deep Dive (React/TypeScript)
+- **React Component Architecture**
+  - Functional vs class components usage patterns
+  - React hooks implementation (useEffect cleanup, dependencies array)
+  - React Router v6 configuration and route protection
+  - Context API vs prop drilling analysis
+  - TypeScript type safety coverage (any usage, proper interfaces)
+
+- **UI/UX & Performance**
+  - Component re-render optimization (memo, useMemo, useCallback)
+  - React.Suspense and code splitting implementation
+  - Headless UI component accessibility (WCAG 2.2 AA)
+  - CSS-in-JS performance considerations
+  - HeroIcons implementation patterns
+
+- **Frontend Security**
+  - XSS protection via DOMPurify implementation
+  - JWT storage and transport security
+  - Form validation and sanitization approaches
+  - React event handlers security patterns
+  - Third-party dependency risk assessment
+
+- **Build & Performance**
+  - CRA configuration and optimization
+  - Bundle analysis (chunk splitting, lazy loading)
+  - TypeScript configuration optimization
+  - Browser compatibility coverage
+
+### 2. Backend Surgical Review (Node.js/Express)
+- **Express.js Configuration**
+  - Middleware chain ordering and optimization
+  - Error handling middleware implementation
+  - Route organization and modularity
+  - helmet configuration completeness
+  - Rate limiting strategy effectiveness
+  - Cookie parser configuration and security
+
+- **Authentication & Authorization**
+  - JWT implementation and security
+  - bcrypt password hashing configuration (cost factor)
+  - CSRF protection implementation
+  - Session management (if applicable)
+  - Cookie security configuration
+
+- **API Design & Implementation**
+  - RESTful design principles adherence
+  - Input validation strategies
+  - Error handling consistency
+  - Response formatting standards
+  - API versioning approach
+
+- **Data Access & Security**
+  - Database query security (injection prevention)
+  - N+1 query patterns in Node.js
+  - Data validation and sanitization
+  - Sensitive data handling (PII)
+  - Database connection pooling
+
+- **Cloud Integration**
+  - Google Cloud Storage implementation
+  - Google APIs integration patterns
+  - Cloud security best practices
+  - Error handling in cloud operations
+
+### 3. Infrastructure & DevOps
+- **Environment Configuration**
+  - dotenv implementation and secret management
+  - Environment-specific configurations
+  - Production vs development setup
+  - Environment variable security
+
+- **Logging & Monitoring**
+  - Winston logger implementation and configuration
+  - Error tracking configuration
+  - Performance monitoring setup
+  - Log level management
+  - PII protection in logs
+
+- **Security Headers & Configuration**
+  - Helmet.js configuration assessment
+  - Content Security Policy implementation
+  - CORS configuration
+  - HTTP security headers analysis
+
+- **Dependency Management**
+  - Outdated dependencies identification
+  - Vulnerable packages detection
+  - Package lock file integrity
+  - Build script optimization
+
+### 4. Code Quality & Architecture
+- **JavaScript/TypeScript Patterns**
+  - Modern ES6+ feature usage
+  - TypeScript type safety implementation
+  - Async/await vs Promise patterns
+  - Error handling patterns
+  - Functional programming approaches
+
+- **Testing Coverage**
+  - Jest test configuration
+  - Unit test coverage (critical paths)
+  - Integration test strategy
+  - Mock implementation patterns
+  - Test organization and structure
+  - Edge case coverage
+
+- **Documentation Quality**
+  - JSDoc/TSDoc implementation
+  - README completeness
+  - API documentation
+  - Code comments quality and relevance
+  - Architecture documentation
+
+- **Code Organization**
+  - Directory structure analysis
+  - Module boundaries clarity
+  - Import/export patterns
+  - Code reuse strategies
+  - Separation of concerns
+
+## Execution Protocol
+
+### 1. Codebase Mapping
+- Map Express routes to controller functions
+- Identify React component hierarchy
+- Trace API request flow from React to Express endpoints
+- Document authentication flow
+- Identify shared code and utilities
+
+### 2. Static Analysis
+- Analyze TypeScript types and interfaces
+- Identify prop drilling patterns
+- Detect potential memory leaks in React components
+- Scan for outdated React patterns
+- Identify Express middleware ordering issues
+
+### 3. Security Analysis
+- JWT implementation review
+- Express security middleware configuration
+- React form submission security
+- API input validation completeness
+- XSS prevention techniques assessment
+- CSRF token implementation
+- Cookie security configuration review
+- Google Cloud Storage security assessment
+
+### 4. Performance Analysis
+- React rendering optimization
+- Express route handler efficiency
+- API response time analysis
+- Bundle size optimization opportunities
+- Database query optimization (if applicable)
+- Cloud storage operation efficiency
+
+### 5. Integration Points Analysis
+- Frontend to backend API contract validation
+- Error handling consistency across stack
+- Authentication flow integrity
+- Data transformation patterns
+- Cross-cutting concerns implementation
+- Cloud service integration patterns
+
+## Output Requirements

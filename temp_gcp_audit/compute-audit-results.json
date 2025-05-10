@@ -1,0 +1,338 @@
+{
+  "vms": [
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+      "status": "RUNNING",
+      "labels": {
+        "goog-gke-cluster-id-base32": "jnfgvluhxbgtzcxrrjjz2bag7kc2fafiuiguuyn27ck4pknt44wa",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-east1-b",
+        "goog-k8s-cluster-name": "ad-generator-cluster",
+        "goog-k8s-node-pool-name": "ad-prod-pool-01"
+      },
+      "creationTimestamp": "2024-10-03T22:12:55.504-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+      "status": "RUNNING",
+      "labels": {
+        "goog-gke-cluster-id-base32": "jnfgvluhxbgtzcxrrjjz2bag7kc2fafiuiguuyn27ck4pknt44wa",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-east1-b",
+        "goog-k8s-cluster-name": "ad-generator-cluster",
+        "goog-k8s-node-pool-name": "ad-prod-pool-01"
+      },
+      "creationTimestamp": "2024-10-03T22:17:57.021-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "labels": {
+        "goog-gke-cluster-id-base32": "jfpwpeciknhjzdqtvwunx5j66attfkzhefeuszejmhgofrstv2ya",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-east1-b",
+        "goog-k8s-cluster-name": "auto-inventory-cluster",
+        "goog-k8s-node-pool-name": "auto-prod-pool-01"
+      },
+      "creationTimestamp": "2025-02-27T21:12:30.231-08:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "labels": {
+        "goog-gke-cluster-id-base32": "jfpwpeciknhjzdqtvwunx5j66attfkzhefeuszejmhgofrstv2ya",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-east1-b",
+        "goog-k8s-cluster-name": "auto-inventory-cluster",
+        "goog-k8s-node-pool-name": "auto-prod-pool-01"
+      },
+      "creationTimestamp": "2025-02-27T21:07:15.797-08:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+      "status": "RUNNING",
+      "labels": {
+        "goog-gke-cluster-id-base32": "fc6nlrcnq5fxdn6y23hesfc2auczlsu7l73epfnvk7pr4ctspsbq",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-east1-b",
+        "goog-k8s-cluster-name": "dba-inventory-services-prod-cluster",
+        "goog-k8s-node-pool-name": "prod-pool-01"
+      },
+      "creationTimestamp": "2024-10-03T22:12:56.461-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+      "status": "RUNNING",
+      "labels": {
+        "goog-gke-cluster-id-base32": "fc6nlrcnq5fxdn6y23hesfc2auczlsu7l73epfnvk7pr4ctspsbq",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-east1-b",
+        "goog-k8s-cluster-name": "dba-inventory-services-prod-cluster",
+        "goog-k8s-node-pool-name": "prod-pool-01"
+      },
+      "creationTimestamp": "2024-10-03T22:15:24.586-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "auto-inventory-service-1",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "creationTimestamp": "2023-02-20T03:46:13.312-08:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "auto-inventory-service-2",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "creationTimestamp": "2023-02-20T04:35:11.943-08:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "cfs-service",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-highmem-8",
+      "status": "RUNNING",
+      "creationTimestamp": "2023-02-16T00:09:59.964-08:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-7hn8",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/n1-standard-1",
+      "status": "RUNNING",
+      "labels": {
+        "goog-composer-environment": "dba-inventory-services-prod",
+        "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439",
+        "goog-composer-location": "us-central1",
+        "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
+        "goog-gke-cluster-id-base32": "egptmxbgu5hwdbcwb4ctos5o7rcjxxagi6wujaemg7jxrqzsvlva",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-central1-a",
+        "goog-k8s-cluster-name": "us-central1-dba-inventory-s-284706cf-gke",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "creationTimestamp": "2025-04-24T17:44:17.709-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-ta87",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/n1-standard-1",
+      "status": "RUNNING",
+      "labels": {
+        "goog-composer-environment": "dba-inventory-services-prod",
+        "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439",
+        "goog-composer-location": "us-central1",
+        "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
+        "goog-gke-cluster-id-base32": "egptmxbgu5hwdbcwb4ctos5o7rcjxxagi6wujaemg7jxrqzsvlva",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-central1-a",
+        "goog-k8s-cluster-name": "us-central1-dba-inventory-s-284706cf-gke",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "creationTimestamp": "2025-04-24T17:57:41.492-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-v0r5",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/n1-standard-1",
+      "status": "RUNNING",
+      "labels": {
+        "goog-composer-environment": "dba-inventory-services-prod",
+        "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439",
+        "goog-composer-location": "us-central1",
+        "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
+        "goog-gke-cluster-id-base32": "egptmxbgu5hwdbcwb4ctos5o7rcjxxagi6wujaemg7jxrqzsvlva",
+        "goog-gke-cost-management": "",
+        "goog-gke-node": "",
+        "goog-k8s-cluster-location": "us-central1-a",
+        "goog-k8s-cluster-name": "us-central1-dba-inventory-s-284706cf-gke",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "creationTimestamp": "2025-04-24T17:47:47.351-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "unite-google-cfs",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-highmem-2",
+      "status": "RUNNING",
+      "creationTimestamp": "2023-10-27T13:21:02.277-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "utility-service",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "creationTimestamp": "2023-05-24T02:30:28.048-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "dbaops",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-f/machineTypes/e2-medium",
+      "status": "RUNNING",
+      "creationTimestamp": "2025-02-17T09:13:31.681-08:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "filemage-gateway-linux-dba-vm",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-f/machineTypes/n2-standard-2",
+      "status": "RUNNING",
+      "labels": {
+        "goog-dm": "filemage-gateway-linux-dba"
+      },
+      "creationTimestamp": "2022-08-22T10:42:28.137-07:00"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "googleproductswin",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-f/machineTypes/c2-standard-8",
+      "status": "RUNNING",
+      "creationTimestamp": "2024-08-28T08:22:37.141-07:00"
+    }
+  ],
+  "kubernetesClusters": [
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "us-central1-dba-inventory-s-284706cf-gke",
+      "location": "us-central1-a",
+      "status": "RUNNING",
+      "nodeCount": 3,
+      "version": "1.30.10-gke.1070000"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "ad-generator-cluster",
+      "location": "us-east1-b",
+      "status": "RUNNING",
+      "nodeCount": 2,
+      "version": "1.31.6-gke.1064001"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "auto-inventory-cluster",
+      "location": "us-east1-b",
+      "status": "RUNNING",
+      "nodeCount": 2,
+      "version": "1.31.6-gke.1064001"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "dba-inventory-services-prod-cluster",
+      "location": "us-east1-b",
+      "status": "RUNNING",
+      "nodeCount": 2,
+      "version": "1.31.6-gke.1064001"
+    }
+  ],
+  "serverlessFunctions": [
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/invoke-upload-files-function",
+      "status": "ACTIVE",
+      "lastModified": "2024-10-14T18:03:03.617Z"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/upload-files",
+      "status": "ACTIVE",
+      "lastModified": "2024-10-14T18:35:53.337345309Z"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/update_bucket_files",
+      "status": "FAILED",
+      "lastModified": "2023-08-10T19:50:58.267Z"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/imagebucket2bq",
+      "status": "ACTIVE",
+      "lastModified": "2023-08-10T23:07:34.355411533Z"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/sftp-shovel",
+      "status": "ACTIVE",
+      "lastModified": "2024-03-22T20:55:25.071365187Z"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/sftp-shovel-custom-onetime",
+      "status": "ACTIVE",
+      "lastModified": "2024-02-12T23:57:15.457872226Z"
+    },
+    {
+      "projectId": "dba-inventory-services-prod",
+      "name": "projects/dba-inventory-services-prod/locations/us-central1/functions/test-ftp-service",
+      "status": "ACTIVE",
+      "lastModified": "2024-03-07T17:41:06.529981334Z"
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "auto-inventory-service-1",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "auto-inventory-service-2",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "gke-us-central1-dba-inve-default-pool-de3e9d12-7hn8",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "filemage-gateway-linux-dba-vm",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    },
+    {
+      "type": "VM_OPTIMIZATION",
+      "projectId": "dba-inventory-services-prod",
+      "instanceName": "googleproductswin",
+      "recommendation": "Consider downsizing or stopping this instance due to low utilization"
+    }
+  ]
+}
