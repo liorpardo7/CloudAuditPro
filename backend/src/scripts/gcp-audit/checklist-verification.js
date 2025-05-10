@@ -34,6 +34,7 @@ async function verifyChecklist() {
     const securitycenter = google.securitycenter({ version: 'v1', auth });
     const billing = google.cloudbilling({ version: 'v1', auth });
     const logging = google.logging({ version: 'v2', auth });
+    const dlp = google.dlp({ version: 'v2', auth });
 
     // Get all zones first
     const zonesResponse = await compute.zones.list({ project: projectId });
@@ -755,6 +756,127 @@ async function verifyChecklist() {
         section: 'DevOps',
         error: error.message,
         details: error.response?.data || {}
+      });
+    }
+
+    // Enhanced VM Security Checks
+    console.log('Verifying Enhanced VM Security...');
+    try {
+      const instances = await compute.instances.list({
+        project: projectId,
+        zone: 'us-central1-a'
+      });
+
+      const enhancedSecurityChecks = instances.data.items.map(instance => ({
+        name: instance.name,
+        osLogin: instance.metadata?.items?.some(item => 
+          item.key === 'enable-oslogin' && item.value === 'TRUE'
+        ),
+        confidentialComputing: instance.confidentialInstanceConfig?.enableConfidentialCompute,
+        shieldedVm: instance.shieldedInstanceConfig?.enableSecureBoot &&
+                   instance.shieldedInstanceConfig?.enableVtpm &&
+                   instance.shieldedInstanceConfig?.enableIntegrityMonitoring
+      }));
+
+      results.status.compute.enhancedSecurity = {
+        osLoginEnabled: enhancedSecurityChecks.some(check => check.osLogin) ? '✓' : '✗',
+        confidentialComputingEnabled: enhancedSecurityChecks.some(check => check.confidentialComputing) ? '✓' : '✗',
+        shieldedVmEnabled: enhancedSecurityChecks.some(check => check.shieldedVm) ? '✓' : '✗'
+      };
+    } catch (error) {
+      results.errors.push({
+        section: 'Enhanced VM Security',
+        error: error.message
+      });
+    }
+
+    // Enhanced GKE Security Checks
+    console.log('Verifying Enhanced GKE Security...');
+    try {
+      const clusters = await container.projects.locations.clusters.list({
+        parent: `projects/${projectId}/locations/-`
+      });
+
+      const enhancedGkeChecks = clusters.data.clusters.map(cluster => ({
+        name: cluster.name,
+        privateCluster: cluster.privateClusterConfig?.enablePrivateNodes,
+        networkPolicy: cluster.networkPolicy?.enabled,
+        binaryAuthorization: cluster.binaryAuthorization?.enabled,
+        podSecurityPolicy: cluster.podSecurityPolicyConfig?.enabled,
+        workloadIdentity: cluster.workloadIdentityConfig?.workloadPool
+      }));
+
+      results.status.compute.enhancedGke = {
+        privateClusters: enhancedGkeChecks.some(check => check.privateCluster) ? '✓' : '✗',
+        networkPolicies: enhancedGkeChecks.some(check => check.networkPolicy) ? '✓' : '✗',
+        binaryAuthorization: enhancedGkeChecks.some(check => check.binaryAuthorization) ? '✓' : '✗',
+        podSecurityPolicies: enhancedGkeChecks.some(check => check.podSecurityPolicy) ? '✓' : '✗',
+        workloadIdentity: enhancedGkeChecks.some(check => check.workloadIdentity) ? '✓' : '✗'
+      };
+    } catch (error) {
+      results.errors.push({
+        section: 'Enhanced GKE Security',
+        error: error.message
+      });
+    }
+
+    // Enhanced Storage Checks
+    console.log('Verifying Enhanced Storage Features...');
+    try {
+      const buckets = await storage.buckets.list({
+        project: projectId
+      });
+
+      const enhancedStorageChecks = await Promise.all(buckets.data.items.map(async bucket => {
+        const [bucketDetails] = await storage.buckets.get({
+          bucket: bucket.name
+        });
+        return {
+          name: bucket.name,
+          versioning: bucketDetails.versioning?.enabled,
+          lifecycleRules: bucketDetails.lifecycle?.rule?.length > 0,
+          retentionPolicy: bucketDetails.retentionPolicy?.isLocked,
+          uniformAccess: bucketDetails.iamConfiguration?.uniformBucketLevelAccess?.enabled
+        };
+      }));
+
+      results.status.storage.enhancedFeatures = {
+        versioningEnabled: enhancedStorageChecks.some(check => check.versioning) ? '✓' : '✗',
+        lifecycleRules: enhancedStorageChecks.some(check => check.lifecycleRules) ? '✓' : '✗',
+        retentionPolicies: enhancedStorageChecks.some(check => check.retentionPolicy) ? '✓' : '✗',
+        uniformAccess: enhancedStorageChecks.some(check => check.uniformAccess) ? '✓' : '✗'
+      };
+    } catch (error) {
+      results.errors.push({
+        section: 'Enhanced Storage Features',
+        error: error.message
+      });
+    }
+
+    // Enhanced Data Protection Checks
+    console.log('Verifying Enhanced Data Protection...');
+    try {
+      const [inspectTemplates, jobTriggers, storedInfoTypes] = await Promise.all([
+        dlp.projects.inspectTemplates.list({
+          parent: `projects/${projectId}`
+        }),
+        dlp.projects.jobTriggers.list({
+          parent: `projects/${projectId}`
+        }),
+        dlp.projects.storedInfoTypes.list({
+          parent: `projects/${projectId}`
+        })
+      ]);
+
+      results.status.compliance.enhancedDataProtection = {
+        inspectTemplates: inspectTemplates.data.inspectTemplates?.length > 0 ? '✓' : '✗',
+        jobTriggers: jobTriggers.data.jobTriggers?.length > 0 ? '✓' : '✗',
+        storedInfoTypes: storedInfoTypes.data.storedInfoTypes?.length > 0 ? '✓' : '✗'
+      };
+    } catch (error) {
+      results.errors.push({
+        section: 'Enhanced Data Protection',
+        error: error.message
       });
     }
 

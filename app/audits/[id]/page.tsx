@@ -3,10 +3,10 @@
 import * as React from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Loader2, ArrowLeft, ChevronRight, CheckCircle, AlertCircle, CircleAlert, Info, HelpCircle, FileText, Settings, Download, BarChart, Server, Database, Network, Shield, Coins, Clock } from "lucide-react"
-import { useToast } from "@/components/ui/toast"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Loader2, ArrowLeft, ChevronRight, CheckCircle, AlertCircle, Info, HelpCircle, FileText, Settings, Download, BarChart, Server, Database, Network, Shield, Coins, Clock } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Finding {
   id: string
@@ -45,7 +45,7 @@ interface AuditDetailsData {
 
 const severityConfig = {
   critical: { icon: AlertCircle, color: "text-red-500", bgColor: "bg-red-100 dark:bg-red-900/30", label: "Critical" },
-  high: { icon: CircleAlert, color: "text-amber-500", bgColor: "bg-amber-100 dark:bg-amber-900/30", label: "High" },
+  high: { icon: AlertCircle, color: "text-amber-500", bgColor: "bg-amber-100 dark:bg-amber-900/30", label: "High" },
   medium: { icon: Info, color: "text-yellow-500", bgColor: "bg-yellow-100 dark:bg-yellow-900/30", label: "Medium" },
   low: { icon: Info, color: "text-blue-500", bgColor: "bg-blue-100 dark:bg-blue-900/30", label: "Low" },
   info: { icon: HelpCircle, color: "text-slate-500", bgColor: "bg-slate-100 dark:bg-slate-800", label: "Info" }

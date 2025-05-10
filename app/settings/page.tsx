@@ -2,10 +2,9 @@ import * as React from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { PlusCircle, Trash2, PlayCircle, Loader2, ChevronDown } from "lucide-react"
-import { PlusCircle, Trash2 } from "lucide-react"
 import { AddProjectDialog } from "./add-project-dialog"
 import { useRouter } from 'next/navigation'
-import { useToast, ToastProvider } from '@/components/ui/toast'
+import { useToast, ToastProvider } from '@/components/ui/use-toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   DropdownMenu,
