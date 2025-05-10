@@ -1,0 +1,121 @@
+{
+  "timestamp": "2025-05-04T15:18:01.739Z",
+  "projectId": "dba-inventory-services-prod",
+  "status": {
+    "compute": {
+      "vmInventory": "✓",
+      "machineTypes": "✓",
+      "instanceTypes": "✓",
+      "labels": "✓",
+      "optimization": {
+        "cpuUtilization": "✓",
+        "memoryUtilization": "✓",
+        "costRecommendations": "✗"
+      },
+      "security": {
+        "shieldedVm": "✓",
+        "confidentialComputing": "✗",
+        "osLogin": "✗",
+        "serviceAccounts": "✓"
+      },
+      "gkeClusters": "✓",
+      "gke": {
+        "privateCluster": "✗",
+        "workloadIdentity": "✓",
+        "networkPolicy": "✗",
+        "binaryAuthorization": "✗",
+        "podSecurityPolicy": "✗",
+        "regionalClusters": "✓"
+      }
+    },
+    "storage": {
+      "bucketInventory": "✓",
+      "bucketSecurity": {
+        "uniformAccess": "✓",
+        "noPublicAccess": "✓",
+        "encryption": "✗",
+        "versioning": "✓",
+        "logging": "✗",
+        "retentionPolicies": "✗",
+        "lifecycleManagement": "✓"
+      },
+      "bucketManagement": "✓",
+      "persistentDisks": "✓",
+      "diskSecurity": {
+        "encryption": "✗",
+        "backupPolicies": "✗",
+        "managedDeletion": "✗",
+        "snapshots": "✗"
+      }
+    },
+    "networking": {
+      "vpcConfiguration": "✓",
+      "vpcSecurity": "✓",
+      "loadBalancers": "✓",
+      "dns": "✓",
+      "security": {
+        "firewalls": {
+          "hasRules": "✓",
+          "usesTags": "✓",
+          "noOverlyPermissive": "✗",
+          "restrictedSourceRanges": "✗"
+        },
+        "subnetworks": {
+          "privateGoogleAccess": "✓",
+          "flowLogs": "✗",
+          "secondaryRanges": "✓"
+        }
+      }
+    },
+    "security": {
+      "auditLogging": {
+        "enabled": "✓",
+        "monitoring": "✓"
+      },
+      "accessControl": {
+        "iamAdmin": "✓",
+        "computeAdmin": "✓",
+        "storageAdmin": "✓"
+      },
+      "monitoring": {
+        "loggingEnabled": "✓",
+        "monitoringEnabled": "✓",
+        "alertsConfigured": "✓"
+      }
+    },
+    "compliance": {
+      "dataProtection": {
+        "dlpTemplates": "✗",
+        "dlpJobs": "✗",
+        "infoTypes": "✗",
+        "apiEnabled": "✓"
+      },
+      "complianceStandards": "✓",
+      "auditLogging": "✓"
+    },
+    "cost": {
+      "billing": {
+        "configured": "✓",
+        "projectBilling": "✓",
+        "costMonitoring": "✓"
+      },
+      "optimization": {
+        "commitments": "✓",
+        "recommendations": "✓",
+        "monitoring": "✓"
+      }
+    },
+    "devops": {
+      "cicd": "✓",
+      "monitoring": "✓",
+      "logging": "✓"
+    }
+  },
+  "errors": [
+    {
+      "section": "Compliance",
+      "error": "securityFindings is not defined",
+      "details": {}
+    }
+  ]
+}

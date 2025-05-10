@@ -1,0 +1,17 @@
+{
+  "name": "gcp-audit-scripts",
+  "version": "1.0.0",
+  "description": "GCP Audit Scripts for CloudAuditPro",
+  "main": "index.js",
+  "scripts": {
+    "audit:compute": "node compute-audit.js",
+    "audit:storage": "node storage-audit.js",
+    "audit:networking": "node networking-audit.js",
+    "audit:security": "node security-audit.js",
+    "audit:cost": "node cost-audit.js",
+    "audit:all": "node run-all-audits.js"
+  },
+  "dependencies": {
+    "googleapis": "^118.0.0"
+  }
+} 
