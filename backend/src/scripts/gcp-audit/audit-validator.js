@@ -24,8 +24,21 @@ class AuditValidator {
         passed: 0,
         failed: 0,
         notImplemented: 0,
-        notApplicable: 0
-      }
+        notApplicable: 0,
+        errors: {
+          permissionDenied: 0,
+          quotaExceeded: 0,
+          serviceUnavailable: 0,
+          timeout: 0,
+          other: 0
+        }
+      },
+      permissions: {
+        required: [],
+        missing: [],
+        verified: []
+      },
+      errors: []
     };
   }
 
@@ -65,35 +78,143 @@ class AuditValidator {
     }
   }
 
-  async validateCheck(category, checkName, checkFn) {
+  async validatePermission(permission) {
     try {
-      if (!this.results.checks[category]) {
-        this.results.checks[category] = {};
+      const testResponse = await this.iam.testIamPermissions({
+        resource: `projects/${this.projectId}`,
+        permissions: [permission]
+      });
+      
+      const hasPermission = testResponse.data.permissions.includes(permission);
+      if (hasPermission) {
+        this.results.permissions.verified.push(permission);
+      } else {
+        this.results.permissions.missing.push(permission);
+      }
+      return hasPermission;
+    } catch (error) {
+      this.results.errors.push({
+        type: 'Permission Check',
+        permission,
+        error: error.message
+      });
+      return false;
+    }
+  }
+
+  async validateCheck(category, checkName, checkFn, requiredPermissions = []) {
+    this.results.summary.total++;
+    
+    try {
+      // Validate required permissions
+      const missingPermissions = [];
+      for (const permission of requiredPermissions) {
+        if (!this.results.permissions.verified.includes(permission)) {
+          const hasPermission = await this.validatePermission(permission);
+          if (!hasPermission) {
+            missingPermissions.push(permission);
+          }
+        }
       }
 
-      console.log(`Running check: ${category}.${checkName}`);
-      const result = await checkFn();
+      if (missingPermissions.length > 0) {
+        this.results.checks[`${category}.${checkName}`] = {
+          status: '✗',
+          error: `Missing required permissions: ${missingPermissions.join(', ')}`,
+          errorType: 'permissionDenied'
+        };
+        this.results.summary.failed++;
+        this.results.summary.errors.permissionDenied++;
+        return;
+      }
 
-      this.results.checks[category][checkName] = {
-        status: 'Passed',
-        details: result
+      // Run the check with timeout
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Check timed out')), 30000)
+      );
+      
+      const result = await Promise.race([checkFn(), timeoutPromise]);
+      
+      // Validate the result
+      const isValid = this.validateResult(result);
+      
+      this.results.checks[`${category}.${checkName}`] = {
+        status: isValid ? '✓' : '✗',
+        result: result,
+        timestamp: new Date().toISOString()
       };
-
-      this.results.summary.total++;
-      this.results.summary.passed++;
-
-      console.log(`Check completed: ${category}.${checkName} - Status: Passed`);
+      
+      if (isValid) {
+        this.results.summary.passed++;
+      } else {
+        this.results.summary.failed++;
+      }
     } catch (error) {
-      console.error(`Error in check ${category}.${checkName}:`, error);
-
-      this.results.checks[category][checkName] = {
-        status: 'Failed',
-        error: error.message
+      let errorType = 'other';
+      let errorMessage = error.message;
+      
+      // Categorize errors
+      if (error.message.includes('permission denied') || error.message.includes('403')) {
+        errorType = 'permissionDenied';
+      } else if (error.message.includes('quota exceeded') || error.message.includes('429')) {
+        errorType = 'quotaExceeded';
+      } else if (error.message.includes('service unavailable') || error.message.includes('503')) {
+        errorType = 'serviceUnavailable';
+      } else if (error.message.includes('timed out')) {
+        errorType = 'timeout';
+      }
+      
+      this.results.checks[`${category}.${checkName}`] = {
+        status: '✗',
+        error: errorMessage,
+        errorType: errorType,
+        timestamp: new Date().toISOString()
       };
-
-      this.results.summary.total++;
+      
       this.results.summary.failed++;
+      this.results.summary.errors[errorType]++;
+      
+      this.results.errors.push({
+        type: 'Check Execution',
+        category,
+        check: checkName,
+        error: errorMessage,
+        errorType,
+        timestamp: new Date().toISOString(),
+        details: error.response?.data || {}
+      });
     }
+  }
+
+  validateResult(result) {
+    if (!result) return false;
+    
+    // Check if result is an object with data
+    if (typeof result === 'object') {
+      // Check for empty arrays
+      if (Array.isArray(result) && result.length === 0) return false;
+      
+      // Check for empty objects
+      if (Object.keys(result).length === 0) return false;
+      
+      // Check for data property in API responses
+      if (result.data) {
+        if (Array.isArray(result.data) && result.data.length === 0) return false;
+        if (typeof result.data === 'object' && Object.keys(result.data).length === 0) return false;
+      }
+    }
+    
+    return true;
+  }
+
+  getResults() {
+    return {
+      ...this.results,
+      summary: {
+        ...this.results.summary,
+        passRate: `${((this.results.summary.passed / this.results.summary.total) * 100).toFixed(2)}%`
+      }
+    };
   }
 
   async validateComputeChecks() {

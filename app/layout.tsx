@@ -3,13 +3,15 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Layout } from "@/components/layout"
+import { Sidebar } from "@/components/sidebar"
+import { Header } from "@/components/header"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "CloudAuditPro - Cloud Infrastructure Audit Platform",
-  description: "Automated cloud infrastructure auditing and optimization platform",
+  title: "CloudAuditPro",
+  description: "Comprehensive cloud infrastructure auditing tool",
 }
 
 export default function RootLayout({
@@ -26,7 +28,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Layout>{children}</Layout>
+          <div className="flex h-screen overflow-hidden">
+            <Sidebar />
+            <div className="flex flex-1 flex-col overflow-hidden">
+              <Header />
+              <main className="flex-1 overflow-y-auto">
+                {children}
+              </main>
+            </div>
+          </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

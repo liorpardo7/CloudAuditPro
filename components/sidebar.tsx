@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 import { 
   LayoutDashboard, 
   ShieldCheck, 
@@ -56,6 +56,11 @@ const routes = [
     label: "Cost",
     icon: BarChart3,
     href: "/cost",
+  },
+  {
+    label: "Big Query",
+    icon: Database,
+    href: "/bigquery",
   },
   {
     label: "Settings",
