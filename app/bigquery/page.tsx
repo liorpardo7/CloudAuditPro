@@ -24,12 +24,17 @@ import {
   ExternalLink,
   Play,
   HardDrive,
-  Timer
+  Timer,
+  Code2
 } from "lucide-react"
 
 export default function BigQueryPage() {
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("datasets")
+  const [stalePartitioning, setStalePartitioning] = React.useState<any[]>([])
+  const [deprecatedUDFs, setDeprecatedUDFs] = React.useState<any[]>([])
+  const [auditLoading, setAuditLoading] = React.useState(true)
+  const [auditError, setAuditError] = React.useState<string | null>(null)
   
   // Mock data - would come from API in a real application
   const bigqueryData = {
@@ -205,6 +210,22 @@ export default function BigQueryPage() {
         return "text-slate-500 bg-slate-100 dark:bg-slate-900/30";
     }
   }
+
+  React.useEffect(() => {
+    let jobId = typeof window !== 'undefined' ? localStorage.getItem('lastAuditJobId') : null;
+    if (!jobId) jobId = 'test';
+    fetch(`/api/audits/status?id=${jobId}`)
+      .then(res => res.json())
+      .then(res => {
+        setStalePartitioning(res.bigqueryResults?.bigquery?.stalePartitioning || []);
+        setDeprecatedUDFs(res.bigqueryResults?.bigquery?.deprecatedUDFs || []);
+        setAuditLoading(false);
+      })
+      .catch(() => {
+        setAuditError('Failed to fetch audit results.');
+        setAuditLoading(false);
+      });
+  }, []);
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-0">
@@ -568,6 +589,80 @@ export default function BigQueryPage() {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* --- Audit Cards from audit-process branch --- */}
+      <div className="grid gap-6 md:grid-cols-2 mt-10">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="text-yellow-500" />
+              Stale Partitioning
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {auditLoading ? (
+              <div>Loading...</div>
+            ) : auditError ? (
+              <div className="text-red-500">{auditError}</div>
+            ) : stalePartitioning.length === 0 ? (
+              <div className="text-muted-foreground">No stale partitioning issues found.</div>
+            ) : (
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr>
+                    <th className="text-left font-semibold">Table</th>
+                    <th className="text-left font-semibold">Partition</th>
+                    <th className="text-left font-semibold">Last Modified</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stalePartitioning.map((item, idx) => (
+                    <tr key={idx} className="border-t">
+                      <td className="py-1">{item.table}</td>
+                      <td className="py-1">{item.partition}</td>
+                      <td className="py-1">{item.lastModified}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Code2 className="text-blue-500" />
+              Deprecated SQL UDFs
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {auditLoading ? (
+              <div>Loading...</div>
+            ) : auditError ? (
+              <div className="text-red-500">{auditError}</div>
+            ) : deprecatedUDFs.length === 0 ? (
+              <div className="text-muted-foreground">No deprecated UDFs found.</div>
+            ) : (
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr>
+                    <th className="text-left font-semibold">Dataset</th>
+                    <th className="text-left font-semibold">Table</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deprecatedUDFs.map((item, idx) => (
+                    <tr key={idx} className="border-t">
+                      <td className="py-1">{item.dataset}</td>
+                      <td className="py-1">{item.table}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </CardContent>
         </Card>
       </div>
