@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Load service account credentials
-const credentials = require('../../config/gcp-service-account.json');
+const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
 
 // Initialize auth client
 const auth = new google.auth.GoogleAuth({
