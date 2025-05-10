@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
+import { Breadcrumb } from "@/components/breadcrumb"
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto">
+          <div className="px-8 pt-6">
+            <Breadcrumb />
+          </div>
           {children}
         </main>
       </div>
