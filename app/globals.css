@@ -10,6 +10,31 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Premium UI utilities */
+  .glass-effect {
+    @apply bg-background/60 backdrop-blur-md backdrop-saturate-150 border border-border/30;
+  }
+  
+  .premium-card {
+    @apply shadow-sm hover:shadow-md transition-all duration-200 border border-border/50 bg-card;
+  }
+  
+  .premium-button {
+    @apply rounded-md font-medium transition-all duration-200 active:scale-95;
+  }
+  
+  .subtle-ring {
+    @apply ring-1 ring-border/50;
+  }
+  
+  .premium-gradient {
+    @apply bg-gradient-to-tr from-primary/5 to-primary/10;
+  }
+  
+  .enterprise-gradient {
+    @apply bg-gradient-to-tr from-blue-500/20 via-purple-500/20 to-indigo-500/20;
+  }
 }
 
 @layer base {
@@ -42,7 +67,19 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --success: 142 72% 29%;
+    --success-foreground: 144 70% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --info: 220 70% 50%;
+    --info-foreground: 210 40% 98%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
+  
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -63,6 +100,12 @@ body {
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
+    --success: 142 72% 29%;
+    --success-foreground: 144 70% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --info: 220 70% 50%;
+    --info-foreground: 210 40% 98%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -83,7 +126,25 @@ body {
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  /* Improved scrollbars for a premium look */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full hover:bg-muted/80;
   }
 } 
