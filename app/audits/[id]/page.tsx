@@ -3,31 +3,10 @@
 import * as React from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { SummaryStatistics } from "@/components/summary-statistics"
-import { ResourceMetrics } from "@/components/resource-metrics"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Download,
-  FileText,
-  ArrowLeft,
-  BarChart,
-  Server,
-  Database,
-  Network,
-  Shield,
-  Coins,
-  Info,
-  HelpCircle,
-  ChevronRight,
-  CircleAlert,
-  Settings,
-  LucideIcon
-} from "lucide-react"
+import { Loader2, ArrowLeft, ChevronRight, CheckCircle, AlertCircle, CircleAlert, Info, HelpCircle, FileText, Settings, Download, BarChart, Server, Database, Network, Shield, Coins, Clock } from "lucide-react"
+import { useToast } from "@/components/ui/toast"
 
 interface Finding {
   id: string
@@ -43,7 +22,7 @@ interface Finding {
 interface AuditDetailsData {
   id: string
   name: string
-  status: "running" | "completed" | "error" | "cancelled" | "scheduled"
+  status: string
   startedAt: string
   completedAt: string
   resourcesScanned: number
@@ -60,153 +39,64 @@ interface AuditDetailsData {
     resourcesScanned: number
     findings: number
     status: string
-    icon: LucideIcon
   }[]
   findings: Finding[]
+}
+
+const severityConfig = {
+  critical: { icon: AlertCircle, color: "text-red-500", bgColor: "bg-red-100 dark:bg-red-900/30", label: "Critical" },
+  high: { icon: CircleAlert, color: "text-amber-500", bgColor: "bg-amber-100 dark:bg-amber-900/30", label: "High" },
+  medium: { icon: Info, color: "text-yellow-500", bgColor: "bg-yellow-100 dark:bg-yellow-900/30", label: "Medium" },
+  low: { icon: Info, color: "text-blue-500", bgColor: "bg-blue-100 dark:bg-blue-900/30", label: "Low" },
+  info: { icon: HelpCircle, color: "text-slate-500", bgColor: "bg-slate-100 dark:bg-slate-800", label: "Info" }
 }
 
 export default function AuditDetailsPage() {
   const params = useParams()
   const auditId = params.id as string
-  
-  // Mock data - in a real app this would be fetched from an API
-  const auditData: AuditDetailsData = {
-    id: auditId,
-    name: "Weekly Production Infrastructure Audit",
-    status: "completed",
-    startedAt: "2023-02-20 09:23:11",
-    completedAt: "2023-02-20 09:35:43",
-    resourcesScanned: 523,
-    findingsCount: {
-      total: 12,
-      critical: 1,
-      high: 3,
-      medium: 5,
-      low: 2,
-      info: 1
-    },
-    services: [
-      {
-        name: "Compute",
-        resourcesScanned: 154,
-        findings: 4,
-        status: "Complete",
-        icon: Server
-      },
-      {
-        name: "Storage",
-        resourcesScanned: 87,
-        findings: 5,
-        status: "Complete",
-        icon: Database
-      },
-      {
-        name: "Network",
-        resourcesScanned: 42,
-        findings: 1,
-        status: "Complete",
-        icon: Network
-      },
-      {
-        name: "Security",
-        resourcesScanned: 156,
-        findings: 2,
-        status: "Complete",
-        icon: Shield
-      },
-      {
-        name: "Cost",
-        resourcesScanned: 84,
-        findings: 0,
-        status: "Complete",
-        icon: Coins
+  const { show } = useToast()
+  const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState<string | null>(null)
+  const [auditData, setAuditData] = React.useState<AuditDetailsData | null>(null)
+
+  React.useEffect(() => {
+    async function fetchAudit() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(`/api/audits/${auditId}`)
+        if (!res.ok) throw new Error('Failed to fetch audit results')
+        const data = await res.json()
+        setAuditData(data)
+      } catch (err: any) {
+        setError(err.message || 'Unknown error')
+        show(err.message || 'Failed to load audit results', 'error')
+      } finally {
+        setLoading(false)
       }
-    ],
-    findings: [
-      {
-        id: "F-1",
-        service: "Storage",
-        resourceId: "bucket-prod-data-01",
-        severity: "critical",
-        title: "Public access enabled on sensitive data bucket",
-        description: "Storage bucket containing sensitive data has public access enabled which violates security policy.",
-        recommendation: "Disable public access on the bucket and implement appropriate access controls.",
-        category: "Security"
-      },
-      {
-        id: "F-2",
-        service: "Compute",
-        resourceId: "vm-api-prod-01",
-        severity: "high",
-        title: "Unpatched critical vulnerability",
-        description: "VM instance is running an operating system version with known critical vulnerabilities.",
-        recommendation: "Apply the latest security patches and update the OS to the latest version.",
-        category: "Security"
-      },
-      {
-        id: "F-3",
-        service: "Compute",
-        resourceId: "vm-batch-01",
-        severity: "medium",
-        title: "VM instance over-provisioned",
-        description: "VM instance has been allocated excessive resources compared to actual usage patterns.",
-        recommendation: "Downsize the VM to an appropriate instance type based on actual resource utilization.",
-        category: "Cost"
-      },
-      {
-        id: "F-4",
-        service: "Network",
-        resourceId: "fw-prod-01",
-        severity: "high",
-        title: "Overly permissive inbound firewall rule",
-        description: "Firewall rule allows unrestricted access on port 22 from any source IP address.",
-        recommendation: "Restrict SSH access to specific trusted IP ranges only.",
-        category: "Security"
-      },
-      {
-        id: "F-5",
-        service: "Storage",
-        resourceId: "bucket-logs-01",
-        severity: "medium",
-        title: "Logging bucket without lifecycle policy",
-        description: "Log storage bucket does not have a lifecycle policy to manage older logs.",
-        recommendation: "Implement a lifecycle policy to archive logs older than 30 days and delete logs older than 1 year.",
-        category: "Cost"
-      }
-    ]
-  }
-  
-  const severityConfig = {
-    critical: { 
-      icon: AlertCircle, 
-      color: "text-red-500", 
-      bgColor: "bg-red-100 dark:bg-red-900/30",
-      label: "Critical" 
-    },
-    high: { 
-      icon: CircleAlert, 
-      color: "text-amber-500", 
-      bgColor: "bg-amber-100 dark:bg-amber-900/30",
-      label: "High" 
-    },
-    medium: { 
-      icon: Info, 
-      color: "text-yellow-500", 
-      bgColor: "bg-yellow-100 dark:bg-yellow-900/30",
-      label: "Medium" 
-    },
-    low: { 
-      icon: Info, 
-      color: "text-blue-500", 
-      bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      label: "Low" 
-    },
-    info: { 
-      icon: HelpCircle, 
-      color: "text-slate-500", 
-      bgColor: "bg-slate-100 dark:bg-slate-800",
-      label: "Info" 
     }
+    if (auditId) fetchAudit()
+  }, [auditId, show])
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-10 w-10 text-primary animate-spin mb-4" />
+        <div className="text-lg font-medium">Loading audit results...</div>
+      </div>
+    )
+  }
+
+  if (error || !auditData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <AlertCircle className="h-10 w-10 text-red-500 mb-4" />
+        <div className="text-lg font-medium text-red-600">{error || 'Failed to load audit results'}</div>
+        <Link href="/audits">
+          <Button variant="outline" className="mt-6">Back to Audits</Button>
+        </Link>
+      </div>
+    )
   }
 
   return (
@@ -286,53 +176,31 @@ export default function AuditDetailsPage() {
                 <div className="font-medium">{auditData.findingsCount.total}</div>
               </div>
             </div>
-            
             <div className="space-y-2">
               <div className="text-xs font-medium">Findings by Severity</div>
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                    <span className="text-xs">Critical</span>
+                {(['critical','high','medium','low','info'] as const).map((sev) => (
+                  <div className="flex items-center justify-between" key={sev}>
+                    <div className="flex items-center gap-1.5">
+                      <div className={`w-2 h-2 rounded-full ${severityConfig[sev].color}`}></div>
+                      <span className="text-xs">{severityConfig[sev].label}</span>
+                    </div>
+                    <span className="text-xs font-medium">{auditData.findingsCount[sev]}</span>
                   </div>
-                  <span className="text-xs font-medium">{auditData.findingsCount.critical}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                    <span className="text-xs">High</span>
-                  </div>
-                  <span className="text-xs font-medium">{auditData.findingsCount.high}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                    <span className="text-xs">Medium</span>
-                  </div>
-                  <span className="text-xs font-medium">{auditData.findingsCount.medium}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                    <span className="text-xs">Low</span>
-                  </div>
-                  <span className="text-xs font-medium">{auditData.findingsCount.low}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-slate-500"></div>
-                    <span className="text-xs">Info</span>
-                  </div>
-                  <span className="text-xs font-medium">{auditData.findingsCount.info}</span>
-                </div>
+                ))}
               </div>
             </div>
-            
             <div className="border-t pt-4">
               <div className="text-xs font-medium mb-2">Services Audited</div>
               <div className="space-y-3">
                 {auditData.services.map((service) => {
-                  const ServiceIcon = service.icon
+                  const ServiceIcon = {
+                    Compute: Server,
+                    Storage: Database,
+                    Network: Network,
+                    Security: Shield,
+                    Cost: Coins
+                  }[service.name] || BarChart
                   return (
                     <div key={service.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -358,7 +226,6 @@ export default function AuditDetailsPage() {
             </div>
           </CardContent>
         </Card>
-        
         <Card className="col-span-1 lg:col-span-2 premium-card">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
@@ -386,7 +253,6 @@ export default function AuditDetailsPage() {
               {auditData.findings.length > 0 ? (
                 auditData.findings.map((finding) => {
                   const SeverityIcon = severityConfig[finding.severity].icon
-                  
                   return (
                     <div key={finding.id} className="border rounded-lg overflow-hidden">
                       <div className="flex items-center justify-between bg-muted/30 px-4 py-2 border-b">

@@ -7,9 +7,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2, CloudCog, LayoutDashboard, FileText, Server, Database, Clock, Shield } from "lucide-react"
+import { CheckCircle2, CloudCog, LayoutDashboard, FileText, Server, Database, Clock, Shield, Loader2 } from "lucide-react"
+import { useToast, ToastProvider } from '@/components/ui/toast'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useRouter } from 'next/navigation'
 
 export default function AuditPage() {
+  return (
+    <ToastProvider>
+      <AuditPageContent />
+    </ToastProvider>
+  )
+}
+
+function AuditPageContent() {
   const [currentStep, setCurrentStep] = React.useState(1)
   const [auditName, setAuditName] = React.useState("")
   const [selectedServices, setSelectedServices] = React.useState({
@@ -19,6 +30,11 @@ export default function AuditPage() {
     security: true,
     cost: true
   })
+  const [progressOpen, setProgressOpen] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [runningJob, setRunningJob] = React.useState<string | null>(null)
+  const { show } = useToast()
+  const router = useRouter()
 
   const totalSteps = 3
 
@@ -79,11 +95,55 @@ export default function AuditPage() {
     })
   }
 
-  const handleStartAudit = () => {
-    // Here you would typically trigger the audit process
-    // For now we'll just go to the confirmation step
-    setCurrentStep(totalSteps)
+  const handleStartAudit = async () => {
+    // Gather selected categories
+    const categories = Object.entries(selectedServices)
+      .filter(([_, v]) => v)
+      .map(([k]) => k)
+    setIsLoading(true)
+    setProgressOpen(true)
+    // Always use the test project for now
+    const projectId = 'dba-inventory-services-prod'
+    // If all categories are selected, use 'all'
+    const category = categories.length === 5 ? 'all' : categories[0] // For now, only support one or all
+    const res = await fetch('/api/audits/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId, category })
+    })
+    const data = await res.json()
+    if (data.jobId) {
+      setRunningJob(data.jobId)
+    } else {
+      setIsLoading(false)
+      setProgressOpen(false)
+      show(data.error || 'Failed to start audit', 'error')
+    }
   }
+
+  React.useEffect(() => {
+    if (!runningJob) return
+    setProgressOpen(true)
+    let interval: NodeJS.Timeout
+    const poll = async () => {
+      const res = await fetch(`/api/audits/status?id=${runningJob}`)
+      const data = await res.json()
+      if (data.status === 'completed') {
+        setRunningJob(null)
+        setIsLoading(false)
+        setProgressOpen(false)
+        show('Audit completed successfully!', 'success')
+        router.push(`/audits/${runningJob}`)
+      } else if (data.status === 'error') {
+        setRunningJob(null)
+        setIsLoading(false)
+        setProgressOpen(false)
+        show(data.error || 'Audit failed', 'error')
+      }
+    }
+    interval = setInterval(poll, 2000)
+    return () => clearInterval(interval)
+  }, [runningJob, router, show])
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-0">
@@ -106,14 +166,12 @@ export default function AuditPage() {
             Configure your audit settings and select which services to include
           </CardDescription>
         </CardHeader>
-        
         <div className="relative h-2 bg-muted/30">
           <div 
             className="absolute h-full bg-primary transition-all duration-300" 
             style={{ width: `${(currentStep / totalSteps) * 100}%` }}
           ></div>
         </div>
-        
         <CardContent className="p-6">
           {currentStep === 1 && (
             <div className="space-y-6">
@@ -130,7 +188,6 @@ export default function AuditPage() {
                       className="mt-1.5"
                     />
                   </div>
-                  
                   <div>
                     <Label htmlFor="audit-description">Description (Optional)</Label>
                     <Input 
@@ -139,7 +196,6 @@ export default function AuditPage() {
                       className="mt-1.5"
                     />
                   </div>
-                  
                   <div className="flex space-x-4">
                     <div className="w-1/2">
                       <Label htmlFor="environment">Environment</Label>
@@ -167,7 +223,6 @@ export default function AuditPage() {
                   </div>
                 </div>
               </div>
-              
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Schedule</h3>
                 <div className="flex items-center space-x-2">
@@ -187,7 +242,6 @@ export default function AuditPage() {
               </div>
             </div>
           )}
-          
           {currentStep === 2 && (
             <div className="space-y-6">
               <div className="space-y-4">
@@ -195,12 +249,10 @@ export default function AuditPage() {
                 <p className="text-sm text-muted-foreground">
                   Choose which cloud services and resources to include in this audit
                 </p>
-                
                 <div className="grid gap-4 pt-2">
                   {auditServices.map((service) => {
                     const Icon = service.icon
                     const isSelected = selectedServices[service.id as keyof typeof selectedServices]
-                    
                     return (
                       <div 
                         key={service.id}
@@ -235,7 +287,6 @@ export default function AuditPage() {
               </div>
             </div>
           )}
-          
           {currentStep === 3 && (
             <div className="flex flex-col items-center justify-center py-6 space-y-6">
               <div className="rounded-full bg-emerald-100 p-3 dark:bg-emerald-900/30">
@@ -247,7 +298,6 @@ export default function AuditPage() {
                   Your audit "{auditName || 'Cloud Infrastructure Audit'}" has been configured and is ready to run.
                 </p>
               </div>
-              
               <div className="bg-muted/30 rounded-lg p-4 w-full max-w-md">
                 <h4 className="text-sm font-medium mb-3">Audit Summary</h4>
                 <ul className="space-y-2">
@@ -265,7 +315,6 @@ export default function AuditPage() {
                   </li>
                 </ul>
               </div>
-              
               <div className="flex items-center space-x-2 text-sm">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">Results will be available in your dashboard</span>
@@ -273,7 +322,6 @@ export default function AuditPage() {
             </div>
           )}
         </CardContent>
-        
         <CardFooter className="flex justify-between border-t bg-muted/20 px-6 py-4">
           <Button
             variant="outline"
@@ -282,22 +330,33 @@ export default function AuditPage() {
           >
             Previous
           </Button>
-          
           <div className="flex space-x-2">
             {currentStep < totalSteps && (
               <Button onClick={handleNextStep}>
                 Continue
               </Button>
             )}
-            
             {currentStep === totalSteps && (
-              <Button onClick={() => window.location.href = "/"} className="bg-emerald-600 hover:bg-emerald-700">
+              <Button onClick={handleStartAudit} className="bg-emerald-600 hover:bg-emerald-700" disabled={isLoading}>
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                 Start Audit
               </Button>
             )}
           </div>
         </CardFooter>
       </Card>
+      <Dialog open={progressOpen} onOpenChange={setProgressOpen}>
+        <DialogContent className="max-w-md text-center">
+          <DialogHeader>
+            <DialogTitle>Running Audit</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-4">
+            <Loader2 className="h-10 w-10 text-primary animate-spin" />
+            <div className="text-lg font-medium">Your audit is in progress...</div>
+            <div className="text-muted-foreground text-sm">This may take a few minutes depending on the size of your project and selected category.</div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 
