@@ -53,6 +53,36 @@ const routes = [
     href: "/network",
   },
   {
+    label: "Resource Utilization",
+    icon: BarChart3,
+    href: "/resource-utilization",
+  },
+  {
+    label: "Cost Allocation & Tagging",
+    icon: BarChart3,
+    href: "/cost-allocation",
+  },
+  {
+    label: "Budgeting & Forecasting",
+    icon: BarChart3,
+    href: "/budgeting",
+  },
+  {
+    label: "Discount Program Evaluation",
+    icon: BarChart3,
+    href: "/discounts",
+  },
+  {
+    label: "Storage Lifecycle Policies",
+    icon: Database,
+    href: "/storage-lifecycle",
+  },
+  {
+    label: "Monitoring & Alerts",
+    icon: ShieldCheck,
+    href: "/monitoring",
+  },
+  {
     label: "Cost",
     icon: BarChart3,
     href: "/cost",

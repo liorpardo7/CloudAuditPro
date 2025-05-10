@@ -11,7 +11,13 @@ const auditScripts = [
   'cost-audit.js',
   'data-protection-audit.js',
   'compliance-validator.js',
-  'bigquery-audit.js'
+  'bigquery-audit.js',
+  'resource-utilization-audit.js',
+  'cost-allocation-audit.js',
+  'budget-audit.js',
+  'discount-audit.js',
+  'storage-lifecycle-audit.js',
+  'monitoring-audit.js'
 ];
 
 const auditResults = {
