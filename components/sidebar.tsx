@@ -13,8 +13,10 @@ import {
   BarChart3,
   Settings,
   PlayCircle,
-  ClipboardList
+  ClipboardList,
+  FileText
 } from "lucide-react"
+import { useState } from "react"
 
 // New nested routes structure
 const routes = [
@@ -37,6 +39,28 @@ const routes = [
     label: "Security",
     icon: ShieldCheck,
     href: "/security",
+  },
+  {
+    label: "Compliance",
+    icon: ShieldCheck,
+    children: [
+      {
+        label: "Data Protection",
+        icon: ShieldCheck,
+        href: "/data-protection",
+      },
+      {
+        label: "Audit Logs",
+        icon: FileText,
+        href: "/compliance/audit-logs",
+      },
+      {
+        label: "Compliance Dashboard",
+        icon: ShieldCheck,
+        href: "/compliance",
+      },
+    ],
+    href: "/compliance",
   },
   {
     label: "Compute",
@@ -68,7 +92,7 @@ const routes = [
     href: "/network",
   },
   {
-    label: "Cost Management",
+    label: "Cost",
     icon: BarChart3,
     children: [
       {
@@ -97,12 +121,41 @@ const routes = [
         href: "/cost",
       },
     ],
-    href: "/cost-management",
+    href: "/cost",
   },
   {
     label: "Big Query",
     icon: Database,
+    children: [
+      {
+        label: "Overview",
+        icon: Database,
+        href: "/bigquery",
+      },
+      {
+        label: "Stale Partitioning",
+        icon: Database,
+        href: "/bigquery/stale-partitioning",
+      },
+      {
+        label: "Deprecated SQL UDFs",
+        icon: Database,
+        href: "/bigquery/deprecated-udfs",
+      },
+    ],
     href: "/bigquery",
+  },
+  {
+    label: "Operations",
+    icon: Server,
+    children: [
+      {
+        label: "DevOps",
+        icon: Server,
+        href: "/devops",
+      },
+    ],
+    href: "/operations",
   },
   {
     label: "Settings",
@@ -113,96 +166,86 @@ const routes = [
 
 export function Sidebar() {
   const pathname = usePathname()
-  // Only one parent can be open at a time, and it's the one whose child is active or was last clicked
-  const [openParent, setOpenParent] = React.useState<string | null>(null)
-
-  React.useEffect(() => {
-    // Expand parent if a child is active
-    for (const route of routes) {
-      if (route.children && route.children.some((child) => child.href === pathname)) {
-        setOpenParent(route.label)
-        return
-      }
-    }
-    // If on a parent route, open it
-    for (const route of routes) {
-      if (route.href === pathname && route.children) {
-        setOpenParent(route.label)
-        return
-      }
-    }
-  }, [pathname])
+  const [openParent, setOpenParent] = useState<string | null>(null)
 
   const handleToggle = (label: string) => {
     setOpenParent((prev) => (prev === label ? null : label))
   }
 
   return (
-    <div className="flex h-full w-[240px] flex-col bg-sidebar-background border-r shadow-sm">
+    <div className="flex h-full w-[240px] flex-col bg-sidebar-background border-r shadow-sm relative">
       <div className="flex h-16 items-center border-b px-6">
         <Link href="/" className="flex items-center">
           <span className="text-xl font-bold tracking-tight">CloudAuditPro</span>
         </Link>
       </div>
       <div className="flex-1 overflow-auto py-6 px-4">
-        <nav className="grid items-start gap-2">
+        <nav className="grid items-start gap-2 relative">
           {routes.map((route) => {
             if (!route.children) {
+              const isSelected = pathname === route.href
               return (
                 <Link
                   key={route.href}
                   href={route.href}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    pathname === route.href
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                    isSelected
+                      ? "bg-primary/10 border-l-4 border-primary text-primary font-bold shadow-sm"
                       : "text-sidebar-foreground opacity-80"
                   )}
+                  style={isSelected ? { boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' } : {}}
                 >
-                  <route.icon className="h-5 w-5" />
+                  <route.icon className={cn("h-5 w-5", isSelected ? "text-primary" : "")}/>
                   {route.label}
                 </Link>
               )
             }
-            // Parent with children (hybrid: only one open at a time)
             const isOpen = openParent === route.label
-            // Parent is active if any child is active or parent route is active
             const isParentActive =
               (route.children && route.children.some((child) => child.href === pathname)) || pathname === route.href
             return (
-              <div key={route.label}>
+              <div key={route.label} className="relative">
                 <button
                   type="button"
                   onClick={() => handleToggle(route.label)}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus:outline-none",
-                    isParentActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                    "flex w-full items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors focus:outline-none relative",
+                    isOpen || isParentActive
+                      ? "bg-primary/10 border-l-4 border-primary text-primary font-bold shadow-sm"
                       : "text-sidebar-foreground opacity-80"
                   )}
                   aria-expanded={isOpen}
                   aria-controls={`submenu-${route.label}`}
+                  style={isOpen || isParentActive ? { boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' } : {}}
                 >
-                  <route.icon className="h-5 w-5" />
+                  <route.icon className={cn("h-5 w-5 z-10", isOpen || isParentActive ? "text-primary" : "")}/>
                   {route.label}
+                  <span className="ml-auto z-10">
+                    <svg className={`h-5 w-5 font-bold transition-transform duration-200 ${isOpen ? 'rotate-90 text-primary' : 'text-muted-foreground'}`} fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
+                  </span>
                 </button>
                 {isOpen && (
-                  <div id={`submenu-${route.label}`} className="ml-7 mt-1 space-y-1">
-                    {route.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className={cn(
-                          "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                          pathname === child.href
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
-                            : "text-sidebar-foreground opacity-80"
-                        )}
-                      >
-                        <child.icon className="h-4 w-4" />
-                        {child.label}
-                      </Link>
-                    ))}
+                  <div id={`submenu-${route.label}`} className="ml-6 mt-1 space-y-1 border-l border-muted pl-3 bg-primary/5 rounded-md py-2">
+                    {route.children.map((child) => {
+                      const isSubSelected = pathname === child.href
+                      return (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className={cn(
+                            "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                            isSubSelected
+                              ? "bg-primary/20 border-l-4 border-primary text-primary font-bold shadow-sm"
+                              : "text-sidebar-foreground opacity-80"
+                          )}
+                          style={isSubSelected ? { boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' } : {}}
+                        >
+                          <child.icon className={cn("h-4 w-4", isSubSelected ? "text-primary" : "")}/>
+                          {child.label}
+                        </Link>
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -218,4 +261,9 @@ export function Sidebar() {
       </div>
     </div>
   )
-} 
+}
+
+// Add animation for drawer
+// In your global CSS (e.g., globals.css), add:
+// .animate-slide-in-right { animation: slideInRight 0.25s cubic-bezier(0.4,0,0.2,1) both; }
+// @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } 

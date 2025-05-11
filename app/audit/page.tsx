@@ -34,7 +34,7 @@ const AUDIT_STEPS = [
   { key: 'Finalizing', label: 'Finalizing', icon: CheckCircle2, fun: 'Wrapping up...' },
 ]
 
-function getCurrentStepIndex(currentStep) {
+function getCurrentStepIndex(currentStep: string) {
   // Map backend currentStep string to step index
   const stepMap = {
     'Initializing audit...': 0,
@@ -48,7 +48,7 @@ function getCurrentStepIndex(currentStep) {
     'Running audit...': 0,
   }
   // Try to match by key or fallback to 0
-  return stepMap[currentStep] ?? AUDIT_STEPS.findIndex(s => currentStep.includes(s.key)) ?? 0
+  return stepMap[currentStep as keyof typeof stepMap] ?? AUDIT_STEPS.findIndex(s => currentStep.includes(s.key)) ?? 0
 }
 
 function AuditPageContent() {
@@ -60,7 +60,10 @@ function AuditPageContent() {
     security: true,
     cost: true,
     bigqueryStale: true,
-    bigqueryUdf: true
+    bigqueryUdf: true,
+    dataProtection: true,
+    devops: true,
+    compliance: true
   })
   const [isLoading, setIsLoading] = React.useState(false)
   const [progressOpen, setProgressOpen] = React.useState(false)
@@ -108,7 +111,7 @@ function AuditPageContent() {
       } else {
         throw new Error(data.error || 'Failed to start audit')
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false)
       setProgressOpen(false)
       toast({
@@ -160,7 +163,7 @@ function AuditPageContent() {
             progress: data.progress || 0
           })
         }
-      } catch (error) {
+      } catch (error: any) {
         setRunningJob(null)
         setIsLoading(false)
         setProgressOpen(false)
@@ -278,6 +281,45 @@ function AuditPageContent() {
                   }
                 />
                 <Label htmlFor="bigqueryUdf">BigQuery: Deprecated SQL UDFs</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="dataProtection"
+                  checked={selectedServices.dataProtection}
+                  onCheckedChange={(checked) =>
+                    setSelectedServices((prev) => ({
+                      ...prev,
+                      dataProtection: checked as boolean
+                    }))
+                  }
+                />
+                <Label htmlFor="dataProtection">Data Protection</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="devops"
+                  checked={selectedServices.devops}
+                  onCheckedChange={(checked) =>
+                    setSelectedServices((prev) => ({
+                      ...prev,
+                      devops: checked as boolean
+                    }))
+                  }
+                />
+                <Label htmlFor="devops">DevOps</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="compliance"
+                  checked={selectedServices.compliance}
+                  onCheckedChange={(checked) =>
+                    setSelectedServices((prev) => ({
+                      ...prev,
+                      compliance: checked as boolean
+                    }))
+                  }
+                />
+                <Label htmlFor="compliance">Compliance</Label>
               </div>
             </div>
             <Button

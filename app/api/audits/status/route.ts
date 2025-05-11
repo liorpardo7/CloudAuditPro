@@ -14,26 +14,20 @@ export async function GET(request: Request) {
   const status = getJobStatus(jobId)
   if (!status) {
     // Try to return results if the results file exists
-    let auditResults = null
-    let bigqueryResults = null
     try {
-      const auditPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/audit-suite-results.json')
-      const bigqueryPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/bigquery-audit-results.json')
-      if (fs.existsSync(auditPath)) {
-        auditResults = JSON.parse(fs.readFileSync(auditPath, 'utf8'))
-      }
-      if (fs.existsSync(bigqueryPath)) {
-        bigqueryResults = JSON.parse(fs.readFileSync(bigqueryPath, 'utf8'))
+      const auditSuitePath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/audit-suite-results.json')
+      if (fs.existsSync(auditSuitePath)) {
+        const auditResults = JSON.parse(fs.readFileSync(auditSuitePath, 'utf8'))
+        return NextResponse.json({
+          status: 'completed',
+          auditResults,
+          timestamp: auditResults.timestamp,
+          projectId: auditResults.projectId,
+          summary: auditResults.summary
+        })
       }
     } catch (err) {
       console.error('Error reading audit results:', err)
-    }
-    if (auditResults || bigqueryResults) {
-      return NextResponse.json({
-        status: 'completed',
-        auditResults,
-        bigqueryResults
-      })
     }
     return NextResponse.json({ error: 'Job not found' }, { status: 404 })
   }
@@ -62,25 +56,21 @@ export async function GET(request: Request) {
   }
 
   // When job is complete, include audit results
-  let auditResults = null
-  let bigqueryResults = null
   try {
-    const auditPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/audit-suite-results.json')
-    const bigqueryPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/bigquery-audit-results.json')
-    if (fs.existsSync(auditPath)) {
-      auditResults = JSON.parse(fs.readFileSync(auditPath, 'utf8'))
-    }
-    if (fs.existsSync(bigqueryPath)) {
-      bigqueryResults = JSON.parse(fs.readFileSync(bigqueryPath, 'utf8'))
+    const auditSuitePath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/audit-suite-results.json')
+    if (fs.existsSync(auditSuitePath)) {
+      const auditResults = JSON.parse(fs.readFileSync(auditSuitePath, 'utf8'))
+      return NextResponse.json({
+        ...status,
+        auditResults,
+        timestamp: auditResults.timestamp,
+        projectId: auditResults.projectId,
+        summary: auditResults.summary
+      })
     }
   } catch (err) {
-    // Log and ignore errors for now
     console.error('Error reading audit results:', err)
   }
 
-  return NextResponse.json({
-    ...status,
-    auditResults,
-    bigqueryResults
-  })
+  return NextResponse.json(status)
 } 
