@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { limiter, csrfProtection, securityHeaders, cookieMiddleware } = require('./middleware/security');
 const gcp = require('./scripts/gcp-audit/gcpClient');
+const auditRoutes = require('./routes/audit');
 require('dotenv').config();
 
 // Validate required environment variables
@@ -242,6 +243,9 @@ app.get('/api/v2/cloud-accounts', authenticateToken, (req, res) => {
   // TODO: Implement cloud accounts logic
   res.json({ accounts: [] });
 });
+
+// Register routes
+app.use('/api/audit', auditRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

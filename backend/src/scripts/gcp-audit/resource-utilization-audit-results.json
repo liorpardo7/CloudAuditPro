@@ -1,0 +1,323 @@
+{
+  "timestamp": "2025-05-11T19:17:20.225Z",
+  "projectId": "dba-inventory-services-prod",
+  "resourceUtilization": {
+    "computeEngine": {
+      "vms": [
+        {
+          "name": "auto-inventory-service-1",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-standard-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "auto-inventory-service-2",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-standard-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "cfs-service",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-highmem-8",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/n1-standard-1",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/n1-standard-1",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/n1-standard-1",
+          "status": "RUNNING"
+        },
+        {
+          "name": "unite-google-cfs",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-highmem-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "utility-service",
+          "zone": "us-central1-a",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-a/machineTypes/e2-standard-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "dbaops",
+          "zone": "us-central1-f",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-f/machineTypes/e2-medium",
+          "status": "RUNNING"
+        },
+        {
+          "name": "filemage-gateway-linux-dba-vm",
+          "zone": "us-central1-f",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-f/machineTypes/n2-standard-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "googleproductswin",
+          "zone": "us-central1-f",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-central1-f/machineTypes/c2-standard-8",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+          "zone": "us-east1-b",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+          "zone": "us-east1-b",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+          "zone": "us-east1-b",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+          "zone": "us-east1-b",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-2",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+          "zone": "us-east1-b",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+          "status": "RUNNING"
+        },
+        {
+          "name": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+          "zone": "us-east1-b",
+          "cpuUtilization": [],
+          "memoryUtilization": [],
+          "diskIO": [],
+          "machineType": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/zones/us-east1-b/machineTypes/e2-standard-4",
+          "status": "RUNNING"
+        }
+      ],
+      "persistentDisks": [
+        {
+          "name": "auto-inventory-service-1",
+          "zone": "us-central1-a",
+          "size": "50",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "auto-inventory-service-2",
+          "zone": "us-central1-a",
+          "size": "50",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "cfs-service",
+          "zone": "us-central1-a",
+          "size": "200",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+          "zone": "us-central1-a",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+          "zone": "us-central1-a",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+          "zone": "us-central1-a",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "pvc-d1985ba8-a040-47b7-b8f5-381ece5117b6",
+          "zone": "us-central1-a",
+          "size": "2",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "unite-google-cfs",
+          "zone": "us-central1-a",
+          "size": "20",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "utility-service",
+          "zone": "us-central1-a",
+          "size": "200",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "dbaops",
+          "zone": "us-central1-f",
+          "size": "10",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "filemage-gateway-linux-dba-vm",
+          "zone": "us-central1-f",
+          "size": "30",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "googleproductswin",
+          "zone": "us-central1-f",
+          "size": "200",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+          "zone": "us-east1-b",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+          "zone": "us-east1-b",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+          "zone": "us-east1-b",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+          "zone": "us-east1-b",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+          "zone": "us-east1-b",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        },
+        {
+          "name": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+          "zone": "us-east1-b",
+          "size": "100",
+          "diskIO": [],
+          "status": "READY"
+        }
+      ],
+      "loadBalancers": [],
+      "unusedIPs": []
+    },
+    "cloudSQL": {
+      "instances": []
+    },
+    "gke": {
+      "clusters": [],
+      "nodes": []
+    }
+  },
+  "idleVMs": [],
+  "idleDisks": [],
+  "idleDatabases": [],
+  "recommendations": [
+    {
+      "category": "Resource Utilization",
+      "issue": "Failed to audit Compute Engine resources",
+      "recommendation": "Check API permissions and try again",
+      "error": "Missing required parameters: region"
+    },
+    {
+      "category": "Resource Utilization",
+      "issue": "Failed to audit Cloud SQL instances",
+      "recommendation": "Check API permissions and try again",
+      "error": "Login Required."
+    },
+    {
+      "category": "Resource Utilization",
+      "issue": "Failed to audit GKE resources",
+      "recommendation": "Check API permissions and try again",
+      "error": "Login Required."
+    }
+  ]
+}

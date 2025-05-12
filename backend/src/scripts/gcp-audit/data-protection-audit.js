@@ -39,7 +39,11 @@ async function auditDataProtection(projectId = 'dba-inventory-services-prod') {
     dataProtection: {
       dataClassification: {},
       privacyControls: {}
-    }
+    },
+    residencyFindings: [],
+    transferFindings: [],
+    privacyFindings: [],
+    recommendations: []
   };
 
   try {

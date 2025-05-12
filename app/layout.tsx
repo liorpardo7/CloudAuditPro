@@ -5,7 +5,8 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster as ShadcnToaster } from "@/components/ui/toaster"
+import { Toaster } from "sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -37,7 +38,8 @@ export default function RootLayout({
               </main>
             </div>
           </div>
-          <Toaster />
+          <ShadcnToaster />
+          <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>
       </body>
     </html>

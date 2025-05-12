@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -33,4 +33,29 @@ model OAuthToken {
   scopes       String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model AuditCategory {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  items       AuditItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model AuditItem {
+  id          String       @id @default(uuid())
+  category    AuditCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String
+  description String?
+  status      String       // 'passing' | 'failing' | 'not_started' | 'not_applicable'
+  scriptFile  String?      // Name of the script that implements this audit
+  apiEndpoint String?      // Required API endpoint for this audit
+  permissions String[]     // Required permissions for this audit
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  lastRun     DateTime?
+  lastResult  String?      // JSON string containing last audit results
 }

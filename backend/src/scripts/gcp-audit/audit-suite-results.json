@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-10T16:16:12.992Z",
+  "timestamp": "2025-05-11T16:44:32.706Z",
   "projectId": "dba-inventory-services-prod",
   "audits": {
     "compute-audit.js": true,
@@ -9,7 +9,13 @@
     "cost-audit.js": true,
     "data-protection-audit.js": true,
     "compliance-validator.js": true,
-    "bigquery-audit.js": true
+    "bigquery-audit.js": true,
+    "resource-utilization-audit.js": true,
+    "cost-allocation-audit.js": true,
+    "budget-audit.js": true,
+    "discount-audit.js": true,
+    "storage-lifecycle-audit.js": true,
+    "monitoring-audit.js": true
   },
   "summary": {
     "total": 0,

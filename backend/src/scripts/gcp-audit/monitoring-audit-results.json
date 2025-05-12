@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-05-11T16:52:12.041Z",
+  "projectId": "dba-inventory-services-prod",
+  "monitoring": {
+    "alertPolicies": [],
+    "notificationChannels": [],
+    "costAnomalyAlerts": [],
+    "missingAlerts": [],
+    "recommendations": [
+      {
+        "category": "Monitoring",
+        "issue": "No cost anomaly alerts configured",
+        "recommendation": "Configure cost anomaly alerts to detect unexpected spending"
+      }
+    ]
+  }
+}

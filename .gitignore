@@ -1,7 +1,6 @@
 # GCP Service Account Credentials
-*-8a97ca8265b5.json
-*.json.key
-credentials.json
+*dba-inventory-services*.json
+*credentials*.json
 
 # Node.js
 node_modules/
@@ -9,10 +8,6 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Environment variables
-.env
-.env.local
-.env.*.local
 
 # IDE
 .idea/
@@ -61,4 +56,17 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts 
+
+# Track TypeScript declaration file
+next-env.d.ts
+
+# Include all source code and configuration files, even .env files
+# Note: For personal use, you're tracking .env files but be careful if the repo is ever made public
+!.env
+!.env.local
+!.env.*.local
+!prisma/migrations/
+!backend/prisma/migrations/
+
+# Include documentation
+!*.md

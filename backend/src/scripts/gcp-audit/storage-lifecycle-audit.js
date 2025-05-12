@@ -1,5 +1,7 @@
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
+const fs = require('fs');
+const path = require('path');
 
 class StorageLifecycleAudit extends BaseValidator {
   async auditAll() {
@@ -13,6 +15,9 @@ class StorageLifecycleAudit extends BaseValidator {
         buckets: [],
         standardTierUsage: [],
         unusedBuckets: [],
+        oldSnapshots: [],
+        coldData: [],
+        lifecyclePolicies: [],
         recommendations: []
       }
     };
@@ -244,8 +249,6 @@ class StorageLifecycleAudit extends BaseValidator {
 }
 
 if (require.main === module) {
-  const fs = require('fs');
-  const path = require('path');
   (async () => {
     const audit = new StorageLifecycleAudit();
     const results = await audit.auditAll();

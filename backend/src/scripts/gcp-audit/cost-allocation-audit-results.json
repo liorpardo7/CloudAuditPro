@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-05-11T16:52:05.060Z",
+  "projectId": "dba-inventory-services-prod",
+  "costAllocation": {
+    "taggingCoverage": {
+      "total": 0,
+      "tagged": 0,
+      "percentage": null
+    },
+    "missingLabels": [],
+    "inconsistentTags": [],
+    "resources": []
+  },
+  "recommendations": []
+}

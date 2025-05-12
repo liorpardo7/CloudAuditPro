@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-10T16:20:53.027Z",
+  "timestamp": "2025-05-11T16:49:20.796Z",
   "projectId": "unknown",
   "bigquery": {
     "stalePartitioning": [
@@ -16,7 +16,7 @@
       {
         "table": "inventory_data",
         "partition": "created_date",
-        "lastModified": "2025-05-10T11:06:08.496Z"
+        "lastModified": "2025-05-11T11:05:54.162Z"
       },
       {
         "table": "inventory_data_bing",
@@ -31,22 +31,22 @@
       {
         "table": "inventory_data_ftp_v2",
         "partition": "created_date",
-        "lastModified": "2025-05-10T16:19:48.739Z"
+        "lastModified": "2025-05-11T16:49:26.134Z"
       },
       {
         "table": "inventory_data_marketcheck",
         "partition": "created_date",
-        "lastModified": "2025-05-10T11:05:26.009Z"
+        "lastModified": "2025-05-11T11:05:40.275Z"
       },
       {
         "table": "inventory_data_marketcheck_motorcycle",
         "partition": "created_date",
-        "lastModified": "2025-05-10T05:01:09.476Z"
+        "lastModified": "2025-05-11T05:01:38.678Z"
       },
       {
         "table": "inventory_data_marketcheck_rv",
         "partition": "created_date",
-        "lastModified": "2025-05-10T05:01:29.751Z"
+        "lastModified": "2025-05-11T05:01:29.227Z"
       }
     ],
     "deprecatedUDFs": []

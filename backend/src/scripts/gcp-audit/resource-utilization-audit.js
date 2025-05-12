@@ -1,5 +1,7 @@
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
+const fs = require('fs');
+const path = require('path');
 
 class ResourceUtilizationAudit extends BaseValidator {
   async auditAll() {
@@ -24,6 +26,9 @@ class ResourceUtilizationAudit extends BaseValidator {
           nodes: []
         }
       },
+      idleVMs: [],
+      idleDisks: [],
+      idleDatabases: [],
       recommendations: []
     };
 
@@ -311,16 +316,16 @@ class ResourceUtilizationAudit extends BaseValidator {
   }
 }
 
+async function runResourceUtilizationAudit() {
+  const audit = new ResourceUtilizationAudit();
+  const results = await audit.auditAll();
+  const resultsPath = path.join(__dirname, 'resource-utilization-audit-results.json');
+  fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
+  console.log('Resource Utilization Audit completed. Results written to', resultsPath);
+}
+
 if (require.main === module) {
-  const fs = require('fs');
-  const path = require('path');
-  (async () => {
-    const audit = new ResourceUtilizationAudit();
-    const results = await audit.auditAll();
-    const resultsPath = path.join(__dirname, 'resource-utilization-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Resource Utilization Audit completed. Results written to', resultsPath);
-  })();
+  runResourceUtilizationAudit();
 }
 
 module.exports = ResourceUtilizationAudit; 

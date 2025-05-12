@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id       String       @id @default(uuid())
+  name     String
+  status   String // 'active' | 'inactive'
+  lastSync DateTime
+  userId   String
+  tokens   OAuthToken[]
+}
+
+model OAuthToken {
+  id           String   @id @default(uuid())
+  project      Project  @relation(fields: [projectId], references: [id])
+  projectId    String
+  accessToken  String
+  refreshToken String
+  expiry       DateTime
+  scopes       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AuditCategory {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  items       AuditItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model AuditItem {
+  id          String        @id @default(uuid())
+  category    AuditCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String
+  description String?
+  status      String // 'passing' | 'failing' | 'not_started' | 'not_applicable'
+  scriptFile  String? // Name of the script that implements this audit
+  apiEndpoint String? // Required API endpoint for this audit
+  permissions String[] // Required permissions for this audit
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  lastRun     DateTime?
+  lastResult  String? // JSON string containing last audit results
+}

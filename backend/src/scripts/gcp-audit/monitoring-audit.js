@@ -1,5 +1,7 @@
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
+const fs = require('fs');
+const path = require('path');
 
 class MonitoringAudit extends BaseValidator {
   async auditAll() {
@@ -15,7 +17,9 @@ class MonitoringAudit extends BaseValidator {
         costAnomalyAlerts: [],
         missingAlerts: [],
         recommendations: []
-      }
+      },
+      dashboards: [],
+      logConfigs: []
     };
 
     // Get all projects
@@ -255,16 +259,13 @@ class MonitoringAudit extends BaseValidator {
   }
 }
 
-if (require.main === module) {
-  const fs = require('fs');
-  const path = require('path');
-  (async () => {
-    const audit = new MonitoringAudit();
-    const results = await audit.auditAll();
-    const resultsPath = path.join(__dirname, 'monitoring-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Monitoring Audit completed. Results written to', resultsPath);
-  })();
+async function runMonitoringAudit() {
+  const audit = new MonitoringAudit();
+  const results = await audit.auditAll();
+  fs.writeFileSync(path.join(__dirname, 'monitoring-audit-results.json'), JSON.stringify(results, null, 2));
+  console.log('Monitoring audit completed. Results saved to monitoring-audit-results.json');
 }
+
+runMonitoringAudit();
 
 module.exports = MonitoringAudit; 

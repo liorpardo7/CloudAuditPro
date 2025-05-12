@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-05-11T19:52:55.311Z",
+  "projectId": "dba-inventory-services-prod",
+  "storageLifecycle": {
+    "buckets": [],
+    "standardTierUsage": [],
+    "unusedBuckets": [],
+    "oldSnapshots": [],
+    "coldData": [],
+    "lifecyclePolicies": [],
+    "recommendations": []
+  }
+}
