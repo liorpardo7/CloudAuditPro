@@ -1,12 +1,5 @@
 {
-<<<<<<< HEAD
-  "timestamp": "2025-05-14T00:40:40.040Z",
-  "iamPolicies": [],
-  "serviceAccounts": [],
-  "keyFindings": [],
-  "recommendations": []
-=======
-  "timestamp": "2025-05-14T00:15:24.571Z",
+  "timestamp": "2025-05-14T14:34:39.222Z",
   "projectId": "test-project",
   "findings": [],
   "summary": {
@@ -16,5 +9,4 @@
     "costSavingsPotential": 0
   },
   "errors": []
->>>>>>> apitesting
 }

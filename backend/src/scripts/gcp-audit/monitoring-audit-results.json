@@ -1,23 +1,148 @@
 {
-<<<<<<< HEAD
-  "timestamp": "2025-05-14T00:40:40.732Z",
-=======
-  "timestamp": "2025-05-14T00:15:25.208Z",
->>>>>>> apitesting
+  "timestamp": "2025-05-14T14:34:40.969Z",
   "projectId": "dba-inventory-services-prod",
-  "monitoring": {
-    "alertPolicies": [],
-    "notificationChannels": [],
-    "costAnomalyAlerts": [],
-    "missingAlerts": [],
-    "recommendations": [
-      {
-        "category": "Monitoring",
-        "issue": "No cost anomaly alerts configured",
-        "recommendation": "Configure cost anomaly alerts to detect unexpected spending"
+  "findings": [
+    {
+      "check": "Cost Anomaly Alerts",
+      "result": "0 cost-related alerts found",
+      "passed": false,
+      "details": []
+    },
+    {
+      "check": "Alert Notification Channels",
+      "result": "20 notification channels found",
+      "passed": true,
+      "details": [
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "dba-inventory-services alert",
+          "enabled": true
+        },
+        {
+          "type": "slack",
+          "displayName": "Auto-Inventory-CFS-Service",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "ad-generator alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "ad-generator alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "Inderpreet Singh",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "ad-generator alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory-cfs alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "Ravish",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "auto-inventory alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "dba-inventory-services alert",
+          "enabled": true
+        },
+        {
+          "type": "email",
+          "displayName": "Ravish DBA",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "check": "Alert Effectiveness",
+      "result": "14 incidents in last 30 days",
+      "passed": true,
+      "details": {
+        "totalIncidents": 14,
+        "bySeverity": {
+          "CRITICAL": 0,
+          "WARNING": 0,
+          "INFO": 0
+        }
       }
-    ]
+    }
+  ],
+  "summary": {
+    "totalChecks": 5,
+    "passed": 2,
+    "failed": 3,
+    "costSavingsPotential": 0
   },
-  "dashboards": [],
-  "logConfigs": []
+  "errors": [
+    {
+      "check": "Critical Alerts Coverage",
+      "error": "Invalid field \"filter\" [value ==\"severity=CRITICAL\"]; member reference \"severity\" is not valid; No such field: severity."
+    },
+    {
+      "check": "Alert Coverage Analysis",
+      "error": "Cannot read properties of undefined (reading 'filter')"
+    }
+  ]
 }

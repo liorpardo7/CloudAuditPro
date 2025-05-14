@@ -1,42 +1,47 @@
 {
-  "timestamp": "2025-05-14T00:28:38.353Z",
-  "projectId": "test-project",
+  "timestamp": "2025-05-14T14:36:52.389Z",
+  "projectId": "dba-inventory-services-prod",
   "findings": [
     {
       "permission": "compute.instances.list",
       "status": "PASSED",
       "severity": "INFO",
-      "description": "Service account has compute.instances.list permission"
+      "description": "Service account has compute.instances.list permission",
+      "projectId": "dba-inventory-services-prod"
     },
     {
       "permission": "compute.disks.list",
-      "status": "PASSED",
-      "severity": "INFO",
-      "description": "Service account has compute.disks.list permission"
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing compute.disks.list permission",
+      "projectId": "dba-inventory-services-prod"
     },
     {
       "permission": "storage.buckets.list",
       "status": "PASSED",
       "severity": "INFO",
-      "description": "Service account has storage.buckets.list permission"
+      "description": "Service account has storage.buckets.list permission",
+      "projectId": "dba-inventory-services-prod"
     },
     {
       "permission": "iam.serviceAccounts.list",
-      "status": "FAILED",
-      "severity": "WARNING",
-      "description": "Service account is missing iam.serviceAccounts.list permission"
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has iam.serviceAccounts.list permission",
+      "projectId": "dba-inventory-services-prod"
     },
     {
       "permission": "monitoring.timeSeries.list",
-      "status": "FAILED",
-      "severity": "WARNING",
-      "description": "Service account is missing monitoring.timeSeries.list permission"
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has monitoring.timeSeries.list permission",
+      "projectId": "dba-inventory-services-prod"
     }
   ],
   "summary": {
     "total": 5,
-    "passed": 3,
-    "failed": 2
+    "passed": 4,
+    "failed": 1
   },
   "errors": []
 }

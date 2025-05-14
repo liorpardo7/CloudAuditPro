@@ -64,11 +64,39 @@ async function auditNetworkingResources() {
       });
       results.networkingResources.vpcs = vpcsResponse.data.items || [];
       console.log(`Found ${results.networkingResources.vpcs.length} VPCs`);
+
+      // Audit VPC Peering
+      for (const vpc of vpcsResponse.data.items || []) {
+        if (vpc.peerings) {
+          vpc.peerings.forEach(peering => {
+            results.networkingResources.vpcs.push({
+              name: vpc.name,
+              peering
+            });
+          });
+        }
+        // Private Service Access
+        if (vpc.subnetworks) {
+          for (const subnetUrl of vpc.subnetworks) {
+            const subnetName = subnetUrl.split('/').pop();
+            const subnet = results.networkingResources.subnets.find(s => s.name === subnetName);
+            if (subnet && subnet.purpose === 'PRIVATE_SERVICE_CONNECT') {
+              results.recommendations.push({
+                category: 'Networking',
+                issue: 'Private Service Access subnet found',
+                recommendation: 'Review Private Service Access subnets for least privilege',
+                resource: subnet.name
+              });
+            }
+          }
+        }
+      }
+      console.log('Checked VPC peering and private service access.');
     } catch (error) {
-      console.error('Error auditing VPCs:', error.message);
+      console.error('Error auditing VPC peering:', error.message);
       results.recommendations.push({
         category: 'Networking',
-        issue: 'Failed to retrieve VPC information',
+        issue: 'Failed to retrieve VPC peering information',
         recommendation: 'Check compute.networks.list permission'
       });
     }
@@ -413,6 +441,43 @@ function generateNetworkingRecommendations(results) {
         resource: tunnel.name,
         region: tunnel.region
       });
+    }
+  });
+
+  // Check routes for default internet gateway and NAT usage
+  results.networkingResources.routes.forEach(route => {
+    if (route.destRange === '0.0.0.0/0') {
+      if (route.nextHopGateway && route.nextHopGateway.includes('default-internet-gateway')) {
+        results.recommendations.push({
+          category: 'Security',
+          issue: 'Default route to internet gateway',
+          recommendation: 'Restrict default routes to internet gateway; use NAT where possible',
+          resource: route.name
+        });
+      }
+      if (route.nextHopNat) {
+        results.recommendations.push({
+          category: 'Networking',
+          issue: 'Default route via Cloud NAT',
+          recommendation: 'Ensure NAT is used for all subnets needing outbound internet',
+          resource: route.name
+        });
+      }
+    }
+  });
+
+  // Check VPC peering security
+  results.networkingResources.vpcs.forEach(vpc => {
+    if (vpc.peering) {
+      if (vpc.peering.exportCustomRoutes || vpc.peering.importCustomRoutes) {
+        results.recommendations.push({
+          category: 'Security',
+          issue: 'VPC peering exports/imports custom routes',
+          recommendation: 'Review peering custom route settings for least privilege',
+          resource: vpc.name,
+          peering: vpc.peering.name
+        });
+      }
     }
   });
 }

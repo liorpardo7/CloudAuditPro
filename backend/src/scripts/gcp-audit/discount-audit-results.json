@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "timestamp": "2025-05-14T00:40:39.950Z",
-=======
-  "timestamp": "2025-05-14T00:15:24.483Z",
->>>>>>> apitesting
+  "timestamp": "2025-05-14T14:34:34.482Z",
   "projectId": "dba-inventory-services-prod",
   "discountPrograms": {
     "commitments": [],

@@ -82,6 +82,24 @@ async function auditStorageResources() {
       }
 
       try {
+        // Get bucket metadata for additional checks
+        const metadataResponse = await storage.buckets.get({
+          bucket: bucket.name
+        });
+        const meta = metadataResponse.data;
+        // Public Access Prevention
+        bucket.publicAccessPrevention = meta.iamConfiguration?.publicAccessPrevention || 'unspecified';
+        // Bucket Policy Only
+        bucket.bucketPolicyOnly = meta.iamConfiguration?.bucketPolicyOnly?.enabled || false;
+        // Object-level logging (logging.logBucket)
+        bucket.objectLevelLogging = !!meta.logging?.logBucket;
+        // Bucket Lock (retentionPolicy.isLocked)
+        bucket.retentionPolicyLocked = !!meta.retentionPolicy?.isLocked;
+      } catch (error) {
+        console.error(`Error getting metadata for bucket ${bucket.name}:`, error.message);
+      }
+
+      try {
         // Get bucket lifecycle rules
         console.log('Getting lifecycle rules...');
         const lifecycleResponse = await storage.buckets.get({
@@ -217,6 +235,46 @@ function generateStorageRecommendations(results) {
         category: 'Security',
         issue: 'Default encryption not configured',
         recommendation: 'Configure default encryption using Cloud KMS',
+        resource: bucket.name
+      });
+    }
+
+    // Check for public access prevention
+    if (bucket.publicAccessPrevention !== 'enforced') {
+      results.recommendations.push({
+        category: 'Security',
+        issue: 'Public access prevention not enforced',
+        recommendation: 'Enforce public access prevention on the bucket',
+        resource: bucket.name
+      });
+    }
+
+    // Check for bucketPolicyOnly (legacy)
+    if (!bucket.iamConfiguration?.uniformBucketLevelAccess?.enabled && !bucket.bucketPolicyOnly) {
+      results.recommendations.push({
+        category: 'Security',
+        issue: 'Legacy bucket policy only not enabled',
+        recommendation: 'Enable uniform bucket-level access or bucketPolicyOnly for better security',
+        resource: bucket.name
+      });
+    }
+
+    // Check for object-level logging
+    if (!bucket.objectLevelLogging) {
+      results.recommendations.push({
+        category: 'Monitoring',
+        issue: 'Object-level logging not enabled',
+        recommendation: 'Enable object-level logging for better auditability',
+        resource: bucket.name
+      });
+    }
+
+    // Check for bucket lock
+    if (bucket.retentionPolicyLocked === false && bucket.retentionPolicy) {
+      results.recommendations.push({
+        category: 'Compliance',
+        issue: 'Retention policy not locked',
+        recommendation: 'Lock the retention policy to prevent changes',
         resource: bucket.name
       });
     }

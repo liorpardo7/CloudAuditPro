@@ -4,26 +4,31 @@ const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
 const path = require('path');
 
+// Load service account credentials
+const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
+const projectId = credentials.project_id;
+
+// Initialize auth client
+const auth = new google.auth.JWT(
+  credentials.client_email,
+  null,
+  credentials.private_key,
+  ['https://www.googleapis.com/auth/cloud-platform']
+);
+
 class ResourceUtilizationAudit extends BaseValidator {
   constructor() {
     super();
-    this.compute = google.compute('v1');
-    this.monitoring = google.monitoring('v3');
-    this.sql = google.sqladmin('v1beta4');
-    this.container = google.container('v1');
-    this.auth = new google.auth.GoogleAuth({
-      scopes: [
-        'https://www.googleapis.com/auth/cloud-platform',
-        'https://www.googleapis.com/auth/monitoring.read'
-      ]
-    });
+    this.compute = google.compute({ version: 'v1', auth });
+    this.monitoring = google.monitoring({ version: 'v3', auth });
+    this.sql = google.sqladmin({ version: 'v1beta4', auth });
+    this.container = google.container({ version: 'v1', auth });
   }
 
   async auditAll() {
     await this.initialize();
     console.log('Starting resource utilization audit...\n');
 
-    const projectId = process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod';
     const results = {
       timestamp: new Date().toISOString(),
       projectId,
@@ -70,7 +75,6 @@ class ResourceUtilizationAudit extends BaseValidator {
       costSavingsPotential: 0
     };
     try {
-      const auth = await this.auth.getClient();
       const project = projectId;
       // Get all regions
       const regionsResponse = await this.compute.regions.list({ project });
@@ -79,7 +83,7 @@ class ResourceUtilizationAudit extends BaseValidator {
         const zonesResponse = await this.compute.zones.list({ project, filter: `region eq .*${region}` });
         for (const zone of zonesResponse.data.items) {
           // Get VM instances
-          const instancesResponse = await this.compute.instances.list({ auth, project, zone: zone.name });
+          const instancesResponse = await this.compute.instances.list({ project, zone: zone.name });
           if (instancesResponse.data.items) {
             for (const instance of instancesResponse.data.items) {
               if (instance.status !== 'RUNNING') continue;
@@ -130,7 +134,7 @@ class ResourceUtilizationAudit extends BaseValidator {
             }
           }
           // Get persistent disks
-          const disksResponse = await this.compute.disks.list({ auth, project, zone: zone.name });
+          const disksResponse = await this.compute.disks.list({ project, zone: zone.name });
           if (disksResponse.data.items) {
             for (const disk of disksResponse.data.items) {
               const diskIO = await this.getMetricData('compute.googleapis.com/instance/disk/read_bytes_count', disk.id);
@@ -146,7 +150,7 @@ class ResourceUtilizationAudit extends BaseValidator {
         }
       }
       // Get load balancers
-      const loadBalancersResponse = await this.compute.forwardingRules.list({ auth, project });
+      const loadBalancersResponse = await this.compute.forwardingRules.list({ project });
       if (loadBalancersResponse.data.items) {
         for (const lb of loadBalancersResponse.data.items) {
           const traffic = await this.getMetricData('compute.googleapis.com/instance/network/received_bytes_count', lb.id);
@@ -159,7 +163,7 @@ class ResourceUtilizationAudit extends BaseValidator {
         }
       }
       // Get unused IPs
-      const addressesResponse = await this.compute.addresses.list({ auth, project });
+      const addressesResponse = await this.compute.addresses.list({ project });
       if (addressesResponse.data.items) {
         for (const ip of addressesResponse.data.items) {
           if (!ip.users) {

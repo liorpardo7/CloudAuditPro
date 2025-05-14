@@ -2,515 +2,233 @@ const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-
-// Initialize auth client
-const auth = new google.auth.GoogleAuth({
-  credentials: credentials,
-  scopes: [
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/compute.readonly',
-    'https://www.googleapis.com/auth/monitoring.read'
-  ]
-});
+const auth = require('./auth');
 
 // Initialize the Compute API client with auth
-const compute = google.compute({
-  version: 'v1',
-  auth: auth
-});
-
-const monitoring = google.monitoring({
-  version: 'v1',
-  auth: auth
-});
+const compute = google.compute('v1');
+const monitoring = google.monitoring('v3');
 
 const recommender = google.recommender({
   version: 'v1',
-  auth: auth
+  auth: auth.getAuthClient()
 });
 
-async function auditComputeResources() {
+async function runComputeAudit() {
   try {
-    console.log('Starting compute audit...');
-    const results = {
-      timestamp: new Date().toISOString(),
-      projectId: 'dba-inventory-services-prod',
-      computeResources: {
-        vms: [],
-        gkeClusters: [],
-        instanceGroups: [],
-        instanceTemplates: [],
-        diskSnapshots: [],
-        diskImages: [],
-        reservations: [],
-        commitments: [],
-        machineTypes: [],
-        utilizationMetrics: []
-      },
-      recommendations: []
+    const authClient = await auth.getAuthClient();
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    
+    const findings = [];
+    const errors = [];
+    
+    // VM Instance Inventory
+    console.log('Starting VM instance inventory...');
+    const instances = await listAllInstances(authClient, projectId);
+    
+    // Check instance types and sizes
+    const machineTypes = await listMachineTypes(authClient, projectId);
+    
+    // Analyze each instance
+    for (const instance of instances) {
+      const instanceFindings = await analyzeInstance(authClient, projectId, instance, machineTypes);
+      findings.push(...instanceFindings);
+    }
+    
+    // Generate summary
+    const summary = {
+      totalInstances: instances.length,
+      findings: findings.length,
+      errors: errors.length
     };
-
-    // Get all regions first
-    const regionsResponse = await compute.regions.list({
-      project: 'dba-inventory-services-prod'
-    });
-    const regions = regionsResponse.data.items.map(region => region.name);
-    console.log(`Found ${regions.length} regions: ${regions.join(', ')}`);
-
-    // Get machine types for deprecated type checks
-    try {
-      for (const zone of regionsResponse.data.items.flatMap(region => region.zones)) {
-        const machineTypesResponse = await compute.machineTypes.list({
-          project: 'dba-inventory-services-prod',
-          zone: zone.split('/').pop()
-        });
-        if (machineTypesResponse.data.items) {
-          results.computeResources.machineTypes.push(...machineTypesResponse.data.items);
-        }
-      }
-      console.log(`Found ${results.computeResources.machineTypes.length} machine types`);
-    } catch (error) {
-      console.error('Error getting machine types:', error.message);
-    }
-
-    // Audit VMs
-    try {
-      for (const region of regions) {
-        const zonesResponse = await compute.zones.list({
-          project: 'dba-inventory-services-prod',
-          filter: `region eq .*${region}`
-        });
-        
-        for (const zone of zonesResponse.data.items) {
-          const instancesResponse = await compute.instances.list({
-            project: 'dba-inventory-services-prod',
-            zone: zone.name
-          });
-          
-          if (instancesResponse.data.items) {
-            for (const instance of instancesResponse.data.items) {
-              // Get utilization metrics
-              try {
-                const utilizationResponse = await monitoring.projects.timeSeries.list({
-                  name: `projects/dba-inventory-services-prod`,
-                  filter: `metric.type="compute.googleapis.com/instance/cpu/utilization" AND resource.labels.instance_id="${instance.id}"`,
-                  interval: {
-                    startTime: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-                    endTime: new Date().toISOString()
-                  }
-                });
-                
-                results.computeResources.utilizationMetrics.push({
-                  instanceId: instance.id,
-                  metrics: utilizationResponse.data.timeSeries || []
-                });
-              } catch (error) {
-                console.error(`Error getting utilization metrics for instance ${instance.id}:`, error.message);
-              }
-
-              results.computeResources.vms.push({
-                ...instance,
-                zone: zone.name,
-                region: region
-              });
-            }
-          }
-        }
-      }
-      console.log(`Found ${results.computeResources.vms.length} VMs`);
-    } catch (error) {
-      console.error('Error auditing VMs:', error.message);
-      results.recommendations.push({
-        category: 'Compute',
-        issue: 'Failed to retrieve VM information',
-        recommendation: 'Check compute.instances.list permission'
-      });
-    }
-
-    // Get cost recommendations
-    try {
-      const recommendationsResponse = await recommender.projects.locations.recommenders.recommendations.list({
-        parent: `projects/dba-inventory-services-prod/locations/-/recommenders/google.compute.instance.MachineTypeRecommender`
-      });
-      results.computeResources.costRecommendations = recommendationsResponse.data.recommendations || [];
-      console.log(`Found ${results.computeResources.costRecommendations.length} cost recommendations`);
-    } catch (error) {
-      console.error('Error getting cost recommendations:', error.message);
-    }
-
-    // Audit GKE Clusters
-    try {
-      const container = google.container('v1');
-      const clustersResponse = await container.projects.locations.clusters.list({
-        parent: `projects/dba-inventory-services-prod/locations/-`
-      });
-      results.computeResources.gkeClusters = clustersResponse.data.clusters || [];
-      console.log(`Found ${results.computeResources.gkeClusters.length} GKE clusters`);
-    } catch (error) {
-      console.error('Error auditing GKE clusters:', error.message);
-      results.recommendations.push({
-        category: 'GKE',
-        issue: 'Failed to retrieve GKE cluster information',
-        recommendation: 'Check container.clusters.list permission'
-      });
-    }
-
-    // Audit Instance Groups
-    try {
-      for (const region of regions) {
-        const instanceGroupsResponse = await compute.instanceGroups.list({
-          project: 'dba-inventory-services-prod',
-          region: region
-        });
-        if (instanceGroupsResponse.data.items) {
-          results.computeResources.instanceGroups.push(...instanceGroupsResponse.data.items);
-        }
-      }
-      console.log(`Found ${results.computeResources.instanceGroups.length} instance groups`);
-    } catch (error) {
-      console.error('Error auditing instance groups:', error.message);
-      results.recommendations.push({
-        category: 'Compute',
-        issue: 'Failed to retrieve instance group information',
-        recommendation: 'Check compute.instanceGroups.list permission'
-      });
-    }
-
-    // Audit Instance Templates
-    try {
-      const instanceTemplatesResponse = await compute.instanceTemplates.list({
-        project: 'dba-inventory-services-prod'
-      });
-      results.computeResources.instanceTemplates = instanceTemplatesResponse.data.items || [];
-      console.log(`Found ${results.computeResources.instanceTemplates.length} instance templates`);
-    } catch (error) {
-      console.error('Error auditing instance templates:', error.message);
-      results.recommendations.push({
-        category: 'Compute',
-        issue: 'Failed to retrieve instance template information',
-        recommendation: 'Check compute.instanceTemplates.list permission'
-      });
-    }
-
-    // Audit Disk Snapshots
-    try {
-      for (const region of regions) {
-        const snapshotsResponse = await compute.snapshots.list({
-          project: 'dba-inventory-services-prod'
-        });
-        if (snapshotsResponse.data.items) {
-          results.computeResources.diskSnapshots.push(...snapshotsResponse.data.items);
-        }
-      }
-      console.log(`Found ${results.computeResources.diskSnapshots.length} disk snapshots`);
-    } catch (error) {
-      console.error('Error auditing disk snapshots:', error.message);
-      results.recommendations.push({
-        category: 'Storage',
-        issue: 'Failed to retrieve disk snapshot information',
-        recommendation: 'Check compute.snapshots.list permission'
-      });
-    }
-
-    // Audit Disk Images
-    try {
-      const imagesResponse = await compute.images.list({
-        project: 'dba-inventory-services-prod'
-      });
-      results.computeResources.diskImages = imagesResponse.data.items || [];
-      console.log(`Found ${results.computeResources.diskImages.length} disk images`);
-    } catch (error) {
-      console.error('Error auditing disk images:', error.message);
-      results.recommendations.push({
-        category: 'Storage',
-        issue: 'Failed to retrieve disk image information',
-        recommendation: 'Check compute.images.list permission'
-      });
-    }
-
-    // Generate recommendations
-    generateComputeRecommendations(results);
-
-    // Save results
-    const resultsPath = path.join(__dirname, 'compute-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Compute audit completed. Results saved to compute-audit-results.json');
+    
+    return {
+      findings,
+      summary,
+      errors
+    };
   } catch (error) {
-    console.error('Error during compute audit:', error);
-    throw error;
+    console.error('Error in compute audit:', error);
+    return {
+      findings: [],
+      summary: {},
+      errors: [error.message]
+    };
   }
 }
 
-function generateComputeRecommendations(results) {
-  // Check VM configurations
-  results.computeResources.vms.forEach(vm => {
-    // Check for deprecated machine types
-    const machineType = results.computeResources.machineTypes.find(
-      mt => mt.selfLink === vm.machineType
-    );
-    if (machineType?.deprecated) {
-      results.recommendations.push({
-        category: 'Compute',
-        issue: 'Deprecated machine type in use',
-        recommendation: 'Migrate to a supported machine type',
-        resource: vm.name,
-        zone: vm.zone,
-        machineType: machineType.name
-      });
-    }
-
-    // Check instance naming conventions
-    if (!/^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(vm.name)) {
-      results.recommendations.push({
-        category: 'Compute',
-        issue: 'Invalid instance naming convention',
-        recommendation: 'Follow GCP naming conventions: lowercase letters, numbers, and hyphens',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-
-    // Check CPU and memory utilization
-    const utilization = results.computeResources.utilizationMetrics.find(
-      um => um.instanceId === vm.id
-    );
-    if (utilization) {
-      const avgUtilization = utilization.metrics.reduce((acc, metric) => {
-        const points = metric.points || [];
-        const sum = points.reduce((sum, point) => sum + (point.value?.doubleValue || 0), 0);
-        return acc + (sum / points.length);
-      }, 0) / utilization.metrics.length;
-
-      if (avgUtilization < 0.3) {
-        results.recommendations.push({
-          category: 'Cost Optimization',
-          issue: 'Low CPU utilization',
-          recommendation: 'Consider downsizing the instance or using a smaller machine type',
-          resource: vm.name,
-          zone: vm.zone,
-          utilization: `${(avgUtilization * 100).toFixed(2)}%`
-        });
-      }
-    }
-
-    // Check for idle instances during non-business hours
-    if (utilization) {
-      const businessHours = utilization.metrics.filter(metric => {
-        const hour = new Date(metric.points[0]?.interval?.startTime).getHours();
-        return hour >= 9 && hour <= 17;
-      });
-      const nonBusinessHours = utilization.metrics.filter(metric => {
-        const hour = new Date(metric.points[0]?.interval?.startTime).getHours();
-        return hour < 9 || hour > 17;
-      });
-
-      const businessUtilization = businessHours.reduce((acc, metric) => {
-        const points = metric.points || [];
-        const sum = points.reduce((sum, point) => sum + (point.value?.doubleValue || 0), 0);
-        return acc + (sum / points.length);
-      }, 0) / businessHours.length;
-
-      const nonBusinessUtilization = nonBusinessHours.reduce((acc, metric) => {
-        const points = metric.points || [];
-        const sum = points.reduce((sum, point) => sum + (point.value?.doubleValue || 0), 0);
-        return acc + (sum / points.length);
-      }, 0) / nonBusinessHours.length;
-
-      if (nonBusinessUtilization < 0.1 && businessUtilization > 0.3) {
-        results.recommendations.push({
-          category: 'Cost Optimization',
-          issue: 'Instance idle during non-business hours',
-          recommendation: 'Consider using instance scheduling or auto-shutdown during non-business hours',
-          resource: vm.name,
-          zone: vm.zone,
-          businessUtilization: `${(businessUtilization * 100).toFixed(2)}%`,
-          nonBusinessUtilization: `${(nonBusinessUtilization * 100).toFixed(2)}%`
-        });
-      }
-    }
-
-    // Enhanced security checks
-    if (!vm.shieldedInstanceConfig?.enableSecureBoot) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'Secure Boot not enabled',
-        recommendation: 'Enable Secure Boot for better security',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-
-    if (!vm.shieldedInstanceConfig?.enableVtpm) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'vTPM not enabled',
-        recommendation: 'Enable vTPM for better security',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-
-    if (!vm.shieldedInstanceConfig?.enableIntegrityMonitoring) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'Integrity monitoring not enabled',
-        recommendation: 'Enable integrity monitoring for better security',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-
-    // Check for confidential computing
-    if (!vm.confidentialInstanceConfig?.enableConfidentialCompute) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'Confidential computing not enabled',
-        recommendation: 'Consider enabling confidential computing for sensitive workloads',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-
-    // Check VM metadata security
-    if (vm.metadata?.items?.some(item => item.key === 'ssh-keys')) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'SSH keys in instance metadata',
-        recommendation: 'Use OS Login instead of SSH keys in instance metadata',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-
-    // Check for sustained use discounts
-    if (!vm.scheduling?.automaticRestart) {
-      results.recommendations.push({
-        category: 'Cost Optimization',
-        issue: 'Automatic restart disabled',
-        recommendation: 'Enable automatic restart to qualify for sustained use discounts',
-        resource: vm.name,
-        zone: vm.zone
-      });
-    }
-  });
-
-  // Check GKE cluster configurations
-  results.computeResources.gkeClusters.forEach(cluster => {
-    // Check for regional vs zonal clusters
-    if (!cluster.location.includes('-')) {
-      results.recommendations.push({
-        category: 'GKE',
-        issue: 'Zonal cluster detected',
-        recommendation: 'Consider using regional clusters for better availability',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for pod security policies
-    if (!cluster.podSecurityPolicyConfig?.enabled) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'Pod security policies not enabled',
-        recommendation: 'Enable pod security policies for better security',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for container image scanning
-    if (!cluster.binaryAuthorization?.enabled) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'Binary authorization not enabled',
-        recommendation: 'Enable binary authorization for better security',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for cluster security posture
-    if (!cluster.securityPostureConfig?.mode) {
-      results.recommendations.push({
-        category: 'Security',
-        issue: 'Security posture not configured',
-        recommendation: 'Configure security posture for better security',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for cluster logging and monitoring
-    if (!cluster.loggingService || !cluster.monitoringService) {
-      results.recommendations.push({
-        category: 'Monitoring',
-        issue: 'Logging or monitoring not configured',
-        recommendation: 'Enable logging and monitoring services',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for node auto-provisioning
-    if (!cluster.autoscaling?.enableNodeAutoprovisioning) {
-      results.recommendations.push({
-        category: 'Cost Optimization',
-        issue: 'Node auto-provisioning not enabled',
-        recommendation: 'Enable node auto-provisioning for better cost optimization',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for pod disruption budgets
-    if (!cluster.podDisruptionBudget) {
-      results.recommendations.push({
-        category: 'Reliability',
-        issue: 'Pod disruption budget not configured',
-        recommendation: 'Configure pod disruption budgets for better reliability',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-
-    // Check for cost-optimized node pools
-    if (!cluster.nodePools?.some(pool => pool.config?.machineType?.includes('e2-'))) {
-      results.recommendations.push({
-        category: 'Cost Optimization',
-        issue: 'No cost-optimized node pools',
-        recommendation: 'Consider using E2 machine types for better cost efficiency',
-        resource: cluster.name,
-        location: cluster.location
-      });
-    }
-  });
-
-  // Check cost recommendations
-  results.computeResources.costRecommendations?.forEach(recommendation => {
-    results.recommendations.push({
-      category: 'Cost Optimization',
-      issue: recommendation.content?.operationGroups?.[0]?.operations?.[0]?.resourceType || 'Cost optimization',
-      recommendation: recommendation.description,
-      resource: recommendation.content?.operationGroups?.[0]?.operations?.[0]?.resource,
-      estimatedSavings: recommendation.primaryImpact?.costProjection?.cost?.currencyUnits || 'N/A'
+async function listAllInstances(authClient, projectId) {
+  const instances = [];
+  let pageToken;
+  
+  do {
+    const response = await compute.instances.aggregatedList({
+      auth: authClient,
+      project: projectId,
+      pageToken
     });
-  });
+    
+    for (const [zone, zoneData] of Object.entries(response.data.items)) {
+      if (zoneData.instances) {
+        instances.push(...zoneData.instances);
+      }
+    }
+    
+    pageToken = response.data.nextPageToken;
+  } while (pageToken);
+  
+  return instances;
 }
 
-// Run the audit if this script is run directly
+async function listMachineTypes(authClient, projectId) {
+  const machineTypes = new Map();
+  let pageToken;
+  
+  do {
+    const response = await compute.machineTypes.aggregatedList({
+      auth: authClient,
+      project: projectId,
+      pageToken
+    });
+    
+    for (const [zone, zoneData] of Object.entries(response.data.items)) {
+      if (zoneData.machineTypes) {
+        for (const machineType of zoneData.machineTypes) {
+          machineTypes.set(machineType.name, machineType);
+        }
+      }
+    }
+    
+    pageToken = response.data.nextPageToken;
+  } while (pageToken);
+  
+  return machineTypes;
+}
+
+async function analyzeInstance(authClient, projectId, instance, machineTypes) {
+  const findings = [];
+  
+  // Check instance type
+  const machineType = machineTypes.get(instance.machineType.split('/').pop());
+  if (machineType) {
+    findings.push({
+      type: 'instance_type',
+      instance: instance.name,
+      status: 'info',
+      message: `Instance using ${machineType.name} (${machineType.description})`
+    });
+  }
+  
+  // Check labels
+  if (!instance.labels || Object.keys(instance.labels).length === 0) {
+    findings.push({
+      type: 'missing_labels',
+      instance: instance.name,
+      status: 'warning',
+      message: 'Instance has no labels'
+    });
+  }
+  
+  // Check service account
+  if (!instance.serviceAccounts || instance.serviceAccounts.length === 0) {
+    findings.push({
+      type: 'no_service_account',
+      instance: instance.name,
+      status: 'warning',
+      message: 'Instance has no service account configured'
+    });
+  }
+  
+  // Check disk encryption
+  for (const disk of instance.disks) {
+    if (!disk.diskEncryptionKey) {
+      findings.push({
+        type: 'unencrypted_disk',
+        instance: instance.name,
+        disk: disk.deviceName,
+        status: 'warning',
+        message: 'Disk is not encrypted'
+      });
+    }
+  }
+  
+  // Check utilization
+  try {
+    const utilization = await getInstanceUtilization(authClient, projectId, instance);
+    if (utilization.cpu < 10) {
+      findings.push({
+        type: 'low_cpu_utilization',
+        instance: instance.name,
+        status: 'warning',
+        message: `Low CPU utilization: ${utilization.cpu}%`
+      });
+    }
+    if (utilization.memory < 10) {
+      findings.push({
+        type: 'low_memory_utilization',
+        instance: instance.name,
+        status: 'warning',
+        message: `Low memory utilization: ${utilization.memory}%`
+      });
+    }
+  } catch (error) {
+    console.error(`Error getting utilization metrics for instance ${instance.name}:`, error);
+  }
+  
+  return findings;
+}
+
+async function getInstanceUtilization(authClient, projectId, instance) {
+  const now = new Date();
+  const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+  
+  const [cpuResponse, memoryResponse] = await Promise.all([
+    monitoring.projects.timeSeries.list({
+      auth: authClient,
+      name: `projects/${projectId}`,
+      filter: `metric.type = "compute.googleapis.com/instance/cpu/utilization" AND resource.labels.instance_id = "${instance.id}"`,
+      interval: {
+        startTime: oneHourAgo.toISOString(),
+        endTime: now.toISOString()
+      }
+    }),
+    monitoring.projects.timeSeries.list({
+      auth: authClient,
+      name: `projects/${projectId}`,
+      filter: `metric.type = "compute.googleapis.com/instance/memory/balloon/ram_used" AND resource.labels.instance_id = "${instance.id}"`,
+      interval: {
+        startTime: oneHourAgo.toISOString(),
+        endTime: now.toISOString()
+      }
+    })
+  ]);
+  
+  const cpuPoints = cpuResponse.data.timeSeries[0]?.points || [];
+  const memoryPoints = memoryResponse.data.timeSeries[0]?.points || [];
+  
+  const cpuAvg = cpuPoints.reduce((sum, point) => sum + point.value.doubleValue, 0) / cpuPoints.length;
+  const memoryAvg = memoryPoints.reduce((sum, point) => sum + point.value.doubleValue, 0) / memoryPoints.length;
+  
+  return {
+    cpu: cpuAvg * 100,
+    memory: memoryAvg * 100
+  };
+}
+
+// Run the audit if this file is executed directly
 if (require.main === module) {
-  auditComputeResources().catch(error => {
-    console.error('Error running compute audit:', error);
-    process.exit(1);
-  });
+  runComputeAudit()
+    .then(results => {
+      console.log('Compute audit completed. Results:', JSON.stringify(results, null, 2));
+    })
+    .catch(error => {
+      console.error('Error running compute audit:', error);
+      process.exit(1);
+    });
 }
 
 module.exports = {
-  auditComputeResources
-}; 
+  runComputeAudit
+};
 
 const findings = [];
 const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };

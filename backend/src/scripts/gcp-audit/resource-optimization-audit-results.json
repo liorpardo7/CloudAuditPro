@@ -1,0 +1,122 @@
+{
+  "timestamp": "2025-05-14T14:38:17.566Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "check": "VM Instance Recommendations",
+      "result": "5 VM optimization recommendations found",
+      "passed": false,
+      "details": [
+        {
+          "resourceName": "//compute.googleapis.com/projects/dba-inventory-services-prod/zones/us-central1-a/instances/cfs-service",
+          "currentMachineType": "cfs-service",
+          "estimatedSavings": "USD -56.-317703375"
+        },
+        {
+          "resourceName": "//compute.googleapis.com/projects/dba-inventory-services-prod/zones/us-central1-a/instances/auto-inventory-service-2",
+          "currentMachineType": "auto-inventory-service-2",
+          "estimatedSavings": "USD -21.-769529936"
+        },
+        {
+          "resourceName": "//compute.googleapis.com/projects/dba-inventory-services-prod/zones/us-central1-a/instances/auto-inventory-service-1",
+          "currentMachineType": "auto-inventory-service-1",
+          "estimatedSavings": "USD -22.-320980872"
+        },
+        {
+          "resourceName": "//compute.googleapis.com/projects/dba-inventory-services-prod/zones/us-central1-a/instances/unite-google-cfs",
+          "currentMachineType": "unite-google-cfs",
+          "estimatedSavings": "USD -11.-639502395"
+        },
+        {
+          "resourceName": "//compute.googleapis.com/projects/dba-inventory-services-prod/zones/us-central1-a/instances/utility-service",
+          "currentMachineType": "utility-service",
+          "estimatedSavings": "USD -25.-629686489"
+        }
+      ]
+    },
+    {
+      "check": "Disk Recommendations",
+      "result": "0 disk optimization recommendations found",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "IAM Recommendations",
+      "result": "11 IAM optimization recommendations found",
+      "passed": false,
+      "details": [
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "Replace the current role with smaller predefined roles to cover the permissions needed.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "Replace the current role with a smaller role to cover the permissions needed.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "This role has not been used during the observation window.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "Replace the current role with a smaller role to cover the permissions needed.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "This role has not been used during the observation window.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "Replace the current role with a smaller role to cover the permissions needed.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "Replace the current role with a smaller role to cover the permissions needed.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "This role has not been used during the observation window.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "This role has not been used during the observation window.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "This role has not been used during the observation window.",
+          "impact": "SECURITY"
+        },
+        {
+          "resourceName": "//cloudresourcemanager.googleapis.com/projects/326969574199",
+          "recommendation": "This role has not been used during the observation window.",
+          "impact": "SECURITY"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalChecks": 5,
+    "passed": 1,
+    "failed": 4,
+    "costSavingsPotential": -135
+  },
+  "errors": [
+    {
+      "check": "Committed Use Discount Recommendations",
+      "error": "Missing required parameters: region"
+    },
+    {
+      "check": "Service Account Recommendations",
+      "error": "Request contains an invalid argument."
+    }
+  ]
+}

@@ -1,12 +1,5 @@
 {
-<<<<<<< HEAD
-  "timestamp": "2025-05-14T00:40:39.980Z",
-  "disks": [],
-  "snapshots": [],
-  "encryptionFindings": [],
-  "recommendations": []
-=======
-  "timestamp": "2025-05-14T00:15:24.514Z",
+  "timestamp": "2025-05-14T14:34:34.579Z",
   "projectId": "test-project",
   "findings": [],
   "summary": {
@@ -16,5 +9,4 @@
     "costSavingsPotential": 0
   },
   "errors": []
->>>>>>> apitesting
 }

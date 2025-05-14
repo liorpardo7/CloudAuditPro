@@ -1,12 +1,33 @@
 {
-  "timestamp": "2025-05-14T00:15:23.108Z",
-  "projectId": "test-project",
+  "timestamp": "2025-05-14T14:34:31.735Z",
+  "projectId": "dba-inventory-services-prod",
   "findings": [],
   "summary": {
-    "totalChecks": 0,
+    "totalChecks": 5,
     "passed": 0,
-    "failed": 0,
+    "failed": 5,
     "costSavingsPotential": 0
   },
-  "errors": []
+  "errors": [
+    {
+      "check": "Sensitive Data Detection",
+      "error": "unauthorized_client"
+    },
+    {
+      "check": "Data Retention",
+      "error": "unauthorized_client"
+    },
+    {
+      "check": "Data Encryption",
+      "error": "unauthorized_client"
+    },
+    {
+      "check": "Data Residency",
+      "error": "unauthorized_client"
+    },
+    {
+      "check": "Data Security",
+      "error": "unauthorized_client"
+    }
+  ]
 }

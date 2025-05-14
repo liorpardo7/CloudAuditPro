@@ -1,8 +1,299 @@
 {
-  "timestamp": "2025-05-14T00:38:12.288Z",
-  "projectId": "unknown",
-  "bigquery": {
-    "stalePartitioning": [],
-    "deprecatedUDFs": []
-  }
+  "timestamp": "2025-05-14T14:31:01.748Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "check": "Stale Partitioning",
+      "result": "0 tables with stale partitioning",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "Deprecated UDFs",
+      "result": "0 deprecated UDFs found",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "Query Optimization",
+      "result": "0 recent queries analyzed",
+      "passed": false,
+      "details": []
+    },
+    {
+      "check": "Cost Optimization",
+      "result": "8 large tables identified",
+      "passed": false,
+      "details": [
+        {
+          "dataset": "VWAUDI_CFS",
+          "table": "inventory_data",
+          "sizeBytes": "2708729796",
+          "rowCount": "335557",
+          "lastModified": "1696868066119"
+        },
+        {
+          "dataset": "VWAUDI_CFS",
+          "table": "inventory_data_marketcheck",
+          "sizeBytes": "2826154351",
+          "rowCount": "358827",
+          "lastModified": "1696866557760"
+        },
+        {
+          "dataset": "autoinventory",
+          "table": "inventory_data",
+          "sizeBytes": "3562414483762",
+          "rowCount": "267085346",
+          "lastModified": "1747220777805"
+        },
+        {
+          "dataset": "ftp",
+          "table": "inventory_data_ftp_v2",
+          "sizeBytes": "444718887632",
+          "rowCount": "61896092",
+          "lastModified": "1747232400529"
+        },
+        {
+          "dataset": "marketcheck",
+          "table": "inventory_data_marketcheck",
+          "sizeBytes": "129954833996",
+          "rowCount": "9832987",
+          "lastModified": "1747220736058"
+        },
+        {
+          "dataset": "marketcheck",
+          "table": "marketcheck_data_raw_new",
+          "sizeBytes": "92096675848",
+          "rowCount": "6177180",
+          "lastModified": "1747220618089"
+        },
+        {
+          "dataset": "marketcheck",
+          "table": "marketcheck_data_raw_used",
+          "sizeBytes": "88356774470",
+          "rowCount": "8730550",
+          "lastModified": "1747220612895"
+        },
+        {
+          "dataset": "marketcheck",
+          "table": "marketcheck_rv_data_raw_new",
+          "sizeBytes": "1135986529",
+          "rowCount": "194955",
+          "lastModified": "1747198860602"
+        }
+      ]
+    },
+    {
+      "check": "Dataset Access Controls",
+      "result": "8 datasets reviewed",
+      "passed": true,
+      "details": [
+        {
+          "dataset": "360agencygooglecards",
+          "access": [
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "mukesh@dbaplatform.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        },
+        {
+          "dataset": "Hyundai_Incoming",
+          "access": [
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "mukesh@dbaplatform.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        },
+        {
+          "dataset": "VWAUDI_CFS",
+          "access": [
+            {
+              "role": "roles/bigquery.admin",
+              "userByEmail": "vwaudi-cfs-google-bing@dba-inventory-services-prod.iam.gserviceaccount.com"
+            },
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "vwaudi-cfs-google-bing@dba-inventory-services-prod.iam.gserviceaccount.com"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "mukesh@dbaplatform.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            },
+            {
+              "role": "roles/editor",
+              "userByEmail": "vwaudi-cfs-google-bing@dba-inventory-services-prod.iam.gserviceaccount.com"
+            }
+          ]
+        },
+        {
+          "dataset": "acuraccyreportdata",
+          "access": [
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "lior@dbaplatform.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        },
+        {
+          "dataset": "assetinventory",
+          "access": [
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "lior@dbaplatform.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        },
+        {
+          "dataset": "autoinventory",
+          "access": [
+            {
+              "role": "roles/bigquery.admin",
+              "userByEmail": "v3-9992@dba-v3.iam.gserviceaccount.com"
+            },
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "WRITER",
+              "userByEmail": "imagedetectionblur@imagedetectionblur.iam.gserviceaccount.com"
+            },
+            {
+              "role": "WRITER",
+              "userByEmail": "v3-9992@dba-v3.iam.gserviceaccount.com"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "billing-export-bigquery@system.gserviceaccount.com"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "v3-9992@dba-v3.iam.gserviceaccount.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        },
+        {
+          "dataset": "ftp",
+          "access": [
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        },
+        {
+          "dataset": "marketcheck",
+          "access": [
+            {
+              "role": "WRITER",
+              "specialGroup": "projectWriters"
+            },
+            {
+              "role": "OWNER",
+              "specialGroup": "projectOwners"
+            },
+            {
+              "role": "OWNER",
+              "userByEmail": "isingh@cloud3tech.com"
+            },
+            {
+              "role": "READER",
+              "specialGroup": "projectReaders"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "check": "Job Monitoring",
+      "result": "0 running jobs",
+      "passed": false,
+      "details": []
+    }
+  ],
+  "summary": {
+    "totalChecks": 6,
+    "passed": 3,
+    "failed": 3,
+    "costSavingsPotential": 0
+  },
+  "errors": []
 }

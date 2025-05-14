@@ -1,100 +1,187 @@
-const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
-const { Storage } = require('@google-cloud/storage');
+const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
 
 // Load service account credentials
 const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
+const projectId = credentials.project_id;
 
 // Initialize auth client
-const auth = new google.auth.GoogleAuth({
-  credentials: credentials,
-  scopes: [
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/dlp.readonly'
-  ]
-});
+const auth = new google.auth.JWT(
+  credentials.client_email,
+  null,
+  credentials.private_key,
+  ['https://www.googleapis.com/auth/cloud-platform', 'https://www.googleapis.com/auth/dlp']
+);
 
-// Initialize the DLP API client with auth
-const dlp = google.dlp({
-  version: 'v2',
-  auth: auth
-});
-
-// Initialize other clients with auth
-const storage = new Storage({
-  credentials: credentials
-});
-
-// Initialize Resource Manager client
-const resourceManager = google.cloudresourcemanager({
-  version: 'v1',
-  auth: auth
-});
-
-async function auditDataProtection(projectId = 'dba-inventory-services-prod') {
-  const results = {
-    timestamp: new Date().toISOString(),
-    projectId: projectId,
-    dataProtection: {
-      dataClassification: {},
-      privacyControls: {}
-    },
-    residencyFindings: [],
-    transferFindings: [],
-    privacyFindings: [],
-    recommendations: []
+async function runDataProtectionAudit() {
+  const findings = [];
+  const summary = {
+    totalChecks: 0,
+    passed: 0,
+    failed: 0,
+    costSavingsPotential: 0
   };
+  const errors = [];
 
   try {
-    // Data Classification Checks
-    console.log('Checking data classification...');
-    const [inspectTemplates] = await dlp.projects.locations.inspectTemplates.list({
-      parent: `projects/${projectId}`,
-    });
-    
-    results.dataProtection.dataClassification.inspectTemplates = inspectTemplates.map(template => ({
-      name: template.name,
-      displayName: template.displayName,
-      description: template.description,
-      createTime: template.createTime,
-      updateTime: template.updateTime
-    }));
+    const dlp = google.dlp({ version: 'v2', auth });
+    const storage = google.storage({ version: 'v1', auth });
+    const compute = google.compute({ version: 'v1', auth });
 
-    // Privacy Controls Checks
-    console.log('Checking privacy controls...');
-    const [projects] = await resourceManager.projects.list();
-    
-    results.dataProtection.privacyControls.projects = await Promise.all(projects.map(async (project) => {
-      const [iamPolicy] = await resourceManager.projects.getIamPolicy({
-        resource: project.projectId,
+    // 1. Check for sensitive data detection
+    try {
+      const inspectTemplatesResp = await dlp.projects.inspectTemplates.list({
+        parent: `projects/${projectId}`
       });
+      const inspectTemplates = inspectTemplatesResp.data.inspectTemplates || [];
+      findings.push({
+        check: 'Sensitive Data Detection',
+        result: `${inspectTemplates.length} inspect templates found`,
+        passed: inspectTemplates.length > 0,
+        details: inspectTemplates.map(template => ({
+          name: template.name,
+          displayName: template.displayName,
+          description: template.description,
+          infoTypes: template.inspectConfig.infoTypes
+        }))
+      });
+      summary.totalChecks++;
+      summary.passed += inspectTemplates.length > 0 ? 1 : 0;
+      summary.failed += inspectTemplates.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Sensitive Data Detection', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
 
-      return {
-        projectId: project.projectId,
-        name: project.name,
-        labels: project.labels,
-        iamPolicy: iamPolicy
-      };
-    }));
+    // 2. Review data retention
+    try {
+      const bucketsResp = await storage.buckets.list({
+        project: projectId
+      });
+      const buckets = bucketsResp.data.items || [];
+      const retentionPolicies = buckets.map(bucket => ({
+        name: bucket.name,
+        retentionPolicy: bucket.retentionPolicy,
+        lifecycle: bucket.lifecycle
+      }));
+      findings.push({
+        check: 'Data Retention',
+        result: `${buckets.length} buckets with retention policies`,
+        passed: buckets.length > 0,
+        details: retentionPolicies
+      });
+      summary.totalChecks++;
+      summary.passed += buckets.length > 0 ? 1 : 0;
+      summary.failed += buckets.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Data Retention', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
 
-    // Save results
-    const resultsPath = path.join(__dirname, 'data-protection-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Data protection audit completed successfully');
-    return results;
+    // 3. Verify data encryption
+    try {
+      // Check storage encryption
+      const bucketsResp = await storage.buckets.list({
+        project: projectId
+      });
+      const buckets = bucketsResp.data.items || [];
+      const storageEncryption = buckets.map(bucket => ({
+        name: bucket.name,
+        encryption: bucket.encryption,
+        defaultKmsKeyName: bucket.encryption?.defaultKmsKeyName
+      }));
 
-  } catch (error) {
-    console.error('Error in data protection audit:', error);
-    throw error;
+      // Check compute disk encryption
+      const disksResp = await compute.disks.list({
+        project: projectId
+      });
+      const disks = disksResp.data.items || [];
+      const diskEncryption = disks.map(disk => ({
+        name: disk.name,
+        diskEncryptionKey: disk.diskEncryptionKey,
+        sourceImageEncryptionKey: disk.sourceImageEncryptionKey
+      }));
+
+      findings.push({
+        check: 'Data Encryption',
+        result: `${buckets.length} buckets and ${disks.length} disks checked`,
+        passed: buckets.length > 0 || disks.length > 0,
+        details: {
+          storage: storageEncryption,
+          compute: diskEncryption
+        }
+      });
+      summary.totalChecks++;
+      summary.passed += (buckets.length > 0 || disks.length > 0) ? 1 : 0;
+      summary.failed += (buckets.length > 0 || disks.length > 0) ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Data Encryption', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+    // 4. Check for data residency
+    try {
+      const bucketsResp = await storage.buckets.list({
+        project: projectId
+      });
+      const buckets = bucketsResp.data.items || [];
+      const dataResidency = buckets.map(bucket => ({
+        name: bucket.name,
+        location: bucket.location,
+        locationConstraint: bucket.locationConstraint,
+        customPlacementConfig: bucket.customPlacementConfig
+      }));
+      findings.push({
+        check: 'Data Residency',
+        result: `${buckets.length} buckets with location settings`,
+        passed: buckets.length > 0,
+        details: dataResidency
+      });
+      summary.totalChecks++;
+      summary.passed += buckets.length > 0 ? 1 : 0;
+      summary.failed += buckets.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Data Residency', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+    // 5. Review data security
+    try {
+      const deidentifyTemplatesResp = await dlp.projects.deidentifyTemplates.list({
+        parent: `projects/${projectId}`
+      });
+      const deidentifyTemplates = deidentifyTemplatesResp.data.deidentifyTemplates || [];
+      findings.push({
+        check: 'Data Security',
+        result: `${deidentifyTemplates.length} deidentification templates found`,
+        passed: deidentifyTemplates.length > 0,
+        details: deidentifyTemplates.map(template => ({
+          name: template.name,
+          displayName: template.displayName,
+          description: template.description,
+          deidentifyConfig: template.deidentifyConfig
+        }))
+      });
+      summary.totalChecks++;
+      summary.passed += deidentifyTemplates.length > 0 ? 1 : 0;
+      summary.failed += deidentifyTemplates.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Data Security', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+  } catch (err) {
+    errors.push({ check: 'Data Protection Audit', error: err.message });
   }
+
+  writeAuditResults('data-protection-audit', findings, summary, errors, projectId);
 }
 
-// Run the audit
-auditDataProtection().catch(console.error); 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("data-protection-audit", findings, summary, errors);
+runDataProtectionAudit();

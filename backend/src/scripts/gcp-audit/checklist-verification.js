@@ -181,13 +181,61 @@ async function verifyChecklist() {
           cluster.location.includes('-')
         );
 
+        const maintenanceWindow = clusters.data.clusters.some(cluster =>
+          !!cluster.maintenancePolicy?.window
+        );
+
+        const imageScanning = clusters.data.clusters.some(cluster =>
+          cluster.securityProfile?.mode === 'BASIC'
+        );
+
+        const loggingService = clusters.data.clusters.some(cluster =>
+          cluster.loggingService !== 'none'
+        );
+
+        const monitoringService = clusters.data.clusters.some(cluster =>
+          cluster.monitoringService !== 'none'
+        );
+
+        const clusterAutoscaling = clusters.data.clusters.some(cluster =>
+          cluster.autoscaling?.enabled
+        );
+
+        const verticalPodAutoscaling = clusters.data.clusters.some(cluster =>
+          cluster.verticalPodAutoscaling?.enabled
+        );
+
+        const resourceUsageExport = clusters.data.clusters.some(cluster =>
+          !!cluster.resourceUsageExportConfig
+        );
+
+        const nodeAutoProvisioning = clusters.data.clusters.some(cluster =>
+          cluster.autoscaling?.enableNodeAutoprovisioning
+        );
+
+        const costOptimizedNodePools = clusters.data.clusters.some(cluster =>
+          cluster.nodePools?.some(nodePool => nodePool.config?.machineType?.includes('e2-'))
+        );
+
         results.status.compute.gke = {
           privateCluster: privateCluster ? '✓' : '✗',
           workloadIdentity: workloadIdentity ? '✓' : '✗',
           networkPolicy: networkPolicy ? '✓' : '✗',
           binaryAuthorization: binaryAuthorization ? '✓' : '✗',
           podSecurityPolicy: podSecurityPolicy ? '✓' : '✗',
-          regionalClusters: regionalClusters ? '✓' : '✗'
+          regionalClusters: regionalClusters ? '✓' : '✗',
+          maintenanceWindow: maintenanceWindow ? '✓' : '✗',
+          imageScanning: imageScanning ? '✓' : '✗',
+          loggingService: loggingService ? '✓' : '✗',
+          monitoringService: monitoringService ? '✓' : '✗',
+          clusterAutoscaling: clusterAutoscaling ? '✓' : '✗',
+          verticalPodAutoscaling: verticalPodAutoscaling ? '✓' : '✗',
+          resourceUsageExport: resourceUsageExport ? '✓' : '✗',
+          nodeAutoProvisioning: nodeAutoProvisioning ? '✓' : '✗',
+          costOptimizedNodePools: costOptimizedNodePools ? '✓' : '✗',
+          podDisruptionBudgets: 'not implemented',
+          gkeWorkloadRightSizing: 'not implemented',
+          gkeIdleNodePoolDetection: 'not implemented'
         };
       }
 

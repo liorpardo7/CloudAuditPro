@@ -1,0 +1,316 @@
+{
+  "timestamp": "2025-05-14T14:45:05.875Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "service": "upload-files",
+      "type": "Cloud Run",
+      "findings": [
+        {
+          "check": "HTTPS Only",
+          "result": "Disabled",
+          "passed": false
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Resource Limits",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Container Concurrency",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Min Instances",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Max Instances",
+          "result": "Not configured",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "service": "sftp-shovel-custom-onetime",
+      "type": "Cloud Run",
+      "findings": [
+        {
+          "check": "HTTPS Only",
+          "result": "Disabled",
+          "passed": false
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Resource Limits",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Container Concurrency",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Min Instances",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Max Instances",
+          "result": "Not configured",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "service": "test-ftp-service",
+      "type": "Cloud Run",
+      "findings": [
+        {
+          "check": "HTTPS Only",
+          "result": "Disabled",
+          "passed": false
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Resource Limits",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Container Concurrency",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Min Instances",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Max Instances",
+          "result": "Not configured",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "service": "imagebucket2bq",
+      "type": "Cloud Run",
+      "findings": [
+        {
+          "check": "HTTPS Only",
+          "result": "Disabled",
+          "passed": false
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Resource Limits",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Container Concurrency",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Min Instances",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Max Instances",
+          "result": "Not configured",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "service": "sftp-shovel",
+      "type": "Cloud Run",
+      "findings": [
+        {
+          "check": "HTTPS Only",
+          "result": "Disabled",
+          "passed": false
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Resource Limits",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Container Concurrency",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Min Instances",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Max Instances",
+          "result": "Not configured",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "service": "projects/dba-inventory-services-prod/locations/us-central1/functions/invoke-upload-files-function",
+      "type": "Cloud Functions",
+      "findings": [
+        {
+          "check": "HTTPS Trigger",
+          "result": "Disabled",
+          "passed": false
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Memory Allocation",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Timeout",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Max Instances",
+          "result": "Configured",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "projects/dba-inventory-services-prod/locations/us-central1/functions/update_bucket_files",
+      "type": "Cloud Functions",
+      "findings": [
+        {
+          "check": "HTTPS Trigger",
+          "result": "Enabled",
+          "passed": true
+        },
+        {
+          "check": "VPC Connector",
+          "result": "Not configured",
+          "passed": false
+        },
+        {
+          "check": "Service Account",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Memory Allocation",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Timeout",
+          "result": "Configured",
+          "passed": true
+        },
+        {
+          "check": "Max Instances",
+          "result": "Not configured",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "service": "Resource Utilization",
+      "type": "Monitoring",
+      "findings": [
+        {
+          "check": "Cloud Run Utilization",
+          "result": "Data available",
+          "passed": true
+        },
+        {
+          "check": "Cloud Functions Utilization",
+          "result": "Data available",
+          "passed": true
+        },
+        {
+          "check": "App Engine Utilization",
+          "result": "No data",
+          "passed": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalChecks": 50,
+    "passed": 25,
+    "failed": 24,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "service": "App Engine",
+      "error": "Missing required parameters: appsId"
+    }
+  ]
+}

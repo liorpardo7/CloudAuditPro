@@ -1,12 +1,5 @@
 {
-<<<<<<< HEAD
-  "timestamp": "2025-05-14T00:40:37.537Z",
-  "taggingFindings": [],
-  "costCenterFindings": [],
-  "projectCostFindings": [],
-  "recommendations": []
-=======
-  "timestamp": "2025-05-14T00:15:22.288Z",
+  "timestamp": "2025-05-14T14:33:36.633Z",
   "projectId": "test-project",
   "findings": [],
   "summary": {
@@ -16,5 +9,4 @@
     "costSavingsPotential": 0
   },
   "errors": []
->>>>>>> apitesting
 }

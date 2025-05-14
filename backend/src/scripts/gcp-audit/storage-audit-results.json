@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T00:25:40.086Z",
+  "timestamp": "2025-05-14T14:45:06.767Z",
   "projectId": "dba-inventory-services-prod",
   "storageResources": {
     "buckets": [
@@ -740,10 +740,10 @@
         "timeCreated": "2022-11-01T13:30:31.325Z",
         "updated": "2022-11-01T13:30:33.733Z",
         "labels": {
-          "goog-composer-environment": "dba-inventory-services-prod",
-          "goog-composer-location": "us-central1",
+          "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
           "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439",
-          "goog-composer-version": "composer-1-19-12-airflow-2-1-4"
+          "goog-composer-environment": "dba-inventory-services-prod",
+          "goog-composer-location": "us-central1"
         },
         "softDeletePolicy": {
           "retentionDurationSeconds": "604800",
@@ -1735,7 +1735,7 @@
       },
       {
         "bucketName": "generated-cfs-files",
-        "count": 226
+        "count": 227
       },
       {
         "bucketName": "generated-vla-files",
@@ -1832,7 +1832,7 @@
       {
         "bucketName": "generated-cfs-files",
         "distribution": {
-          "STANDARD": 226
+          "STANDARD": 227
         }
       },
       {
