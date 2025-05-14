@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-11T16:52:12.041Z",
+  "timestamp": "2025-05-14T00:40:40.732Z",
   "projectId": "dba-inventory-services-prod",
   "monitoring": {
     "alertPolicies": [],
@@ -13,5 +13,7 @@
         "recommendation": "Configure cost anomaly alerts to detect unexpected spending"
       }
     ]
-  }
+  },
+  "dashboards": [],
+  "logConfigs": []
 }
