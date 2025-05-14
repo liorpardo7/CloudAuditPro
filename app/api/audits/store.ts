@@ -4,7 +4,12 @@ export const jobStatus: Record<string, {
   started: number, 
   error?: string,
   currentStep?: string,
-  progress?: number 
+  progress?: number,
+  projectId?: string,
+  stdout?: string,
+  stderr?: string,
+  completed?: number,
+  auditResults?: any
 }> = {}
 
 // Helper functions to manage job status

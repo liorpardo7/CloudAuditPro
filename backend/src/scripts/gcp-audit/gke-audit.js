@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // gke-audit.js
 // Scaffold for GCP GKE Audit
 const fs = require('fs');
@@ -20,3 +21,8 @@ async function runGkeAudit() {
 }
 
 runGkeAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("gke-audit", findings, summary, errors);

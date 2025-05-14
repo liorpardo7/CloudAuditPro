@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
@@ -8,9 +9,10 @@ class StorageLifecycleAudit extends BaseValidator {
     await this.initialize();
     console.log('Starting storage lifecycle policies audit...\n');
 
+    const projectId = process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod';
     const results = {
       timestamp: new Date().toISOString(),
-      projectId: this.projectId,
+      projectId,
       storageLifecycle: {
         buckets: [],
         standardTierUsage: [],
@@ -21,18 +23,18 @@ class StorageLifecycleAudit extends BaseValidator {
         recommendations: []
       }
     };
+    const summary = { totalChecks: 0, passed: 0, failed: 0 };
+    const errors = [];
 
     // Get all projects
     const projects = await this.getAllProjects();
-    
     // Audit each project
     for (const project of projects) {
-      await this.auditProject(project, results);
+      await this.auditProject(project, results, summary, errors);
     }
-
     // Generate recommendations
     this.generateRecommendations(results);
-
+    writeAuditResults('storage-lifecycle-audit', results.storageLifecycle.buckets, summary, errors, projectId);
     return results;
   }
 
@@ -41,19 +43,15 @@ class StorageLifecycleAudit extends BaseValidator {
       const response = await this.resourceManager.projects.list();
       return response.data.projects || [];
     } catch (error) {
-      console.error('Error getting projects:', error);
       return [];
     }
   }
 
-  async auditProject(project, results) {
+  async auditProject(project, results, summary, errors) {
     try {
       // Get all storage buckets
       const storage = google.storage('v1');
-      const bucketsResponse = await storage.buckets.list({
-        project: project.projectId
-      });
-
+      const bucketsResponse = await storage.buckets.list({ project: project.projectId });
       if (bucketsResponse.data.items) {
         for (const bucket of bucketsResponse.data.items) {
           const bucketInfo = {
@@ -68,24 +66,20 @@ class StorageLifecycleAudit extends BaseValidator {
             objectCount: 0,
             cost: 0
           };
-
           // Get bucket metadata and usage
           const [metadata, usage] = await Promise.all([
             this.getBucketMetadata(bucket.name),
             this.getBucketUsage(bucket.name)
           ]);
-
           if (metadata) {
             bucketInfo.lifecycleRules = metadata.lifecycle?.rule || [];
             bucketInfo.storageClass = metadata.storageClass;
           }
-
           if (usage) {
             bucketInfo.size = usage.size;
             bucketInfo.objectCount = usage.objectCount;
             bucketInfo.cost = usage.cost;
           }
-
           // Check for standard tier usage
           if (bucketInfo.storageClass === 'STANDARD') {
             const lastAccess = await this.getLastAccessTime(bucket.name);
@@ -99,18 +93,19 @@ class StorageLifecycleAudit extends BaseValidator {
               }
             }
           }
-
           // Check for unused buckets
           if (bucketInfo.objectCount === 0 || 
               (bucketInfo.lastModified && this.getDaysSinceAccess(bucketInfo.lastModified) > 90)) {
             results.storageLifecycle.unusedBuckets.push(bucketInfo);
           }
-
           results.storageLifecycle.buckets.push(bucketInfo);
+          summary.totalChecks++;
+          if (bucketInfo.objectCount > 0) summary.passed++;
+          else summary.failed++;
         }
       }
     } catch (error) {
-      console.error(`Error auditing project ${project.projectId}:`, error);
+      errors.push({ error: error.message, project: project.projectId });
       results.storageLifecycle.recommendations.push({
         category: 'Storage Lifecycle',
         issue: 'Failed to audit project',
@@ -251,11 +246,8 @@ class StorageLifecycleAudit extends BaseValidator {
 if (require.main === module) {
   (async () => {
     const audit = new StorageLifecycleAudit();
-    const results = await audit.auditAll();
-    const resultsPath = path.join(__dirname, 'storage-lifecycle-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Storage Lifecycle Audit completed. Results written to', resultsPath);
+    await audit.auditAll();
   })();
 }
 
-module.exports = StorageLifecycleAudit; 
+module.exports = StorageLifecycleAudit;

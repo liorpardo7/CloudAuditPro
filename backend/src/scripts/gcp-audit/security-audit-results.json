@@ -1,61 +1,12 @@
 {
-  "timestamp": "2025-05-11T19:52:59.612Z",
-  "projectId": "dba-inventory-services-prod",
-  "securitySettings": {
-    "iamPolicies": [],
-    "serviceAccounts": [],
-    "organizationPolicies": [],
-    "enabledApis": [],
-    "securityFindings": [],
-    "securityRecommendations": [],
-    "keyManagement": [],
-    "auditLogs": []
+  "timestamp": "2025-05-14T00:35:24.975Z",
+  "projectId": "test-project",
+  "findings": [],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
   },
-  "recommendations": [
-    {
-      "category": "IAM",
-      "issue": "Failed to retrieve IAM policy",
-      "recommendation": "Check resourcemanager.projects.getIamPolicy permission"
-    },
-    {
-      "category": "IAM",
-      "issue": "Failed to list service accounts",
-      "recommendation": "Check iam.serviceAccounts.list permission"
-    },
-    {
-      "category": "API",
-      "issue": "Failed to list enabled APIs",
-      "recommendation": "Check serviceusage.services.list permission"
-    },
-    {
-      "category": "Organization Policy",
-      "issue": "Organization Policy API not enabled",
-      "recommendation": "Enable the Organization Policy API in the project"
-    },
-    {
-      "category": "Security",
-      "issue": "Failed to retrieve security findings",
-      "recommendation": "Check securitycenter.findings.list permission"
-    },
-    {
-      "category": "Security",
-      "issue": "Failed to retrieve security recommendations",
-      "recommendation": "Check recommender.recommendations.list permission"
-    },
-    {
-      "category": "Security",
-      "issue": "Failed to retrieve KMS key information",
-      "recommendation": "Check cloudkms.cryptoKeys.list permission"
-    },
-    {
-      "category": "Security",
-      "issue": "Failed to retrieve audit log configuration",
-      "recommendation": "Check logging.sinks.list permission"
-    },
-    {
-      "category": "Security",
-      "issue": "No audit log sinks configured",
-      "recommendation": "Configure audit log sinks for better security monitoring"
-    }
-  ]
+  "errors": []
 }

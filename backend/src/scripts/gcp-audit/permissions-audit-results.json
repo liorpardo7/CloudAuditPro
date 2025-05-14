@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-05-14T00:28:38.353Z",
+  "projectId": "test-project",
+  "findings": [
+    {
+      "permission": "compute.instances.list",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has compute.instances.list permission"
+    },
+    {
+      "permission": "compute.disks.list",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has compute.disks.list permission"
+    },
+    {
+      "permission": "storage.buckets.list",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has storage.buckets.list permission"
+    },
+    {
+      "permission": "iam.serviceAccounts.list",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing iam.serviceAccounts.list permission"
+    },
+    {
+      "permission": "monitoring.timeSeries.list",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing monitoring.timeSeries.list permission"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 3,
+    "failed": 2
+  },
+  "errors": []
+}

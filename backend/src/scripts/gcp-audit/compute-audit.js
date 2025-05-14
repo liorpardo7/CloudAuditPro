@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
@@ -510,3 +511,8 @@ if (require.main === module) {
 module.exports = {
   auditComputeResources
 }; 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("compute-audit", findings, summary, errors);

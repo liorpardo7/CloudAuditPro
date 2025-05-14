@@ -1,16 +1,32 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
 const path = require('path');
 
 class ResourceUtilizationAudit extends BaseValidator {
+  constructor() {
+    super();
+    this.compute = google.compute('v1');
+    this.monitoring = google.monitoring('v3');
+    this.sql = google.sqladmin('v1beta4');
+    this.container = google.container('v1');
+    this.auth = new google.auth.GoogleAuth({
+      scopes: [
+        'https://www.googleapis.com/auth/cloud-platform',
+        'https://www.googleapis.com/auth/monitoring.read'
+      ]
+    });
+  }
+
   async auditAll() {
     await this.initialize();
     console.log('Starting resource utilization audit...\n');
 
+    const projectId = process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod';
     const results = {
       timestamp: new Date().toISOString(),
-      projectId: this.projectId,
+      projectId,
       resourceUtilization: {
         computeEngine: {
           vms: [],
@@ -33,88 +49,91 @@ class ResourceUtilizationAudit extends BaseValidator {
     };
 
     // Audit Compute Engine resources
-    await this.auditComputeEngine(results);
-    
+    const computeResult = await this.auditComputeEngine(results, projectId);
     // Audit Cloud SQL instances
-    await this.auditCloudSQL(results);
-    
+    await this.auditCloudSQL(results, projectId);
     // Audit GKE resources
-    await this.auditGKE(results);
+    await this.auditGKE(results, projectId);
 
+    // Write results
+    writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, projectId);
     return results;
   }
 
-  async auditComputeEngine(results) {
+  async auditComputeEngine(results, projectId) {
+    const findings = [];
+    const errors = [];
+    const summary = {
+      totalChecks: 0,
+      passed: 0,
+      failed: 0,
+      costSavingsPotential: 0
+    };
     try {
+      const auth = await this.auth.getClient();
+      const project = projectId;
       // Get all regions
-      const regionsResponse = await this.compute.regions.list({
-        project: this.projectId
-      });
+      const regionsResponse = await this.compute.regions.list({ project });
       const regions = regionsResponse.data.items.map(region => region.name);
-
-      // Audit VMs and their resources
       for (const region of regions) {
-        const zonesResponse = await this.compute.zones.list({
-          project: this.projectId,
-          filter: `region eq .*${region}`
-        });
-
+        const zonesResponse = await this.compute.zones.list({ project, filter: `region eq .*${region}` });
         for (const zone of zonesResponse.data.items) {
           // Get VM instances
-          const instancesResponse = await this.compute.instances.list({
-            project: this.projectId,
-            zone: zone.name
-          });
-
+          const instancesResponse = await this.compute.instances.list({ auth, project, zone: zone.name });
           if (instancesResponse.data.items) {
             for (const instance of instancesResponse.data.items) {
-              // Get CPU utilization
-              const cpuUtilization = await this.getMetricData(
-                'compute.googleapis.com/instance/cpu/utilization',
-                instance.id,
-                'instance_id'
-              );
-
-              // Get memory utilization
-              const memoryUtilization = await this.getMetricData(
-                'compute.googleapis.com/instance/memory/balloon/ram_used',
-                instance.id,
-                'instance_id'
-              );
-
-              // Get disk I/O
-              const diskIO = await this.getMetricData(
-                'compute.googleapis.com/instance/disk/read_bytes_count',
-                instance.id,
-                'instance_id'
-              );
-
+              if (instance.status !== 'RUNNING') continue;
+              const cpuFilter = `metric.type="compute.googleapis.com/instance/cpu/utilization" AND resource.labels.instance_id="${instance.id}"`;
+              const memoryFilter = `metric.type="compute.googleapis.com/instance/memory/balloon/ram_used" AND resource.labels.instance_id="${instance.id}"`;
+              const diskFilter = `metric.type="compute.googleapis.com/instance/disk/read_bytes_count" AND resource.labels.instance_id="${instance.id}"`;
+              const [cpuData, memoryData, diskData] = await Promise.all([
+                this.getMetricData(cpuFilter, instance.id),
+                this.getMetricData(memoryFilter, instance.id),
+                this.getMetricData(diskFilter, instance.id)
+              ]);
+              const cpuUtilization = cpuData.map(ts => ts.points.map(p => p.value.doubleValue)).flat();
+              const memoryUtilization = memoryData.map(ts => ts.points.map(p => p.value.doubleValue)).flat();
+              const diskIO = diskData.map(ts => ts.points.map(p => p.value.doubleValue)).flat();
+              const avgCpu = cpuUtilization.length ? cpuUtilization.reduce((a, b) => a + b, 0) / cpuUtilization.length : 0;
+              const avgMemory = memoryUtilization.length ? memoryUtilization.reduce((a, b) => a + b, 0) / memoryUtilization.length : 0;
+              findings.push({
+                resourceType: 'compute',
+                resourceId: instance.id,
+                name: instance.name,
+                zone: zone.name,
+                machineType: instance.machineType,
+                status: instance.status,
+                utilization: {
+                  cpu: avgCpu,
+                  memory: avgMemory,
+                  diskIO: diskIO.length ? diskIO.reduce((a, b) => a + b, 0) / diskIO.length : 0
+                },
+                recommendations: this.generateRecommendations(avgCpu, avgMemory, instance.machineType),
+                projectId
+              });
+              summary.totalChecks++;
+              if (avgCpu < 0.3 || avgMemory < 0.3) {
+                summary.failed++;
+                summary.costSavingsPotential += this.estimateCostSavings(instance.machineType);
+              } else {
+                summary.passed++;
+              }
               results.resourceUtilization.computeEngine.vms.push({
                 name: instance.name,
                 zone: zone.name,
-                cpuUtilization,
-                memoryUtilization,
-                diskIO,
+                cpuUtilization: avgCpu,
+                memoryUtilization: avgMemory,
+                diskIO: diskIO.length ? diskIO.reduce((a, b) => a + b, 0) / diskIO.length : 0,
                 machineType: instance.machineType,
                 status: instance.status
               });
             }
           }
-
           // Get persistent disks
-          const disksResponse = await this.compute.disks.list({
-            project: this.projectId,
-            zone: zone.name
-          });
-
+          const disksResponse = await this.compute.disks.list({ auth, project, zone: zone.name });
           if (disksResponse.data.items) {
             for (const disk of disksResponse.data.items) {
-              const diskIO = await this.getMetricData(
-                'compute.googleapis.com/instance/disk/read_bytes_count',
-                disk.id,
-                'device_name'
-              );
-
+              const diskIO = await this.getMetricData('compute.googleapis.com/instance/disk/read_bytes_count', disk.id);
               results.resourceUtilization.computeEngine.persistentDisks.push({
                 name: disk.name,
                 zone: zone.name,
@@ -126,20 +145,11 @@ class ResourceUtilizationAudit extends BaseValidator {
           }
         }
       }
-
       // Get load balancers
-      const loadBalancersResponse = await this.compute.forwardingRules.list({
-        project: this.projectId
-      });
-
+      const loadBalancersResponse = await this.compute.forwardingRules.list({ auth, project });
       if (loadBalancersResponse.data.items) {
         for (const lb of loadBalancersResponse.data.items) {
-          const traffic = await this.getMetricData(
-            'compute.googleapis.com/instance/network/received_bytes_count',
-            lb.id,
-            'forwarding_rule_id'
-          );
-
+          const traffic = await this.getMetricData('compute.googleapis.com/instance/network/received_bytes_count', lb.id);
           results.resourceUtilization.computeEngine.loadBalancers.push({
             name: lb.name,
             region: lb.region,
@@ -148,12 +158,8 @@ class ResourceUtilizationAudit extends BaseValidator {
           });
         }
       }
-
       // Get unused IPs
-      const addressesResponse = await this.compute.addresses.list({
-        project: this.projectId
-      });
-
+      const addressesResponse = await this.compute.addresses.list({ auth, project });
       if (addressesResponse.data.items) {
         for (const ip of addressesResponse.data.items) {
           if (!ip.users) {
@@ -165,24 +171,24 @@ class ResourceUtilizationAudit extends BaseValidator {
           }
         }
       }
+      return { findings, errors, summary };
     } catch (error) {
-      console.error('Error auditing Compute Engine resources:', error);
-      results.recommendations.push({
-        category: 'Resource Utilization',
-        issue: 'Failed to audit Compute Engine resources',
-        recommendation: 'Check API permissions and try again',
-        error: error.message
+      errors.push({ error: error.message });
+      findings.push({
+        status: 'ERROR',
+        severity: 'ERROR',
+        description: `Error auditing Compute Engine: ${error.message}`,
+        projectId
       });
+      return { findings, errors, summary };
     }
   }
 
-  async auditCloudSQL(results) {
+  async auditCloudSQL(results, projectId) {
     try {
-      const sql = google.sqladmin('v1beta4');
-      
       // Get all Cloud SQL instances
-      const instancesResponse = await sql.instances.list({
-        project: this.projectId
+      const instancesResponse = await this.sql.instances.list({
+        project: projectId
       });
 
       if (instancesResponse.data.items) {
@@ -190,22 +196,19 @@ class ResourceUtilizationAudit extends BaseValidator {
           // Get CPU utilization
           const cpuUtilization = await this.getMetricData(
             'cloudsql.googleapis.com/database/cpu/utilization',
-            instance.name,
-            'database_id'
+            instance.name
           );
 
           // Get memory utilization
           const memoryUtilization = await this.getMetricData(
             'cloudsql.googleapis.com/database/memory/utilization',
-            instance.name,
-            'database_id'
+            instance.name
           );
 
           // Get disk utilization
           const diskUtilization = await this.getMetricData(
             'cloudsql.googleapis.com/database/disk/utilization',
-            instance.name,
-            'database_id'
+            instance.name
           );
 
           results.resourceUtilization.cloudSQL.instances.push({
@@ -229,19 +232,17 @@ class ResourceUtilizationAudit extends BaseValidator {
     }
   }
 
-  async auditGKE(results) {
+  async auditGKE(results, projectId) {
     try {
-      const container = google.container('v1');
-      
       // Get all GKE clusters
-      const clustersResponse = await container.projects.locations.clusters.list({
-        parent: `projects/${this.projectId}/locations/-`
+      const clustersResponse = await this.container.projects.locations.clusters.list({
+        parent: `projects/${projectId}/locations/-`
       });
 
       if (clustersResponse.data.clusters) {
         for (const cluster of clustersResponse.data.clusters) {
           // Get node pool information
-          const nodePoolsResponse = await container.projects.locations.clusters.nodePools.list({
+          const nodePoolsResponse = await this.container.projects.locations.clusters.nodePools.list({
             parent: cluster.name
           });
 
@@ -251,14 +252,12 @@ class ResourceUtilizationAudit extends BaseValidator {
               // Get node metrics
               const cpuUtilization = await this.getMetricData(
                 'container.googleapis.com/node/cpu/core_usage_time',
-                nodePool.name,
-                'node_pool_id'
+                nodePool.name
               );
 
               const memoryUtilization = await this.getMetricData(
                 'container.googleapis.com/node/memory/used_bytes',
-                nodePool.name,
-                'node_pool_id'
+                nodePool.name
               );
 
               nodes.push({
@@ -290,42 +289,54 @@ class ResourceUtilizationAudit extends BaseValidator {
     }
   }
 
-  async getMetricData(metricType, resourceId, resourceLabel) {
+  async getMetricData(filter, resourceId) {
     try {
-      const now = new Date();
-      const startTime = new Date(now.getTime() - 24 * 60 * 60 * 1000); // Last 24 hours
-
+      const endTime = new Date();
+      const startTime = new Date(endTime);
+      startTime.setHours(startTime.getHours() - 24);
       const response = await this.monitoring.projects.timeSeries.list({
-        name: `projects/${this.projectId}`,
-        filter: `metric.type="${metricType}" AND resource.labels.${resourceLabel}="${resourceId}"`,
+        name: `projects/${process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod'}`,
+        filter: filter,
         interval: {
           startTime: startTime.toISOString(),
-          endTime: now.toISOString()
+          endTime: endTime.toISOString()
         },
         aggregation: {
           alignmentPeriod: '3600s',
           perSeriesAligner: 'ALIGN_MEAN'
         }
       });
-
       return response.data.timeSeries || [];
     } catch (error) {
-      console.error(`Error getting metric data for ${metricType}:`, error);
+      console.error(`Error getting metric data for ${filter}:`, error.message);
       return [];
     }
+  }
+
+  generateRecommendations(cpu, memory, machineType) {
+    const recommendations = [];
+    if (cpu < 0.3) {
+      recommendations.push('Consider downsizing CPU resources');
+    }
+    if (memory < 0.3) {
+      recommendations.push('Consider reducing memory allocation');
+    }
+    return recommendations;
+  }
+
+  estimateCostSavings(machineType) {
+    // This is a simplified estimation - you may want to implement a more accurate calculation
+    return 100; // Example: $100 potential savings
   }
 }
 
 async function runResourceUtilizationAudit() {
   const audit = new ResourceUtilizationAudit();
-  const results = await audit.auditAll();
-  const resultsPath = path.join(__dirname, 'resource-utilization-audit-results.json');
-  fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-  console.log('Resource Utilization Audit completed. Results written to', resultsPath);
+  await audit.auditAll();
 }
 
 if (require.main === module) {
-  runResourceUtilizationAudit();
+  runResourceUtilizationAudit().catch(console.error);
 }
 
-module.exports = ResourceUtilizationAudit; 
+module.exports = { runResourceUtilizationAudit };

@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-05-14T00:35:26.181Z",
+  "projectId": "test-project",
+  "findings": {
+    "timestamp": "2025-05-14T00:35:26.181Z",
+    "project": "test-project",
+    "findings": [
+      {
+        "resource": "IAM",
+        "type": "SERVICE",
+        "status": "ERROR",
+        "severity": "ERROR",
+        "description": "Failed to audit IAM resources",
+        "details": {
+          "error": "Permission 'iam.serviceAccounts.list' denied on resource (or it may not exist)."
+        }
+      },
+      {
+        "resource": "Storage",
+        "type": "SERVICE",
+        "status": "ERROR",
+        "severity": "ERROR",
+        "description": "Failed to audit Storage resources",
+        "details": {
+          "error": "lior@dbaplatform.com does not have storage.buckets.list access to the Google Cloud project. Permission 'storage.buckets.list' denied on resource (or it may not exist)."
+        }
+      },
+      {
+        "resource": "Compute",
+        "type": "SERVICE",
+        "status": "ERROR",
+        "severity": "ERROR",
+        "description": "Failed to audit Compute resources",
+        "details": {
+          "error": "Compute Engine API has not been used in project test-project before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=test-project then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+        }
+      }
+    ],
+    "summary": {
+      "totalChecks": 3,
+      "passed": 0,
+      "failed": 0,
+      "errors": 3
+    }
+  },
+  "errors": []
+}

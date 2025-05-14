@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
 const { checkStalePartitioning, checkDeprecatedUDFs } = require('../../services/bigqueryChecks');
@@ -39,3 +40,8 @@ runBigQueryAudit().catch(err => {
   console.error('BigQuery audit failed:', err);
   process.exit(1);
 }); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("bigquery-audit", findings, summary, errors);

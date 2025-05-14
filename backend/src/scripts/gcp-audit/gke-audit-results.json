@@ -1,7 +1,20 @@
 {
+<<<<<<< HEAD
   "timestamp": "2025-05-14T00:40:40.011Z",
   "clusters": [],
   "nodePools": [],
   "securityFindings": [],
   "recommendations": []
+=======
+  "timestamp": "2025-05-14T00:15:24.543Z",
+  "projectId": "test-project",
+  "findings": [],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
+  },
+  "errors": []
+>>>>>>> apitesting
 }

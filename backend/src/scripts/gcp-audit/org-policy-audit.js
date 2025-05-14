@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // org-policy-audit.js
 // Scaffold for GCP Organization Policy Audit
 const fs = require('fs');
@@ -19,3 +20,8 @@ async function runOrgPolicyAudit() {
 }
 
 runOrgPolicyAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("org-policy-audit", findings, summary, errors);

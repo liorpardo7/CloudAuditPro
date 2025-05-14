@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
@@ -269,3 +270,8 @@ async function runMonitoringAudit() {
 runMonitoringAudit();
 
 module.exports = MonitoringAudit; 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("monitoring-audit", findings, summary, errors);

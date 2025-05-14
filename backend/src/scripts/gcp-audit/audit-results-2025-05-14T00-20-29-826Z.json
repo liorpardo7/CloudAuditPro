@@ -1,0 +1,2767 @@
+{
+  "Virtual Machines": {
+    "VM Instance Inventory": {
+      "status": "✓",
+      "error": null,
+      "script": "compute-audit.js",
+      "timestamp": "2025-05-14T00:22:56.636Z"
+    },
+    "List all VM instances (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Check instance types and sizes (`compute.machineTypes.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Verify machine family usage (`compute.machineTypes.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Review instance labels and tags (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Check for deprecated machine types (`compute.machineTypes.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Verify instance naming conventions (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "VM Optimization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Check for underutilized instances (`monitoring.timeSeries.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Review instance scheduling (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Verify preemptible/spot instance usage (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Check for right-sized instances (`compute.instances.list`, `monitoring.timeSeries.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Review CPU and memory utilization patterns (`monitoring.timeSeries.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Check for idle instances during non-business hours (`monitoring.timeSeries.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Verify instance reservations (`compute.reservations.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.641Z"
+    },
+    "Check for sustained use discounts (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Granular VM Right-Sizing & Customization (analyze historical utilization for precise right-sizing and custom machine type recommendations) _(compute-audit.js or resource-utilization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Sole-Tenant Node Efficiency Review (verify utilization, recommend consolidation or right-sizing) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "VM Security": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify OS patch levels (`compute.instances.list`, `compute.images.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for secure boot enabled (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review service account usage (`compute.instances.list`, `iam.serviceAccounts.get`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify disk encryption (`compute.disks.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for Shielded VM features (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify integrity monitoring (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review OS login configuration (`compute.instances.list`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for confidential computing (`compute.instances.list`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify VM metadata security (`compute.instances.list`) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Optimize Machine Image Storage Costs (identify old/unused/redundant custom images, evaluate public image use) _(compute-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    }
+  },
+  "Kubernetes (GKE)": {
+    "Cluster Configuration": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "List all GKE clusters (`container.clusters.list`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check cluster versions (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify node pool configurations (`container.nodePools.list`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review cluster labels and tags (`container.clusters.list`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for regional vs zonal clusters (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify cluster maintenance windows (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Cluster Security": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for private clusters (`container.clusters.get`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify workload identity (`container.clusters.get`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review network policies (`container.clusters.get`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for binary authorization (`container.clusters.get`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify pod security policies (`container.clusters.get`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for container image scanning (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review cluster security posture (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify cluster logging and monitoring (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Cluster Optimization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review node pool sizing (`container.nodePools.list`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for cluster autoscaling (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify vertical pod autoscaling (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review resource quotas (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for node auto-provisioning (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify cluster resource utilization (`monitoring.timeSeries.list`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review pod disruption budgets (`container.clusters.get`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for cost-optimized node pools (`container.nodePools.list`) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "GKE Workload (Pod) Right-Sizing (analyze pod resource requests vs. actual usage) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "GKE Idle/Underutilized Node Pool Detection (suggest consolidation, auto-scaling adjustments, or decommissioning) _(gke-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    }
+  },
+  "Serverless": {
+    "Cloud Functions": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "List all functions (`cloudfunctions.functions.list`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check function versions (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review memory allocations (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify function triggers (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for cold start optimization (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review function timeout settings (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify function security settings (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for function retry policies (`cloudfunctions.functions.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Cloud Functions Resource & Concurrency Optimization (analyze memory, instances, execution times) _(run-full-gcp-checklist-audit.js or serverless-optimization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Cloud Run": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "List all services (`run.services.list`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check service configurations (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review scaling settings (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify container images (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for concurrency settings (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Review CPU allocation (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Verify service security settings (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Check for service mesh integration (`run.services.get`) _(run-full-gcp-checklist-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    },
+    "Cloud Run Resource & Concurrency Optimization (analyze memory, CPU, instances, concurrency) _(run-full-gcp-checklist-audit.js or serverless-optimization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.642Z"
+    }
+  },
+  "Cloud Storage": {
+    "Bucket Inventory": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "List all buckets (`storage.buckets.list`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check bucket locations (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review storage classes (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify bucket labels (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for bucket versioning (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review bucket lifecycle rules (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify bucket retention policies (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for bucket logging (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Bucket Security": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check IAM policies (`storage.buckets.getIamPolicy`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify bucket permissions (`storage.buckets.getIamPolicy`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review public access (`storage.buckets.getIamPolicy`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for uniform bucket access (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify bucket encryption (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for bucket lock (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review bucket CORS configuration (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify bucket access logs (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Bucket Management": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review lifecycle rules (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check versioning status (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify retention policies (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review object metadata (`storage.objects.list`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for object immutability (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review storage class transitions (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify object access patterns (`storage.objects.list`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for bucket cost optimization (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Advanced Object Lifecycle Management (OLM) Policy Tuning (analyze access patterns for specific OLM rules) _(storage-lifecycle-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    }
+  },
+  "Persistent Disks": {
+    "Disk Inventory": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "List all persistent disks (`compute.disks.list`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check disk types (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review disk sizes (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify disk labels (`compute.disks.list`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for disk snapshots (`compute.snapshots.list`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review disk performance (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify disk attachments (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for disk reservations (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Disk Security": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for encryption (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify snapshot policies (`compute.snapshots.list`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review access controls (`compute.disks.getIamPolicy`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for secure deletion (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify disk integrity (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for disk backup policies (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review disk access logs (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify disk security policies (`compute.disks.get`) _(disk-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Persistent Disk Type & Snapshot Cost-Effectiveness (review disk types vs. performance, audit snapshot frequency/retention, identify orphaned snapshots) _(disk-audit.js, storage-lifecycle-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    }
+  },
+  "Filestore": {
+    "Filestore Instance Optimization (check for underutilized instances, recommend right-sizing or tier changes) _(filestore-audit.js or resource-utilization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    }
+  },
+  "VPC": {
+    "Network Configuration": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "List all VPCs (`compute.networks.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check subnet configurations (`compute.subnetworks.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review routing tables (`compute.routes.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify network labels (`compute.networks.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for VPC peering (`compute.networks.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Review network topology (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Verify network performance (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Check for network cost optimization (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:22:56.643Z"
+    },
+    "Network Security": {
+      "status": "✓",
+      "error": null,
+      "script": "networking-audit.js",
+      "timestamp": "2025-05-14T00:25:36.496Z"
+    },
+    "Check firewall rules (`compute.firewalls.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Review VPC flow logs (`compute.networks.get`) _(checklist-verification.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Verify private Google access (`compute.subnetworks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Check for VPC service controls (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Verify network encryption (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Check for network segmentation (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Review network access policies (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Verify network security posture (`compute.networks.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Network Service Tier Analysis (Egress Costs) (analyze Premium vs. Standard Tier for VMs, LBs) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Cloud NAT Gateway Efficiency (analyze VMs mapped, port utilization, data processed) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Inter-Region/Zone Traffic Cost Analysis (analyze flow logs for high-cost transfers, suggest co-location) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    }
+  },
+  "Load Balancing": {
+    "Load Balancer Inventory": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "List all load balancers (`compute.forwardingRules.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Check load balancer types (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.497Z"
+    },
+    "Review backend services (`compute.backendServices.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify health checks (`compute.healthChecks.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for load balancer redundancy (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review load balancer performance (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify load balancer scaling (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for load balancer cost optimization (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Load Balancer Security": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check SSL certificates (`compute.sslCertificates.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review security policies (`compute.securityPolicies.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify WAF configurations (`compute.securityPolicies.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for DDoS protection (`compute.securityPolicies.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify TLS configuration (`compute.sslCertificates.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for SSL policies (`compute.sslPolicies.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review load balancer access logs (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify load balancer security posture (`compute.forwardingRules.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    }
+  },
+  "Cloud DNS": {
+    "DNS Configuration": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "List all DNS zones (`dns.managedZones.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check DNS records (`dns.resourceRecordSets.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review DNSSEC status (`dns.managedZones.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify DNS policies (`dns.policies.list`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for DNS redundancy (`dns.managedZones.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review DNS performance (`dns.managedZones.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify DNS security settings (`dns.managedZones.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for DNS cost optimization (`dns.managedZones.get`) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    }
+  },
+  "Cloud CDN": {
+    "Cloud CDN for Egress Optimization (identify workloads serving cacheable static content) _(networking-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    }
+  },
+  "Identity & Access Management": {
+    "IAM Policies": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "List all IAM policies (`resourcemanager.projects.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check role assignments (`resourcemanager.projects.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review custom roles (`iam.roles.list`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify principle of least privilege (`resourcemanager.projects.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Check for role separation (`resourcemanager.projects.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Review IAM audit logs (`logging.logEntries.list`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.498Z"
+    },
+    "Verify IAM security posture (`resourcemanager.projects.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for IAM cost optimization (`resourcemanager.projects.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Service Accounts": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "List all service accounts (`iam.serviceAccounts.list`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check key management (`iam.serviceAccountKeys.list`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review account permissions (`iam.serviceAccounts.getIamPolicy`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify workload identity (`iam.serviceAccounts.get`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for service account rotation (`iam.serviceAccounts.get`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review service account usage (`iam.serviceAccounts.get`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify service account security (`iam.serviceAccounts.get`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for service account cost optimization (`iam.serviceAccounts.get`) _(iam-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    }
+  },
+  "Security Controls": {
+    "Organization Policies": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "List all organization policies (`orgpolicy.policy.get`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check policy enforcement (`orgpolicy.policy.get`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review constraint settings (`orgpolicy.constraints.list`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify policy inheritance (`orgpolicy.policy.get`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for policy compliance (`orgpolicy.policy.get`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review policy audit logs (`logging.logEntries.list`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify policy security posture (`orgpolicy.policy.get`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for policy cost optimization (`orgpolicy.policy.get`) _(org-policy-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Security Command Center": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check security findings (`securitycenter.findings.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review vulnerability reports (`securitycenter.sources.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify security health analytics (`securitycenter.assets.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for threat detection (`securitycenter.findings.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review security recommendations (`securitycenter.findings.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify security monitoring (`securitycenter.findings.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for security automation (`securitycenter.findings.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review security cost optimization (`securitycenter.findings.list`) _(securitycenter-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    }
+  },
+  "Billing": {
+    "Billing Configuration": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "List all billing accounts (`billing.accounts.list`) _(billing-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check billing export (`billing.accounts.get`) _(billing-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review budget alerts (`billing.budgets.get`) _(budget-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify cost allocation (`billing.accounts.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for billing optimization (`billing.accounts.get`) _(billing-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review billing reports (`billing.accounts.get`) _(billing-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify billing security (`billing.accounts.get`) _(billing-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for billing automation (`billing.accounts.get`) _(billing-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Cost Optimization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for committed use discounts (`compute.commitments.list`) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review sustained use discounts (`compute.instances.list`) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify resource utilization (`monitoring.timeSeries.list`) _(resource-utilization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for idle resources (`monitoring.timeSeries.list`) _(resource-utilization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review cost recommendations (`recommender.recommendations.list`) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Verify cost allocation tags (`billing.accounts.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check for cost anomaly detection (`billing.accounts.get`) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Review cost optimization automation (`billing.accounts.get`) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    }
+  },
+  "Resource Management": {
+    "Resource Organization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "List all projects (`resourcemanager.projects.list`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.499Z"
+    },
+    "Check project hierarchy (`resourcemanager.projects.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review resource labels (`resourcemanager.projects.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify resource quotas (`compute.regions.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for resource optimization (`resourcemanager.projects.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review resource security (`resourcemanager.projects.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify resource automation (`resourcemanager.projects.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for resource cost optimization (`resourcemanager.projects.get`) _(cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Dormant/Unused Projects Review (identify projects with no significant activity or billing changes) _(project-cleanup-audit.js or cost-allocation-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Resource Monitoring": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check monitoring dashboards (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review alert policies (`monitoring.alertPolicies.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify logging configuration (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for custom metrics (`monitoring.metricDescriptors.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review monitoring optimization (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify monitoring security (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for monitoring automation (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review monitoring cost optimization (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    }
+  },
+  "Data Protection": {
+    "Data Classification": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for sensitive data (`dlp.inspectTemplates.list`) _(data-protection-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review data retention (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify data encryption (`compute.disks.get`, `storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for data residency (`storage.buckets.get`) _(data-protection-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review data security (`dlp.inspectTemplates.list`) _(data-protection-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify data compliance (`dlp.inspectTemplates.list`) _(data-protection-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for data optimization (`dlp.inspectTemplates.list`) _(data-protection-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review data automation (`dlp.inspectTemplates.list`) _(data-protection-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Privacy Controls": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review privacy policies (`resourcemanager.projects.get`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for data access logs (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify consent management (`resourcemanager.projects.get`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for data deletion (`storage.buckets.get`) _(storage-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review privacy security (`resourcemanager.projects.get`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify privacy compliance (`resourcemanager.projects.get`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for privacy optimization (`resourcemanager.projects.get`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review privacy automation (`resourcemanager.projects.get`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    }
+  },
+  "Compliance Standards": {
+    "Regulatory Compliance": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for GDPR compliance (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review HIPAA compliance (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify PCI DSS compliance (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for SOC 2 compliance (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review compliance security (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify compliance optimization (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for compliance automation (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review compliance cost optimization (`securitycenter.findings.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Audit Logging": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review audit logs (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for log retention (`logging.sinks.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify log export (`logging.sinks.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for log analysis (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review audit security (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Verify audit optimization (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Check for audit automation (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    },
+    "Review audit cost optimization (`logging.logEntries.list`) _(compliance-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.500Z"
+    }
+  },
+  "CI/CD": {
+    "Cloud Build": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "List all build configurations (`cloudbuild.builds.list`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check build triggers (`cloudbuild.triggers.list`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review build artifacts (`cloudbuild.builds.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify build security (`cloudbuild.builds.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for build optimization (`cloudbuild.builds.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review build automation (`cloudbuild.builds.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify build cost optimization (`cloudbuild.builds.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for build security posture (`cloudbuild.builds.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Cloud Build Efficiency (Machine Types & Caching) (analyze execution times, machine types, cache hit rates) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Deployment": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check deployment history (`clouddeploy.releases.list`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review deployment configurations (`clouddeploy.deliveryPipelines.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify deployment security (`clouddeploy.releases.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for deployment automation (`clouddeploy.deliveryPipelines.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review deployment optimization (`clouddeploy.releases.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify deployment cost optimization (`clouddeploy.releases.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for deployment security posture (`clouddeploy.releases.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review deployment automation (`clouddeploy.releases.get`) _(devops-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    }
+  },
+  "Monitoring & Logging": {
+    "Cloud Monitoring": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check monitoring dashboards (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review alert policies (`monitoring.alertPolicies.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify metric collection (`monitoring.metricDescriptors.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for custom metrics (`monitoring.metricDescriptors.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review monitoring optimization (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify monitoring security (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for monitoring automation (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review monitoring cost optimization (`monitoring.dashboards.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Cloud Logging": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check log retention (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review log exports (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify log analysis (`logging.logEntries.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for log-based metrics (`logging.metrics.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review logging optimization (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Verify logging security (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Check for logging automation (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Review logging cost optimization (`logging.sinks.list`) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Log Export Destination & Volume Cost Optimization (review sinks, destinations, volumes; identify expensive sinks) _(monitoring-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    }
+  },
+  "BigQuery Audit Items": {
+    "Check for stale partitioning (bigquery-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Identify deprecated UDFs (bigquery-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Query optimization analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "BigQuery cost optimization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Dataset access controls review": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "BigQuery job monitoring": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "BigQuery Storage API Cost Monitoring (analyze Read/Write API usage for high-cost patterns) _(bigquery-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "BigQuery Slot Utilization & Reservation Sizing (analyze slot utilization for reservations; evaluate flat-rate/flex slots for on-demand) _(bigquery-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    }
+  },
+  "Resource Utilization Items": {
+    "Cloud SQL instance utilization (resource-utilization-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Database CPU utilization analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Database memory utilization analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Database disk utilization analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Database connection monitoring": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Database scaling recommendations": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Unused IP address detection (resource-utilization-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Load balancer traffic analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "VM instance scheduling optimization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "VM instance utilization trends": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    }
+  },
+  "Storage Lifecycle Items": {
+    "Standard tier usage analysis (storage-lifecycle-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.501Z"
+    },
+    "Unused bucket detection (storage-lifecycle-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Storage cost calculation": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Storage access pattern analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Storage class transition recommendations": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Object lifecycle policy optimization": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    }
+  },
+  "Monitoring and Alerting Items": {
+    "Cost anomaly alerts (monitoring-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Missing critical alerts detection (monitoring-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Alert notification channel verification": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Alert coverage analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Alert effectiveness assessment": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    }
+  },
+  "Cost Management Items": {
+    "Budget alert configuration (budget-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Budget tracking and forecasting": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Budget vs. actual spending analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Budget allocation by service": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Discount utilization analysis (discount-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Committed use discount opportunities": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Sustained use discount tracking": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Discount optimization recommendations": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Holistic CUD/SUD Coverage Analysis (systematically check CUD/SUD eligibility for all applicable services) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Flexible CUDs vs. Resource-based CUDs Strategy (analyze spending patterns to recommend optimal CUD mix) _(discount-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Resource tagging compliance (cost-allocation-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Cost center allocation": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Project-level cost analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Service-level cost breakdown": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    }
+  },
+  "Compliance Items": {
+    "Data location compliance (data-protection-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Cross-region data transfer analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Regional compliance verification": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    }
+  },
+  "Security Items": {
+    "OS login configuration verification (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Confidential computing verification (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Private cluster configuration (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Workload identity verification (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.502Z"
+    },
+    "Network policy enforcement (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Binary authorization verification (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Pod security policy verification (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "VPC flow logs verification (checklist-verification.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Network segmentation analysis": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Cross-VPC connectivity audit": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    }
+  },
+  "Storage Items": {
+    "Bucket versioning verification (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Bucket lifecycle rules review (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Bucket retention policies verification (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Bucket logging configuration (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Bucket lock verification (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Object immutability verification (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Storage class transition verification (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Bucket access logs verification (storage-audit.js)": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    }
+  },
+  "1. Development Process": {
+    "Follow the standards in `AUDIT_DEVELOPMENT_RULES.md`": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Use the provided template for new audit scripts": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Implement all required error handling": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Include comprehensive testing": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Document all functions and parameters": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    }
+  },
+  "2. Required Components": {
+    "Authentication setup": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.510Z"
+    },
+    "Input validation": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Resource collection": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Analysis logic": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Recommendation generation": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Results formatting": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Error handling": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Logging": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    }
+  },
+  "3. Testing Requirements": {
+    "Unit tests for all functions": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Integration tests for API calls": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Mock responses for testing": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Error scenario testing": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Output validation": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    }
+  },
+  "4. Documentation": {
+    "README with setup instructions": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Function documentation": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Example usage": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Error handling guide": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Output format description": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    }
+  },
+  "5. Code Review": {
+    "Security review": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Performance review": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Reliability review": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Maintainability review": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Compliance review": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    }
+  },
+  "6. Deployment": {
+    "Version control": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Dependency management": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Environment configuration": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Credential management": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Access control": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Passing/Implemented": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Failing/Not Implemented": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Not Started": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Not Applicable": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    }
+  },
+  "Billing & Cost Management": {
+    "List all billing accounts (`billing.accounts.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "billing-audit.js",
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Check for committed use discounts (`compute.commitments.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "billing-audit.js",
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Review budget alerts (`billing.budgets.get`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "billing-audit.js",
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Detect idle resources (`monitoring.timeSeries.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "billing-audit.js",
+      "timestamp": "2025-05-14T00:25:36.511Z"
+    },
+    "Review cost allocation tags (`billing.accounts.get`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "billing-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Identify projects/services with high/abnormal spend (`billing.accounts.get`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "billing-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    }
+  },
+  "Resource Utilization": {
+    "Find idle/underutilized VMs (`monitoring.timeSeries.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "resource-utilization-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Find unused disks (`compute.disks.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "resource-utilization-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Find underutilized databases (`sql.instances.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "resource-utilization-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Recommend resizing or deleting underused resources (`compute.instances.delete`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "resource-utilization-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Estimate potential monthly savings for each finding": {
+      "status": "not implemented",
+      "error": null,
+      "script": "resource-utilization-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    }
+  },
+  "Storage Optimization": {
+    "Detect unused buckets (`storage.buckets.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "storage-lifecycle-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Find old snapshots (`compute.snapshots.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "storage-lifecycle-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Identify cold data (`storage.objects.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "storage-lifecycle-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Recommend storage class transitions (`storage.buckets.get`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "storage-lifecycle-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Recommend lifecycle policies (`storage.buckets.get`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "storage-lifecycle-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Highlight buckets with no lifecycle or retention policies": {
+      "status": "not implemented",
+      "error": null,
+      "script": "storage-lifecycle-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    }
+  },
+  "Security & Compliance": {
+    "Audit IAM/service account permissions (`iam.serviceAccounts.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Check for key rotation (`iam.serviceAccountKeys.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Detect public buckets (`storage.buckets.getIamPolicy`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Detect open firewall rules (`compute.firewalls.list`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Check for encryption at rest (`compute.disks.get`, `storage.buckets.get`)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Check for compliance with standards (GDPR, HIPAA, etc.)": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    },
+    "Output severity/priority for each finding": {
+      "status": "not implemented",
+      "error": null,
+      "script": "security-audit.js",
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    }
+  },
+  "Cloud Spanner": {
+    "Cloud Spanner Instance Right-Sizing (analyze CPU, storage, node counts vs. performance) _(spanner-audit.js or resource-utilization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    }
+  },
+  "Cloud Memorystore": {
+    "Cloud Memorystore (Redis/Memcached) Sizing (review capacity, throughput, CPU; recommend downsizing/tier changes) _(memorystore-audit.js or resource-utilization-audit.js)_": {
+      "status": "not implemented",
+      "error": null,
+      "script": null,
+      "timestamp": "2025-05-14T00:25:36.512Z"
+    }
+  },
+  "_summary": {
+    "total": 448,
+    "passed": 2,
+    "failed": 0,
+    "notImplemented": 446
+  },
+  "_timestamp": "2025-05-14T00:25:36.512Z"
+}

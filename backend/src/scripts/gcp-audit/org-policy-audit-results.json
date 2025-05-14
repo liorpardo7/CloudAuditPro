@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-05-14T00:18:07.759Z",
+  "projectId": "test-project",
+  "findings": [],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
+  },
+  "errors": []
+}

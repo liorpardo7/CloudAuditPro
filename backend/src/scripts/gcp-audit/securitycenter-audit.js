@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // securitycenter-audit.js
 // Scaffold for GCP Security Command Center Audit
 const fs = require('fs');
@@ -18,3 +19,8 @@ async function runSecuritycenterAudit() {
 }
 
 runSecuritycenterAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("securitycenter-audit", findings, summary, errors);

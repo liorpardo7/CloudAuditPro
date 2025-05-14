@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // compliance-audit.js
 // Scaffold for GCP Compliance Audit
 const fs = require('fs');
@@ -20,3 +21,8 @@ async function runComplianceAudit() {
 }
 
 runComplianceAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("compliance-audit", findings, summary, errors);
