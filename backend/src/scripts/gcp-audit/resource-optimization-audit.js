@@ -2,18 +2,7 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-const projectId = credentials.project_id;
-
-// Initialize auth client
-const auth = new google.auth.JWT(
-  credentials.client_email,
-  null,
-  credentials.private_key,
-  ['https://www.googleapis.com/auth/cloud-platform']
-);
+const auth = require('./auth');
 
 async function runResourceOptimizationAudit() {
   const findings = [];
@@ -26,10 +15,12 @@ async function runResourceOptimizationAudit() {
   const errors = [];
 
   try {
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
     // Initialize APIs
-    const compute = google.compute({ version: 'v1', auth });
-    const monitoring = google.monitoring({ version: 'v3', auth });
-    const recommender = google.recommender({ version: 'v1', auth });
+    const compute = google.compute({ version: 'v1', auth: authClient });
+    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
+    const recommender = google.recommender({ version: 'v1', auth: authClient });
 
     // 1. Check for VM instance recommendations
     try {

@@ -15,8 +15,8 @@ const recommender = google.recommender({
 
 async function runComputeAudit() {
   try {
-    const authClient = await auth.getAuthClient();
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
     
     const findings = [];
     const errors = [];

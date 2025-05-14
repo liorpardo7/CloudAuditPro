@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T14:31:01.748Z",
+  "timestamp": "2025-05-14T16:30:58.725Z",
   "projectId": "dba-inventory-services-prod",
   "findings": [
     {
@@ -42,37 +42,37 @@
         {
           "dataset": "autoinventory",
           "table": "inventory_data",
-          "sizeBytes": "3562414483762",
-          "rowCount": "267085346",
-          "lastModified": "1747220777805"
+          "sizeBytes": "3584813704408",
+          "rowCount": "268713654",
+          "lastModified": "1747238668172"
         },
         {
           "dataset": "ftp",
           "table": "inventory_data_ftp_v2",
-          "sizeBytes": "444718887632",
-          "rowCount": "61896092",
-          "lastModified": "1747232400529"
+          "sizeBytes": "444720484833",
+          "rowCount": "61896326",
+          "lastModified": "1747239982154"
         },
         {
           "dataset": "marketcheck",
           "table": "inventory_data_marketcheck",
-          "sizeBytes": "129954833996",
-          "rowCount": "9832987",
-          "lastModified": "1747220736058"
+          "sizeBytes": "141522492290",
+          "rowCount": "10711741",
+          "lastModified": "1747238662315"
         },
         {
           "dataset": "marketcheck",
           "table": "marketcheck_data_raw_new",
           "sizeBytes": "92096675848",
           "rowCount": "6177180",
-          "lastModified": "1747220618089"
+          "lastModified": "1747238537030"
         },
         {
           "dataset": "marketcheck",
           "table": "marketcheck_data_raw_used",
           "sizeBytes": "88356774470",
           "rowCount": "8730550",
-          "lastModified": "1747220612895"
+          "lastModified": "1747238528993"
         },
         {
           "dataset": "marketcheck",

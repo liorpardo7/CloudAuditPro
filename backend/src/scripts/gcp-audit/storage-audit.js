@@ -2,20 +2,12 @@ const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
+const auth = require('./auth');
 
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-
-// Initialize authentication
-const auth = new google.auth.GoogleAuth({
-  scopes: ['https://www.googleapis.com/auth/cloud-platform']
-});
-
-// Initialize the Storage API client with auth
 let storage;
 
 async function initializeStorage() {
-  const authClient = await auth.getClient();
+  const authClient = auth.getAuthClient();
   storage = google.storage({
     version: 'v1',
     auth: authClient
@@ -26,10 +18,11 @@ async function auditStorageResources() {
   try {
     console.log('Starting storage audit...');
     await initializeStorage();
+    const projectId = auth.getProjectId();
     
     const results = {
       timestamp: new Date().toISOString(),
-      projectId: 'dba-inventory-services-prod',
+      projectId: projectId,
       storageResources: {
         buckets: [],
         bucketIamPolicies: [],
@@ -45,7 +38,7 @@ async function auditStorageResources() {
     try {
       console.log('Listing buckets...');
       const bucketsResponse = await storage.buckets.list({
-        project: 'dba-inventory-services-prod'
+        project: projectId
       });
       results.storageResources.buckets = bucketsResponse.data.items || [];
       console.log(`Found ${results.storageResources.buckets.length} buckets`);

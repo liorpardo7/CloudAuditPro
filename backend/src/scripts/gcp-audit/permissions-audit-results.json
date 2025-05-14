@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T14:36:52.389Z",
+  "timestamp": "2025-05-14T16:34:17.887Z",
   "projectId": "dba-inventory-services-prod",
   "findings": [
     {
@@ -11,9 +11,9 @@
     },
     {
       "permission": "compute.disks.list",
-      "status": "FAILED",
-      "severity": "WARNING",
-      "description": "Service account is missing compute.disks.list permission",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has compute.disks.list permission",
       "projectId": "dba-inventory-services-prod"
     },
     {
@@ -40,8 +40,8 @@
   ],
   "summary": {
     "total": 5,
-    "passed": 4,
-    "failed": 1
+    "passed": 5,
+    "failed": 0
   },
   "errors": []
 }

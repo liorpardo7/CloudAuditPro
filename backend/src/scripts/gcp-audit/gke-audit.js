@@ -4,21 +4,12 @@ const fs = require('fs');
 const path = require('path');
 const auth = require('./auth');
 
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-const projectId = credentials.project_id;
-
 // Initialize auth client
-const authClient = new google.auth.JWT(
-  credentials.client_email,
-  null,
-  credentials.private_key,
-  ['https://www.googleapis.com/auth/cloud-platform']
-);
+const authClient = auth.getAuthClient();
 
 async function runGkeAudit() {
   try {
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    const projectId = auth.getProjectId();
     
     const findings = [];
     const errors = [];

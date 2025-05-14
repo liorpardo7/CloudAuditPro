@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T14:45:06.767Z",
+  "timestamp": "2025-05-14T16:40:15.167Z",
   "projectId": "dba-inventory-services-prod",
   "storageResources": {
     "buckets": [
@@ -32,7 +32,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -61,7 +65,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": false,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -92,7 +100,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -123,7 +135,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -154,7 +170,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -185,7 +205,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -216,7 +240,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -250,7 +278,11 @@
         "rpo": "DEFAULT",
         "hierarchicalNamespace": {
           "enabled": true
-        }
+        },
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -279,7 +311,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": false,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -327,7 +363,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "region",
-        "satisfiesPZI": true
+        "satisfiesPZI": true,
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -391,7 +431,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "region",
-        "satisfiesPZI": true
+        "satisfiesPZI": true,
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -454,7 +498,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "region",
-        "satisfiesPZI": true
+        "satisfiesPZI": true,
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -485,7 +533,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -516,7 +568,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -559,7 +615,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -590,7 +650,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -621,7 +685,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -652,7 +720,11 @@
           "publicAccessPrevention": "enforced"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "enforced",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -693,7 +765,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": false,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -724,7 +800,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": true,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -740,10 +820,10 @@
         "timeCreated": "2022-11-01T13:30:31.325Z",
         "updated": "2022-11-01T13:30:33.733Z",
         "labels": {
-          "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
-          "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439",
+          "goog-composer-location": "us-central1",
           "goog-composer-environment": "dba-inventory-services-prod",
-          "goog-composer-location": "us-central1"
+          "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
+          "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439"
         },
         "softDeletePolicy": {
           "retentionDurationSeconds": "604800",
@@ -759,7 +839,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "region",
-        "satisfiesPZI": true
+        "satisfiesPZI": true,
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": false,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       },
       {
         "kind": "storage#bucket",
@@ -788,7 +872,11 @@
           "publicAccessPrevention": "inherited"
         },
         "locationType": "multi-region",
-        "rpo": "DEFAULT"
+        "rpo": "DEFAULT",
+        "publicAccessPrevention": "inherited",
+        "bucketPolicyOnly": false,
+        "objectLevelLogging": false,
+        "retentionPolicyLocked": false
       }
     ],
     "bucketIamPolicies": [
@@ -1893,6 +1981,12 @@
       "resource": "apple-inventory"
     },
     {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "apple-inventory"
+    },
+    {
       "category": "Security",
       "issue": "Uniform bucket-level access not enabled",
       "recommendation": "Enable uniform bucket-level access for better security",
@@ -1917,6 +2011,24 @@
       "resource": "artifacts.dba-inventory-services-prod.appspot.com"
     },
     {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "artifacts.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Security",
+      "issue": "Legacy bucket policy only not enabled",
+      "recommendation": "Enable uniform bucket-level access or bucketPolicyOnly for better security",
+      "resource": "artifacts.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "artifacts.dba-inventory-services-prod.appspot.com"
+    },
+    {
       "category": "Data Protection",
       "issue": "Versioning not enabled",
       "recommendation": "Enable versioning for data protection",
@@ -1935,6 +2047,12 @@
       "resource": "auto-inventory-prod-ftp"
     },
     {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "auto-inventory-prod-ftp"
+    },
+    {
       "category": "Data Protection",
       "issue": "Versioning not enabled",
       "recommendation": "Enable versioning for data protection",
@@ -1950,6 +2068,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "auto-inventory-prod-vla-ftp"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "auto-inventory-prod-vla-ftp"
     },
     {
@@ -1968,6 +2092,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "autoinventory-cfs-service"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "autoinventory-cfs-service"
     },
     {
@@ -1986,6 +2116,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "azure_cfs_files"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "azure_cfs_files"
     },
     {
@@ -2004,6 +2140,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "cloud-sql-dump-backup"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "cloud-sql-dump-backup"
     },
     {
@@ -2022,6 +2164,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "dba-inventory-services-prod-cloud-functions"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "dba-inventory-services-prod-cloud-functions"
     },
     {
@@ -2049,6 +2197,24 @@
       "resource": "dba-inventory-services-prod.appspot.com"
     },
     {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Security",
+      "issue": "Legacy bucket policy only not enabled",
+      "recommendation": "Enable uniform bucket-level access or bucketPolicyOnly for better security",
+      "resource": "dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "dba-inventory-services-prod.appspot.com"
+    },
+    {
       "category": "Data Protection",
       "issue": "Versioning not enabled",
       "recommendation": "Enable versioning for data protection",
@@ -2064,6 +2230,18 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "gcf-sources-326969574199-us-central1"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "gcf-sources-326969574199-us-central1"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "gcf-sources-326969574199-us-central1"
     },
     {
@@ -2079,6 +2257,18 @@
       "resource": "gcf-v2-sources-326969574199-us-central1"
     },
     {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "gcf-v2-sources-326969574199-us-central1"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "gcf-v2-sources-326969574199-us-central1"
+    },
+    {
       "category": "Data Protection",
       "issue": "Versioning not enabled",
       "recommendation": "Enable versioning for data protection",
@@ -2097,6 +2287,18 @@
       "resource": "gcf-v2-uploads-326969574199-us-central1"
     },
     {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "gcf-v2-uploads-326969574199-us-central1"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "gcf-v2-uploads-326969574199-us-central1"
+    },
+    {
       "category": "Data Protection",
       "issue": "Versioning not enabled",
       "recommendation": "Enable versioning for data protection",
@@ -2112,6 +2314,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "generated-bing-cfs-files"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "generated-bing-cfs-files"
     },
     {
@@ -2130,6 +2338,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "generated-cfs-files"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "generated-cfs-files"
     },
     {
@@ -2148,6 +2362,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "generated-vla-files"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "generated-vla-files"
     },
     {
@@ -2166,6 +2386,18 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "images_inventory_files"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "images_inventory_files"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "images_inventory_files"
     },
     {
@@ -2184,6 +2416,18 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "marketcheck-data-prod"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "marketcheck-data-prod"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "marketcheck-data-prod"
     },
     {
@@ -2202,6 +2446,12 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "msn-marketplace-reporting-files"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "msn-marketplace-reporting-files"
     },
     {
@@ -2229,6 +2479,24 @@
       "resource": "staging.dba-inventory-services-prod.appspot.com"
     },
     {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "staging.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Security",
+      "issue": "Legacy bucket policy only not enabled",
+      "recommendation": "Enable uniform bucket-level access or bucketPolicyOnly for better security",
+      "resource": "staging.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "staging.dba-inventory-services-prod.appspot.com"
+    },
+    {
       "category": "Data Protection",
       "issue": "Versioning not enabled",
       "recommendation": "Enable versioning for data protection",
@@ -2244,6 +2512,18 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "test-bucket-for-filemage"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "test-bucket-for-filemage"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "test-bucket-for-filemage"
     },
     {
@@ -2272,6 +2552,24 @@
     },
     {
       "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "us-central1-dba-inventory-s-284706cf-bucket"
+    },
+    {
+      "category": "Security",
+      "issue": "Legacy bucket policy only not enabled",
+      "recommendation": "Enable uniform bucket-level access or bucketPolicyOnly for better security",
+      "resource": "us-central1-dba-inventory-s-284706cf-bucket"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
+      "resource": "us-central1-dba-inventory-s-284706cf-bucket"
+    },
+    {
+      "category": "Security",
       "issue": "Uniform bucket-level access not enabled",
       "recommendation": "Enable uniform bucket-level access for better security",
       "resource": "us.artifacts.dba-inventory-services-prod.appspot.com"
@@ -2292,6 +2590,24 @@
       "category": "Security",
       "issue": "Default encryption not configured",
       "recommendation": "Configure default encryption using Cloud KMS",
+      "resource": "us.artifacts.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access prevention not enforced",
+      "recommendation": "Enforce public access prevention on the bucket",
+      "resource": "us.artifacts.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Security",
+      "issue": "Legacy bucket policy only not enabled",
+      "recommendation": "Enable uniform bucket-level access or bucketPolicyOnly for better security",
+      "resource": "us.artifacts.dba-inventory-services-prod.appspot.com"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "Object-level logging not enabled",
+      "recommendation": "Enable object-level logging for better auditability",
       "resource": "us.artifacts.dba-inventory-services-prod.appspot.com"
     },
     {

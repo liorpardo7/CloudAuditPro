@@ -3,13 +3,15 @@ const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
 const path = require('path');
+const auth = require('./auth');
 
 class StorageLifecycleAudit extends BaseValidator {
   async auditAll() {
     await this.initialize();
     console.log('Starting storage lifecycle policies audit...\n');
 
-    const projectId = process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod';
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
     const results = {
       timestamp: new Date().toISOString(),
       projectId,

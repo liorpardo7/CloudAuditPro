@@ -3,26 +3,15 @@ const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-const projectId = credentials.project_id;
-
-// Initialize auth client
-const auth = new google.auth.JWT(
-  credentials.client_email,
-  null,
-  credentials.private_key,
-  ['https://www.googleapis.com/auth/cloud-platform']
-);
+const auth = require('./auth');
 
 class ResourceUtilizationAudit extends BaseValidator {
   constructor() {
     super();
-    this.compute = google.compute({ version: 'v1', auth });
-    this.monitoring = google.monitoring({ version: 'v3', auth });
-    this.sql = google.sqladmin({ version: 'v1beta4', auth });
-    this.container = google.container({ version: 'v1', auth });
+    this.compute = google.compute({ version: 'v1', auth: auth.getAuthClient() });
+    this.monitoring = google.monitoring({ version: 'v3', auth: auth.getAuthClient() });
+    this.sql = google.sqladmin({ version: 'v1beta4', auth: auth.getAuthClient() });
+    this.container = google.container({ version: 'v1', auth: auth.getAuthClient() });
   }
 
   async auditAll() {
@@ -31,7 +20,7 @@ class ResourceUtilizationAudit extends BaseValidator {
 
     const results = {
       timestamp: new Date().toISOString(),
-      projectId,
+      projectId: auth.getProjectId(),
       resourceUtilization: {
         computeEngine: {
           vms: [],
@@ -54,14 +43,14 @@ class ResourceUtilizationAudit extends BaseValidator {
     };
 
     // Audit Compute Engine resources
-    const computeResult = await this.auditComputeEngine(results, projectId);
+    const computeResult = await this.auditComputeEngine(results, auth.getProjectId());
     // Audit Cloud SQL instances
-    await this.auditCloudSQL(results, projectId);
+    await this.auditCloudSQL(results, auth.getProjectId());
     // Audit GKE resources
-    await this.auditGKE(results, projectId);
+    await this.auditGKE(results, auth.getProjectId());
 
     // Write results
-    writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, projectId);
+    writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, auth.getProjectId());
     return results;
   }
 

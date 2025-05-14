@@ -8,8 +8,8 @@ const compute = google.compute('v1');
 
 async function runPersistentDiskAudit() {
   try {
-    const authClient = await auth.getAuthClient();
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
     const findings = [];
     const errors = [];
 

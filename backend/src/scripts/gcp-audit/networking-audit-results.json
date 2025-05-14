@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T14:42:54.286Z",
+  "timestamp": "2025-05-14T16:37:57.691Z",
   "projectId": "dba-inventory-services-prod",
   "networkingResources": {
     "vpcs": [
@@ -3552,6 +3552,36 @@
       "recommendation": "Configure health checks for better reliability",
       "resource": "gke-dba-inventory-services-prod-cluster-28bcd5c4-c3bd8ca3-pe",
       "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "ad-network-route"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "auto-network-route"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "default-route-4f2bf0d91da75666"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "default-route-df381f449b193cab"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "network-route"
     }
   ]
 }

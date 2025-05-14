@@ -2,18 +2,7 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-const projectId = credentials.project_id;
-
-// Initialize auth client
-const auth = new google.auth.JWT(
-  credentials.client_email,
-  null,
-  credentials.private_key,
-  ['https://www.googleapis.com/auth/cloud-platform', 'https://www.googleapis.com/auth/dlp']
-);
+const auth = require('./auth');
 
 async function runDataProtectionAudit() {
   const findings = [];
@@ -26,9 +15,11 @@ async function runDataProtectionAudit() {
   const errors = [];
 
   try {
-    const dlp = google.dlp({ version: 'v2', auth });
-    const storage = google.storage({ version: 'v1', auth });
-    const compute = google.compute({ version: 'v1', auth });
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
+    const dlp = google.dlp({ version: 'v2', auth: authClient });
+    const storage = google.storage({ version: 'v1', auth: authClient });
+    const compute = google.compute({ version: 'v1', auth: authClient });
 
     // 1. Check for sensitive data detection
     try {

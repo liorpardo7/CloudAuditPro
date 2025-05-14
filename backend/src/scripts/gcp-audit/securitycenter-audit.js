@@ -2,18 +2,7 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-const projectId = credentials.project_id;
-
-// Initialize auth client
-const auth = new google.auth.JWT(
-  credentials.client_email,
-  null,
-  credentials.private_key,
-  ['https://www.googleapis.com/auth/cloud-platform']
-);
+const auth = require('./auth');
 
 async function runSecurityCenterAudit() {
   const findings = [];
@@ -26,7 +15,9 @@ async function runSecurityCenterAudit() {
   const errors = [];
 
   try {
-    const securitycenter = google.securitycenter({ version: 'v1', auth });
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
+    const securitycenter = google.securitycenter({ version: 'v1', auth: authClient });
     const projectName = `projects/${projectId}`;
 
     // 1. Check security findings

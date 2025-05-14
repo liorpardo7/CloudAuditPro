@@ -2,28 +2,17 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
+const auth = require('./auth');
+
 const cloudfunctions = google.cloudfunctions('v2');
 const run = google.run('v2');
 const appengine = google.appengine('v1');
 const monitoring = google.monitoring('v3');
-const auth = require('./auth');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-const projectId = credentials.project_id;
-
-// Initialize auth client
-const authClient = new google.auth.JWT(
-  credentials.client_email,
-  null,
-  credentials.private_key,
-  ['https://www.googleapis.com/auth/cloud-platform']
-);
 
 async function runServerlessAudit() {
   try {
-    const authClient = await auth.getAuthClient();
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    const authClient = auth.getAuthClient();
+    const projectId = auth.getProjectId();
     
     const findings = [];
     const errors = [];
