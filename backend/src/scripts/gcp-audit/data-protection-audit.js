@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { Storage } = require('@google-cloud/storage');
 const fs = require('fs');
@@ -92,3 +93,8 @@ async function auditDataProtection(projectId = 'dba-inventory-services-prod') {
 
 // Run the audit
 auditDataProtection().catch(console.error); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("data-protection-audit", findings, summary, errors);

@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 
@@ -223,3 +224,8 @@ if (require.main === module) {
 }
 
 module.exports = BudgetAudit; 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("budget-audit", findings, summary, errors);

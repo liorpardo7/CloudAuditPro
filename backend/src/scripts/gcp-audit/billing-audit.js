@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // billing-audit.js
 // Scaffold for GCP Billing Audit
 const fs = require('fs');
@@ -21,3 +22,8 @@ async function runBillingAudit() {
 }
 
 runBillingAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("billing-audit", findings, summary, errors);

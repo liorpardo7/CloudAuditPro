@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
@@ -201,3 +202,8 @@ if (require.main === module) {
 }
 
 module.exports = CostAllocationAudit; 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("cost-allocation-audit", findings, summary, errors);

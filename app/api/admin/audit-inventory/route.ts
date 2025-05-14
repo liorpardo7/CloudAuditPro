@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
 
 const prisma = new PrismaClient();
 
@@ -40,23 +42,42 @@ export async function GET() {
       }
     }) as any;
 
+    // Helper to get results from file
+    function getResultsForScript(scriptFile: string) {
+      if (!scriptFile) return {};
+      const resultFile = scriptFile.replace('.js', '-results.json');
+      const resultPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit', resultFile);
+      if (fs.existsSync(resultPath)) {
+        try {
+          const data = fs.readFileSync(resultPath, 'utf-8');
+          return JSON.parse(data);
+        } catch (e) {
+          return { error: 'Failed to parse results file' };
+        }
+      }
+      return {};
+    }
+
     // Transform the data to match the frontend's expected format
     const items: AuditItem[] = categories.flatMap((category: CategoryWithItems) => 
-      category.items.map((item) => ({
-        id: item.id,
-        category: category.name,
-        name: item.name,
-        page: `/${category.name.toLowerCase().replace(/\s+/g, '-')}`,
-        script: item.scriptFile,
-        endpoint: `/api/audits/${category.name.toLowerCase().replace(/\s+/g, '-')}/${item.name.toLowerCase().replace(/\s+/g, '-')}`,
-        description: item.description,
-        formula: item.apiEndpoint,
-        status: mapStatus(item.status),
-        notes: '',
-        reviewed: item.status === 'implemented',
-        lastRun: item.lastRun || new Date().toISOString(),
-        results: {}
-      }))
+      category.items.map((item) => {
+        const results = getResultsForScript(item.scriptFile);
+        return {
+          id: item.id,
+          category: category.name,
+          name: item.name,
+          page: `/${category.name.toLowerCase().replace(/\s+/g, '-')}`,
+          script: item.scriptFile,
+          endpoint: `/api/audits/${category.name.toLowerCase().replace(/\s+/g, '-')}/${item.name.toLowerCase().replace(/\s+/g, '-')}`,
+          description: item.description,
+          formula: item.apiEndpoint,
+          status: mapStatus(item.status),
+          notes: '',
+          reviewed: item.status === 'implemented',
+          lastRun: item.lastRun || new Date().toISOString(),
+          results
+        };
+      })
     );
 
     return NextResponse.json({

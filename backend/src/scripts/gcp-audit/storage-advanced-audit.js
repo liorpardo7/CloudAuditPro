@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // storage-advanced-audit.js
 // Scaffold for GCP Advanced Storage Audit
 const fs = require('fs');
@@ -21,3 +22,8 @@ async function runStorageAdvancedAudit() {
 }
 
 runStorageAdvancedAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("storage-advanced-audit", findings, summary, errors);

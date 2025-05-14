@@ -76,6 +76,14 @@ const CATEGORY_TO_FILES: Record<string, { script: string; resultFile: string }> 
   'devops-audit': {
     script: 'devops-audit.js',
     resultFile: 'devops-audit-results.json'
+  },
+  'permissions-audit': {
+    script: 'permissions-audit.js',
+    resultFile: 'permissions-audit-results.json'
+  },
+  'api-audit': {
+    script: 'api-audit.js',
+    resultFile: 'api-audit-results.json'
   }
 };
 

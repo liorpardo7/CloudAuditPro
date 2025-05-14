@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // run-full-gcp-checklist-audit.js
 // Script to run all GCP audit checklist items and output a timestamped results file
 
@@ -555,3 +556,8 @@ function main() {
 }
 
 main(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("run-full-gcp-checklist-audit", findings, summary, errors);

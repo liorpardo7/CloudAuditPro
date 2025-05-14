@@ -28,6 +28,7 @@ const AUDIT_CATEGORIES = [
   { key: 'security', label: 'Security' },
   { key: 'cost', label: 'Cost' },
   { key: 'data-protection', label: 'Data Protection' },
+  { key: 'permissions-audit', label: 'Permissions Audit' },
 ]
 
 export default function SettingsPage() {
@@ -108,6 +109,17 @@ export default function SettingsPage() {
               <CardDescription>
                 Manage your connected Google Cloud projects
               </CardDescription>
+              {projects.length > 0 && (
+                <div className="mb-4">
+                  <Button
+                    variant="default"
+                    onClick={() => handleRunAudit(projects[0].id, 'all')}
+                    disabled={isLoading && progressProject === projects[0].id}
+                  >
+                    Run All Audits
+                  </Button>
+                </div>
+              )}
             </CardHeader>
             <CardContent>
               {projects.length === 0 ? (

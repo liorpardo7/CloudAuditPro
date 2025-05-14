@@ -24,6 +24,8 @@ const CATEGORY_TO_SCRIPT: Record<string, string> = {
   compliance: 'compliance-audit.js',
   devops: 'devops-audit.js',
   all: 'run-all-audits.js',
+  'permissions-audit': 'permissions-audit.js',
+  'api-audit': 'api-audit.js',
 }
 
 export async function POST(request: Request) {
@@ -54,27 +56,22 @@ export async function POST(request: Request) {
       projectId
     })
 
-    // Check for GCP credentials
-    const scriptDir = path.join(process.cwd(), 'backend/src/scripts/gcp-audit')
-    const credentialFiles = fs.readdirSync(scriptDir).filter(file => 
-      file.endsWith('.json') && !file.endsWith('-results.json') && !file.includes('audit-')
-    )
-    
-    if (credentialFiles.length === 0) {
+    // Always use the test service account key
+    const credentialPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json')
+    if (!fs.existsSync(credentialPath)) {
       updateJobStatus(jobId, {
         status: 'error',
-        error: 'No GCP credential files found. Please add a service account key file to the backend/src/scripts/gcp-audit directory.'
+        error: 'Test service account key not found at backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json'
       })
       return NextResponse.json({ 
         jobId,
-        error: 'No GCP credential files found'
+        error: 'Test service account key not found'
       }, { status: 400 })
     }
 
-    // Set the credential file as an environment variable
-    const credentialFile = credentialFiles[0]
-    const credentialPath = path.join(scriptDir, credentialFile)
-    
+    // Define the script directory for the audit scripts
+    const scriptDir = path.join(process.cwd(), 'backend/src/scripts/gcp-audit');
+
     // Create a properly typed environment object
     const scriptEnv: NodeJS.ProcessEnv = {
       ...process.env,
@@ -83,7 +80,7 @@ export async function POST(request: Request) {
       NODE_ENV: 'production'
     }
 
-    console.log(`Running audit: ${script} for project ${projectId} with credentials ${credentialFile}`)
+    console.log(`Running audit: ${script} for project ${projectId} with credentials ${credentialPath}`)
 
     // Spawn the audit script with proper TypeScript types
     const proc = spawn('node', [script], {

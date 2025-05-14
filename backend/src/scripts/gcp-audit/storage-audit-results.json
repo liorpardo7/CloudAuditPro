@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-11T16:46:54.984Z",
+  "timestamp": "2025-05-14T00:25:40.086Z",
   "projectId": "dba-inventory-services-prod",
   "storageResources": {
     "buckets": [
@@ -740,10 +740,10 @@
         "timeCreated": "2022-11-01T13:30:31.325Z",
         "updated": "2022-11-01T13:30:33.733Z",
         "labels": {
-          "goog-composer-version": "composer-1-19-12-airflow-2-1-4",
-          "goog-composer-location": "us-central1",
           "goog-composer-environment": "dba-inventory-services-prod",
-          "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439"
+          "goog-composer-location": "us-central1",
+          "goog-composer-environment-uuid": "1d7f57fd-583c-4e66-8a49-6d676c2b2439",
+          "goog-composer-version": "composer-1-19-12-airflow-2-1-4"
         },
         "softDeletePolicy": {
           "retentionDurationSeconds": "604800",
@@ -1703,7 +1703,7 @@
       },
       {
         "bucketName": "auto-inventory-prod-vla-ftp",
-        "count": 895
+        "count": 899
       },
       {
         "bucketName": "autoinventory-cfs-service",
@@ -1735,7 +1735,7 @@
       },
       {
         "bucketName": "generated-cfs-files",
-        "count": 224
+        "count": 226
       },
       {
         "bucketName": "generated-vla-files",
@@ -1752,10 +1752,6 @@
       {
         "bucketName": "msn-marketplace-reporting-files",
         "count": 523
-      },
-      {
-        "bucketName": "staging.dba-inventory-services-prod.appspot.com",
-        "count": 111
       },
       {
         "bucketName": "us-central1-dba-inventory-s-284706cf-bucket",
@@ -1788,7 +1784,7 @@
       {
         "bucketName": "auto-inventory-prod-vla-ftp",
         "distribution": {
-          "STANDARD": 895
+          "STANDARD": 899
         }
       },
       {
@@ -1836,7 +1832,7 @@
       {
         "bucketName": "generated-cfs-files",
         "distribution": {
-          "STANDARD": 224
+          "STANDARD": 226
         }
       },
       {
@@ -1861,12 +1857,6 @@
         "bucketName": "msn-marketplace-reporting-files",
         "distribution": {
           "STANDARD": 523
-        }
-      },
-      {
-        "bucketName": "staging.dba-inventory-services-prod.appspot.com",
-        "distribution": {
-          "STANDARD": 111
         }
       },
       {
@@ -2494,13 +2484,6 @@
       "issue": "High usage of standard storage class",
       "recommendation": "Consider using more cost-effective storage classes for infrequently accessed data",
       "resource": "msn-marketplace-reporting-files",
-      "standardClassPercentage": "100.00%"
-    },
-    {
-      "category": "Cost Optimization",
-      "issue": "High usage of standard storage class",
-      "recommendation": "Consider using more cost-effective storage classes for infrequently accessed data",
-      "resource": "staging.dba-inventory-services-prod.appspot.com",
       "standardClassPercentage": "100.00%"
     },
     {

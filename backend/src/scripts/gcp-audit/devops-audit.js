@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 const { CloudBuildClient } = require('@google-cloud/cloudbuild');
 const { CloudDeployClient } = require('@google-cloud/deploy');
 const { ArtifactRegistryClient } = require('@google-cloud/artifact-registry');
@@ -296,3 +297,8 @@ if (require.main === module) {
       process.exit(1);
     });
 } 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("devops-audit", findings, summary, errors);

@@ -1,3 +1,4 @@
+const { writeAuditResults } = require('./writeAuditResults');
 // disk-audit.js
 // Scaffold for GCP Persistent Disks Audit
 const fs = require('fs');
@@ -20,3 +21,8 @@ async function runDiskAudit() {
 }
 
 runDiskAudit(); 
+
+const findings = [];
+const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+const errors = [];
+writeAuditResults("disk-audit", findings, summary, errors);
