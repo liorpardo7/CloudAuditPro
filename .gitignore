@@ -63,10 +63,10 @@ next-env.d.ts
 # Include all source code and configuration files, even .env files
 # Note: For personal use, you're tracking .env files but be careful if the repo is ever made public
 !.env
-!.env.local
-!.env.*.local
 !prisma/migrations/
 !backend/prisma/migrations/
 
 # Include documentation
 !*.md
+backend/src/scripts/gcp-audit/audit-config.json
+backend/src/scripts/gcp-audit/oauth-tokens.json
