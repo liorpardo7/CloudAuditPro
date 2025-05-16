@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T16:31:59.366Z",
+  "timestamp": "2025-05-15T16:20:10.875Z",
   "projectId": "dba-inventory-services-prod",
   "findings": [
     {
@@ -12,106 +12,131 @@
       "check": "Alert Notification Channels",
       "result": "20 notification channels found",
       "passed": true,
+      "details": {
+        "channelTypes": {
+          "email": 19,
+          "slack": 1
+        },
+        "channels": [
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "dba-inventory-services alert",
+            "enabled": true
+          },
+          {
+            "type": "slack",
+            "displayName": "Auto-Inventory-CFS-Service",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "ad-generator alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "ad-generator alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "Inderpreet Singh",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "ad-generator alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory-cfs alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "Ravish",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "auto-inventory alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "dba-inventory-services alert",
+            "enabled": true
+          },
+          {
+            "type": "email",
+            "displayName": "Ravish DBA",
+            "enabled": true
+          }
+        ]
+      }
+    },
+    {
+      "check": "Custom Metrics",
+      "result": "2 custom metrics found",
+      "passed": true,
       "details": [
         {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
+          "name": "OpenCensus/disk/percent_used",
+          "type": "custom.googleapis.com/guest/disk/percent_used",
+          "unit": "%",
+          "description": "Disk usage in percentage of total space"
         },
         {
-          "type": "email",
-          "displayName": "dba-inventory-services alert",
-          "enabled": true
-        },
-        {
-          "type": "slack",
-          "displayName": "Auto-Inventory-CFS-Service",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "ad-generator alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "ad-generator alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "Inderpreet Singh",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "ad-generator alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory-cfs alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "Ravish",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "auto-inventory alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "dba-inventory-services alert",
-          "enabled": true
-        },
-        {
-          "type": "email",
-          "displayName": "Ravish DBA",
-          "enabled": true
+          "name": "OpenCensus/memory/percent_used",
+          "type": "custom.googleapis.com/guest/memory/percent_used",
+          "unit": "%",
+          "description": "Memory usage in percentage of total memory."
         }
       ]
     },
@@ -125,17 +150,202 @@
           "CRITICAL": 0,
           "WARNING": 0,
           "INFO": 0
+        },
+        "byService": {
+          "undefined": 14
         }
+      }
+    },
+    {
+      "check": "Monitoring Automation",
+      "result": "1 automated alerts found",
+      "passed": true,
+      "details": [
+        {
+          "name": "Dba-inventory-services.prod - auto-inventory-api-service uptime failure",
+          "conditions": [
+            {
+              "conditionThreshold": {
+                "filter": "metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" AND metric.label.check_id=\"dba-inventory-services-prod-auto-inventory-api-service-d0_zn5HbihQ\" AND resource.type=\"uptime_url\"",
+                "comparison": "COMPARISON_GT",
+                "thresholdValue": 1,
+                "duration": "60s",
+                "trigger": {
+                  "count": 1
+                },
+                "aggregations": [
+                  {
+                    "alignmentPeriod": "1200s",
+                    "perSeriesAligner": "ALIGN_NEXT_OLDER",
+                    "crossSeriesReducer": "REDUCE_COUNT_FALSE",
+                    "groupByFields": [
+                      "resource.label.*"
+                    ]
+                  }
+                ]
+              },
+              "displayName": "Failure of uptime check_id dba-inventory-services-prod-auto-inventory-api-service-d0_zn5HbihQ",
+              "name": "projects/dba-inventory-services-prod/alertPolicies/16183678268511520129/conditions/16183678268511521044"
+            }
+          ],
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "check": "Monitoring Cost Optimization",
+      "result": "6883 total metrics",
+      "passed": true,
+      "details": {
+        "totalMetrics": 6883,
+        "byService": {
+          "actions.googleapis.com": 19,
+          "agent.googleapis.com": 258,
+          "aiplatform.googleapis.com": 106,
+          "alloydb.googleapis.com": 88,
+          "apigateway.googleapis.com": 1,
+          "apigee.googleapis.com": 88,
+          "appengine.googleapis.com": 80,
+          "apphub.googleapis.com": 17,
+          "artifactregistry.googleapis.com": 33,
+          "authztoolkitcontrol.googleapis.com": 2,
+          "autoscaler.googleapis.com": 3,
+          "backupdr.googleapis.com": 67,
+          "baremetalsolution.googleapis.com": 9,
+          "bigquery.googleapis.com": 33,
+          "bigquerybiengine.googleapis.com": 6,
+          "bigquerydatatransfer.googleapis.com": 4,
+          "bigquerystorage.googleapis.com": 13,
+          "bigtable.googleapis.com": 48,
+          "billingbudgets.googleapis.com": 3,
+          "blockchainnodeengine.googleapis.com": 12,
+          "certificatemanager.googleapis.com": 2,
+          "chronicle.googleapis.com": 25,
+          "cloudaicompanion.googleapis.com": 4,
+          "cloudbuild.googleapis.com": 6,
+          "clouddeploy.googleapis.com": 3,
+          "cloudfunctions.googleapis.com": 7,
+          "cloudkms.googleapis.com": 12,
+          "cloudonefs.isiloncloud.com": 5,
+          "cloudsql.googleapis.com": 219,
+          "cloudtasks.googleapis.com": 4,
+          "cloudtrace.googleapis.com": 3,
+          "cloudvolumesgcp-api.netapp.com": 19,
+          "composer.googleapis.com": 123,
+          "compute.googleapis.com": 263,
+          "connectors.googleapis.com": 10,
+          "contactcenterinsights.googleapis.com": 5,
+          "container.googleapis.com": 35,
+          "custom.googleapis.com": 2,
+          "dataflow.googleapis.com": 73,
+          "datafusion.googleapis.com": 37,
+          "datamigration.googleapis.com": 10,
+          "dataplex.googleapis.com": 10,
+          "dataproc.googleapis.com": 34,
+          "datastore.googleapis.com": 6,
+          "datastream.googleapis.com": 10,
+          "dbinsights.googleapis.com": 18,
+          "dialogflow.googleapis.com": 11,
+          "directpathgrpctesting-pa.googleapis.com": 19,
+          "discoveryengine.googleapis.com": 1,
+          "displayvideo.googleapis.com": 2,
+          "dlp.googleapis.com": 7,
+          "dns.googleapis.com": 2,
+          "documentai.googleapis.com": 27,
+          "earthengine.googleapis.com": 3,
+          "edgecache.googleapis.com": 25,
+          "edgecontainer.googleapis.com": 45,
+          "eventarc.googleapis.com": 3,
+          "file.googleapis.com": 21,
+          "firebaseappcheck.googleapis.com": 3,
+          "firebaseapphosting.googleapis.com": 2,
+          "firebaseauth.googleapis.com": 1,
+          "firebasedatabase.googleapis.com": 18,
+          "firebasedataconnect.googleapis.com": 12,
+          "firebaseextensions.googleapis.com": 1,
+          "firebasehosting.googleapis.com": 5,
+          "firebasestorage.googleapis.com": 1,
+          "firebasevertexai.googleapis.com": 3,
+          "firestore.googleapis.com": 24,
+          "firewallinsights.googleapis.com": 8,
+          "fleetengine.googleapis.com": 2,
+          "generativelanguage.googleapis.com": 24,
+          "gkebackup.googleapis.com": 4,
+          "healthcare.googleapis.com": 2,
+          "iam.googleapis.com": 5,
+          "identitytoolkit.googleapis.com": 13,
+          "ids.googleapis.com": 2,
+          "integrations.googleapis.com": 5,
+          "interconnect.googleapis.com": 50,
+          "issuerswitch.googleapis.com": 9,
+          "istio.io": 24,
+          "knative.dev": 11,
+          "kubernetes.io": 3449,
+          "livestream.googleapis.com": 9,
+          "loadbalancing.googleapis.com": 46,
+          "logging.googleapis.com": 17,
+          "managedflink.googleapis.com": 33,
+          "managedidentities.googleapis.com": 3,
+          "managedkafka.googleapis.com": 45,
+          "maps.googleapis.com": 6,
+          "memcache.googleapis.com": 12,
+          "memorystore.googleapis.com": 85,
+          "metastore.googleapis.com": 25,
+          "ml.googleapis.com": 19,
+          "mobilitybilling.googleapis.com": 1,
+          "modelarmor.googleapis.com": 5,
+          "monitoring.googleapis.com": 17,
+          "netapp.com": 8,
+          "netapp.googleapis.com": 31,
+          "network.googleapis.com": 10,
+          "networkconnectivity.googleapis.com": 12,
+          "networking.googleapis.com": 37,
+          "networksecurity.googleapis.com": 31,
+          "networkservices.googleapis.com": 10,
+          "oracledatabase.googleapis.com": 106,
+          "osconfig.googleapis.com": 1,
+          "parallelstore.googleapis.com": 13,
+          "privateca.googleapis.com": 10,
+          "pubsub.googleapis.com": 72,
+          "pubsublite.googleapis.com": 26,
+          "recaptchaenterprise.googleapis.com": 8,
+          "recommendationengine.googleapis.com": 1,
+          "redis.googleapis.com": 140,
+          "remotebuildexecution.googleapis.com": 7,
+          "retail.googleapis.com": 1,
+          "router.googleapis.com": 31,
+          "run.googleapis.com": 36,
+          "serviceruntime.googleapis.com": 14,
+          "spanner.googleapis.com": 91,
+          "storage.googleapis.com": 59,
+          "storagetransfer.googleapis.com": 11,
+          "stream.googleapis.com": 3,
+          "telcoautomation.googleapis.com": 8,
+          "tpu.googleapis.com": 19,
+          "trafficdirector.googleapis.com": 3,
+          "transferappliance.googleapis.com": 15,
+          "translationhub.googleapis.com": 3,
+          "videostitcher.googleapis.com": 3,
+          "visionai.googleapis.com": 9,
+          "vpcaccess.googleapis.com": 6,
+          "vpn.googleapis.com": 9,
+          "workflows.googleapis.com": 37
+        },
+        "potentialOptimizations": []
       }
     }
   ],
   "summary": {
-    "totalChecks": 5,
-    "passed": 2,
-    "failed": 3,
+    "totalChecks": 10,
+    "passed": 5,
+    "failed": 5,
     "costSavingsPotential": 0
   },
   "errors": [
+    {
+      "check": "Monitoring Dashboards",
+      "error": "Cannot read properties of undefined (reading 'list')"
+    },
     {
       "check": "Critical Alerts Coverage",
       "error": "Invalid field \"filter\" [value ==\"severity=CRITICAL\"]; member reference \"severity\" is not valid; No such field: severity."
@@ -143,6 +353,10 @@
     {
       "check": "Alert Coverage Analysis",
       "error": "Cannot read properties of undefined (reading 'filter')"
+    },
+    {
+      "check": "Monitoring Security",
+      "error": "monitoring.projects.getIamPolicy is not a function"
     }
   ]
 }

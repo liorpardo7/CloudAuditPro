@@ -1,0 +1,329 @@
+# Test Results for label_consistency.js
+# Timestamp: 2025-05-15T14:01:22.542Z
+# Summary: {"totalChecks":41,"passed":14,"failed":27}
+
+{
+  "timestamp": "2025-05-15T14:01:22.536Z",
+  "projectId": "all-projects",
+  "findings": [
+    {
+      "check": "Missing Project Labels",
+      "project": "dba-inventory-services-prod",
+      "result": "No labels set on project",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "apple-inventory",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "artifacts.dba-inventory-services-prod.appspot.com",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "auto-inventory-prod-ftp",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "auto-inventory-prod-vla-ftp",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "autoinventory-cfs-service",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "azure_cfs_files",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "cloud-sql-dump-backup",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "dba-inventory-services-prod-cloud-functions",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "dba-inventory-services-prod.appspot.com",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gcf-sources-326969574199-us-central1",
+      "result": "Labels: {\"goog-managed-by\":\"cloudfunctions\"}",
+      "passed": true
+    },
+    {
+      "check": "Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gcf-v2-sources-326969574199-us-central1",
+      "result": "Labels: {\"goog-managed-by\":\"cloudfunctions\"}",
+      "passed": true
+    },
+    {
+      "check": "Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gcf-v2-uploads-326969574199-us-central1",
+      "result": "Labels: {\"goog-managed-by\":\"cloudfunctions\"}",
+      "passed": true
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "generated-bing-cfs-files",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "generated-cfs-files",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "generated-vla-files",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "images_inventory_files",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "marketcheck-data-prod",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "msn-marketplace-reporting-files",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "staging.dba-inventory-services-prod.appspot.com",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "test-bucket-for-filemage",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "us-central1-dba-inventory-s-284706cf-bucket",
+      "result": "Labels: {\"goog-composer-location\":\"us-central1\",\"goog-composer-environment-uuid\":\"1d7f57fd-583c-4e66-8a49-6d676c2b2439\",\"goog-composer-environment\":\"dba-inventory-services-prod\",\"goog-composer-version\":\"composer-1-19-12-airflow-2-1-4\"}",
+      "passed": true
+    },
+    {
+      "check": "Missing Bucket Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "us.artifacts.dba-inventory-services-prod.appspot.com",
+      "result": "No labels set on bucket",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "auto-inventory-service-1",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "auto-inventory-service-2",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "cfs-service",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+      "result": "Labels: {\"goog-composer-environment\":\"dba-inventory-services-prod\",\"goog-composer-environment-uuid\":\"1d7f57fd-583c-4e66-8a49-6d676c2b2439\",\"goog-composer-location\":\"us-central1\",\"goog-composer-version\":\"composer-1-19-12-airflow-2-1-4\",\"goog-gke-cluster-id-base32\":\"egptmxbgu5hwdbcwb4ctos5o7rcjxxagi6wujaemg7jxrqzsvlva\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-central1-a\",\"goog-k8s-cluster-name\":\"us-central1-dba-inventory-s-284706cf-gke\",\"goog-k8s-node-pool-name\":\"default-pool\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+      "result": "Labels: {\"goog-composer-environment\":\"dba-inventory-services-prod\",\"goog-composer-environment-uuid\":\"1d7f57fd-583c-4e66-8a49-6d676c2b2439\",\"goog-composer-location\":\"us-central1\",\"goog-composer-version\":\"composer-1-19-12-airflow-2-1-4\",\"goog-gke-cluster-id-base32\":\"egptmxbgu5hwdbcwb4ctos5o7rcjxxagi6wujaemg7jxrqzsvlva\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-central1-a\",\"goog-k8s-cluster-name\":\"us-central1-dba-inventory-s-284706cf-gke\",\"goog-k8s-node-pool-name\":\"default-pool\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+      "result": "Labels: {\"goog-composer-environment\":\"dba-inventory-services-prod\",\"goog-composer-environment-uuid\":\"1d7f57fd-583c-4e66-8a49-6d676c2b2439\",\"goog-composer-location\":\"us-central1\",\"goog-composer-version\":\"composer-1-19-12-airflow-2-1-4\",\"goog-gke-cluster-id-base32\":\"egptmxbgu5hwdbcwb4ctos5o7rcjxxagi6wujaemg7jxrqzsvlva\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-central1-a\",\"goog-k8s-cluster-name\":\"us-central1-dba-inventory-s-284706cf-gke\",\"goog-k8s-node-pool-name\":\"default-pool\"}",
+      "passed": true
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "unite-google-cfs",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "utility-service",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "dbaops",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "filemage-gateway-linux-dba-vm",
+      "result": "Labels: {\"goog-dm\":\"filemage-gateway-linux-dba\"}",
+      "passed": true
+    },
+    {
+      "check": "Missing VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "googleproductswin",
+      "result": "No labels set on VM",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "result": "Labels: {\"goog-gke-cluster-id-base32\":\"jnfgvluhxbgtzcxrrjjz2bag7kc2fafiuiguuyn27ck4pknt44wa\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-east1-b\",\"goog-k8s-cluster-name\":\"ad-generator-cluster\",\"goog-k8s-node-pool-name\":\"ad-prod-pool-01\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "result": "Labels: {\"goog-gke-cluster-id-base32\":\"jnfgvluhxbgtzcxrrjjz2bag7kc2fafiuiguuyn27ck4pknt44wa\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-east1-b\",\"goog-k8s-cluster-name\":\"ad-generator-cluster\",\"goog-k8s-node-pool-name\":\"ad-prod-pool-01\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "result": "Labels: {\"goog-gke-cluster-id-base32\":\"jfpwpeciknhjzdqtvwunx5j66attfkzhefeuszejmhgofrstv2ya\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-east1-b\",\"goog-k8s-cluster-name\":\"auto-inventory-cluster\",\"goog-k8s-node-pool-name\":\"auto-prod-pool-01\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+      "result": "Labels: {\"goog-gke-cluster-id-base32\":\"jfpwpeciknhjzdqtvwunx5j66attfkzhefeuszejmhgofrstv2ya\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-east1-b\",\"goog-k8s-cluster-name\":\"auto-inventory-cluster\",\"goog-k8s-node-pool-name\":\"auto-prod-pool-01\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "result": "Labels: {\"goog-gke-cluster-id-base32\":\"fc6nlrcnq5fxdn6y23hesfc2auczlsu7l73epfnvk7pr4ctspsbq\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-east1-b\",\"goog-k8s-cluster-name\":\"dba-inventory-services-prod-cluster\",\"goog-k8s-node-pool-name\":\"prod-pool-01\"}",
+      "passed": true
+    },
+    {
+      "check": "VM Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "result": "Labels: {\"goog-gke-cluster-id-base32\":\"fc6nlrcnq5fxdn6y23hesfc2auczlsu7l73epfnvk7pr4ctspsbq\",\"goog-gke-cost-management\":\"\",\"goog-gke-node\":\"\",\"goog-k8s-cluster-location\":\"us-east1-b\",\"goog-k8s-cluster-name\":\"dba-inventory-services-prod-cluster\",\"goog-k8s-node-pool-name\":\"prod-pool-01\"}",
+      "passed": true
+    },
+    {
+      "check": "Missing SQL Labels",
+      "project": "dba-inventory-services-prod",
+      "resource": "cloud-mysql-prod",
+      "result": "No labels set on SQL instance",
+      "passed": false,
+      "recommendation": "Add labels for cost allocation and management"
+    }
+  ],
+  "summary": {
+    "totalChecks": 41,
+    "passed": 14,
+    "failed": 27
+  },
+  "errors": []
+}

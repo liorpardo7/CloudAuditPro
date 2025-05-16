@@ -58,4 +58,5 @@ model AuditItem {
   updatedAt   DateTime     @updatedAt
   lastRun     DateTime?
   lastResult  String?      // JSON string containing last audit results
+  @@unique([categoryId, name])
 }

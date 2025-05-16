@@ -1,10 +1,42 @@
 const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
+const { getAuthClient, getProjectId } = require('./auth');
 const fs = require('fs');
 const path = require('path');
 
 class CostAllocationAudit extends BaseValidator {
+  async initialize() {
+    try {
+      console.log('Initializing GCP clients...');
+      
+      // Get auth client and project ID
+      this.authClient = await getAuthClient();
+      this.projectId = await getProjectId();
+      
+      // Initialize API clients with authenticated client
+      this.compute = google.compute({ version: 'v1', auth: this.authClient });
+      this.monitoring = google.monitoring({ version: 'v3', auth: this.authClient });
+      this.monitoringDashboards = google.monitoring({ version: 'v1', auth: this.authClient });
+      this.storage = google.storage({ version: 'v1', auth: this.authClient });
+      this.securitycenter = google.securitycenter({ version: 'v1', auth: this.authClient });
+      this.billing = google.cloudbilling({ version: 'v1', auth: this.authClient });
+      this.iam = google.iam({ version: 'v1', auth: this.authClient });
+      this.cloudasset = google.cloudasset({ version: 'v1', auth: this.authClient });
+      this.container = google.container({ version: 'v1', auth: this.authClient });
+      this.dns = google.dns({ version: 'v1', auth: this.authClient });
+      this.cloudbuild = google.cloudbuild({ version: 'v1', auth: this.authClient });
+      this.logging = google.logging({ version: 'v2', auth: this.authClient });
+      this.dlp = google.dlp({ version: 'v2', auth: this.authClient });
+      this.cloudresourcemanager = google.cloudresourcemanager({ version: 'v1', auth: this.authClient });
+      
+      console.log('GCP clients initialized successfully');
+    } catch (error) {
+      console.error('Error initializing GCP clients:', error);
+      throw error;
+    }
+  }
+
   async auditAll() {
     await this.initialize();
     console.log('Starting cost allocation and tagging audit...\n');
@@ -25,27 +57,35 @@ class CostAllocationAudit extends BaseValidator {
       recommendations: []
     };
 
-    // Get all projects
-    const projects = await this.getAllProjects();
-    
-    // Required labels to check
-    const requiredLabels = ['cost_center', 'environment', 'project', 'owner', 'team'];
-    
-    // Audit each project
-    for (const project of projects) {
-      await this.auditProject(project, requiredLabels, results);
+    try {
+      // Get all projects
+      const projects = await this.getAllProjects();
+      
+      // Required labels to check
+      const requiredLabels = ['cost_center', 'environment', 'project', 'owner', 'team'];
+      
+      // Audit each project
+      for (const project of projects) {
+        await this.auditProject(project, requiredLabels, results);
+      }
+
+      // Calculate tagging coverage
+      results.costAllocation.taggingCoverage.percentage = 
+        (results.costAllocation.taggingCoverage.tagged / results.costAllocation.taggingCoverage.total) * 100;
+
+      // Generate recommendations
+      this.generateRecommendations(results);
+
+      return results;
+    } catch (error) {
+      console.error('Error during cost allocation audit:', error);
+      throw error;
     }
-
-    // Calculate tagging coverage
-    results.costAllocation.taggingCoverage.percentage = 
-      (results.costAllocation.taggingCoverage.tagged / results.costAllocation.taggingCoverage.total) * 100;
-
-    return results;
   }
 
   async getAllProjects() {
     try {
-      const response = await this.resourceManager.projects.list();
+      const response = await this.cloudresourcemanager.projects.list();
       return response.data.projects || [];
     } catch (error) {
       console.error('Error getting projects:', error);
@@ -181,29 +221,48 @@ class CostAllocationAudit extends BaseValidator {
   }
 }
 
-async function runCostAllocationAudit() {
-  // TODO: Implement GCP API calls to collect cost allocation data
-  const results = {
-    timestamp: new Date().toISOString(),
-    taggingFindings: [], // Fill with tagging compliance
-    costCenterFindings: [], // Fill with cost center allocation
-    projectCostFindings: [], // Fill with project/service-level cost analysis
-    recommendations: [
-      // Example:
-      // { issue: 'Missing cost center tags', recommendation: 'Tag all resources with cost center', severity: 'medium', estimatedSavings: null }
-    ]
-  };
-  fs.writeFileSync(path.join(__dirname, 'cost-allocation-audit-results.json'), JSON.stringify(results, null, 2));
-  console.log('Cost Allocation audit completed. Results saved to cost-allocation-audit-results.json');
-}
-
 if (require.main === module) {
-  runCostAllocationAudit();
+  (async () => {
+    try {
+      const audit = new CostAllocationAudit();
+      const results = await audit.auditAll();
+      
+      // Save results to JSON file
+      const resultsPath = path.join(__dirname, 'cost-allocation-audit-results.json');
+      fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
+      
+      // Write audit results using the common function
+      const findings = results.recommendations.map(rec => ({
+        category: rec.category,
+        issue: rec.issue,
+        recommendation: rec.recommendation,
+        severity: 'medium',
+        impact: 'Cost allocation and resource management'
+      }));
+      
+      const summary = {
+        totalChecks: results.costAllocation.taggingCoverage.total,
+        passed: results.costAllocation.taggingCoverage.tagged,
+        failed: results.costAllocation.taggingCoverage.total - results.costAllocation.taggingCoverage.tagged,
+        costSavingsPotential: 0 // This could be calculated based on recommendations
+      };
+      
+      const errors = results.recommendations
+        .filter(rec => rec.error)
+        .map(rec => ({
+          message: rec.error,
+          project: rec.project
+        }));
+      
+      await writeAuditResults("cost-allocation-audit", findings, summary, errors);
+      
+      console.log('Cost Allocation audit completed successfully.');
+      console.log(`Results saved to ${resultsPath}`);
+    } catch (error) {
+      console.error('Failed to complete cost allocation audit:', error);
+      process.exit(1);
+    }
+  })();
 }
 
-module.exports = CostAllocationAudit; 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("cost-allocation-audit", findings, summary, errors);
+module.exports = CostAllocationAudit;

@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState } from "react"
-import { Loader2, CheckCircle2, AlertCircle, Clock, BarChart2, FileText, Server, Database, LayoutDashboard, Shield, BadgeCheck, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import React, { useState, ReactElement } from "react"
+import { Loader2, CheckCircle2, AlertCircle, Clock, BarChart2, FileText, Server, Database, LayoutDashboard, Shield, BadgeCheck, ArrowUpRight, ArrowDownRight, CircleIcon, Loader2Icon, CheckCircleIcon, XCircleIcon } from "lucide-react"
 
 const categories = [
   { key: 'compute', label: 'Compute Resources', icon: Server },
@@ -14,28 +14,47 @@ const categories = [
 
 const sectionOrder = ['compute', 'storage', 'network', 'security', 'cost', 'compliance']
 
-const statusIcons = {
-  empty: <Clock className="w-5 h-5 text-slate-400" />, // Not started
-  loading: <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />, // Running
-  result: <CheckCircle2 className="w-5 h-5 text-green-600" />, // Completed
-  error: <AlertCircle className="w-5 h-5 text-red-500" />, // Error
+type StatusType = 'empty' | 'loading' | 'result' | 'error'
+
+const statusIcons: Record<StatusType, ReactElement> = {
+  empty: <CircleIcon className="h-4 w-4" />,
+  loading: <Loader2Icon className="h-4 w-4 animate-spin" />,
+  result: <CheckCircleIcon className="h-4 w-4" />,
+  error: <XCircleIcon className="h-4 w-4" />
 }
 
-const statusLabels = {
-  empty: 'Not started',
-  loading: 'Running…',
-  result: 'Completed',
-  error: 'Error',
+const statusLabels: Record<StatusType, string> = {
+  empty: 'No Data',
+  loading: 'Loading...',
+  result: 'Complete',
+  error: 'Error'
 }
 
-const demoFindings = {
-  compute: { critical: 2, total: 5, utilization: 72 },
-  storage: { critical: 0, total: 2, utilization: 65 },
-  network: { critical: 1, total: 3, utilization: 58 },
-  security: { critical: 3, total: 6, utilization: 80 },
-  cost: { critical: 0, total: 1, utilization: 54 },
-  compliance: { critical: 0, total: 0, utilization: 89 },
+interface FindingStats {
+  critical: number
+  total: number
+  utilization: number
 }
+
+interface DemoFindings {
+  compute: FindingStats
+  storage: FindingStats
+  network: FindingStats
+  security: FindingStats
+  cost: FindingStats
+  compliance: FindingStats
+}
+
+const demoFindings: DemoFindings = {
+  compute: { critical: 2, total: 10, utilization: 0.8 },
+  storage: { critical: 1, total: 8, utilization: 0.6 },
+  network: { critical: 0, total: 5, utilization: 0.4 },
+  security: { critical: 3, total: 12, utilization: 0.9 },
+  cost: { critical: 1, total: 6, utilization: 0.5 },
+  compliance: { critical: 2, total: 9, utilization: 0.7 }
+}
+
+type DemoFindingKey = keyof DemoFindings
 
 function MiniBar({ value }: { value: number }) {
   // Simple bar for utilization
@@ -58,7 +77,7 @@ function CategoryCard({ label, icon: Icon, state, findings, onViewDetails }: any
       <div className="flex items-center gap-3 mb-2">
         <span className="bg-slate-50 rounded-full p-2 flex items-center justify-center">{<Icon className="w-6 h-6" />}</span>
         <span className="font-semibold text-lg">{label}</span>
-        <span className="ml-auto flex items-center gap-1">{statusIcons[state]}<span className="text-xs font-medium">{statusLabels[state]}</span></span>
+        <span className="ml-auto flex items-center gap-1">{statusIcons[state as StatusType]}<span className="text-xs font-medium">{statusLabels[state as StatusType]}</span></span>
       </div>
       <div className="flex items-center gap-4 mb-2">
         <div className="flex flex-col">
@@ -152,7 +171,7 @@ function DrillDownModal({ open, onClose, category }: any) {
 
 export default function AuditPreviewPage() {
   // State: 'empty' | 'loading' | 'result' | 'error' for each section
-  const [sectionStates, setSectionStates] = useState<Record<string, 'empty' | 'loading' | 'result' | 'error'>>({
+  const [sectionStates, setSectionStates] = useState<Record<string, StatusType>>({
     compute: 'empty',
     storage: 'empty',
     network: 'empty',
@@ -195,7 +214,7 @@ export default function AuditPreviewPage() {
             label={cat.label}
             icon={cat.icon}
             state={sectionStates[cat.key]}
-            findings={demoFindings[cat.key]}
+            findings={demoFindings[cat.key as DemoFindingKey]}
             onViewDetails={() => setModal(cat.label)}
           />
         ))}

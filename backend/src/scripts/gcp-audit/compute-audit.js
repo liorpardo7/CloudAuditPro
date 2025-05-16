@@ -221,14 +221,14 @@ if (require.main === module) {
       console.log('Compute audit completed. Results:', JSON.stringify(results, null, 2));
     })
     .catch(error => {
-      console.error('Error running compute audit:', error);
-      process.exit(1);
-    });
+    console.error('Error running compute audit:', error);
+    process.exit(1);
+  });
 }
 
 module.exports = {
   runComputeAudit
-};
+}; 
 
 const findings = [];
 const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };

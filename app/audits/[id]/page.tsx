@@ -3,8 +3,8 @@
 import * as React from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
-import { Button } from "../../components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Loader2, ArrowLeft, ChevronRight, CheckCircle, AlertCircle, Info, HelpCircle, FileText, Settings, Download, BarChart, Server, Database, Network, Shield, Coins, Clock } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
@@ -54,7 +54,7 @@ const severityConfig = {
 export default function AuditDetailsPage() {
   const params = useParams()
   const auditId = params.id as string
-  const { show } = useToast()
+  const { toast } = useToast()
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
   const [auditData, setAuditData] = React.useState<AuditDetailsData | null>(null)
@@ -70,13 +70,17 @@ export default function AuditDetailsPage() {
         setAuditData(data)
       } catch (err: any) {
         setError(err.message || 'Unknown error')
-        show(err.message || 'Failed to load audit results', 'error')
+        toast({
+          title: 'Error',
+          description: err.message || 'Failed to load audit results',
+          variant: 'destructive'
+        })
       } finally {
         setLoading(false)
       }
     }
     if (auditId) fetchAudit()
-  }, [auditId, show])
+  }, [auditId, toast])
 
   if (loading) {
     return (

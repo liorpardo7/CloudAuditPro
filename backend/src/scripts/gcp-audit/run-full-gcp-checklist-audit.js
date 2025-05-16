@@ -5,6 +5,7 @@ const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { getAuthClient, getProjectId } = require('./auth');
 
 const CHECKLIST_PATH = path.resolve(__dirname, '../../../../GCP_AUDIT_CHECKLIST.md');
 const CREDENTIALS_PATH = path.join(__dirname, 'dba-inventory-services-prod-8a97ca8265b5.json');
@@ -245,6 +246,33 @@ const STORAGE_ADV_SUBITEMS_MAP = {
   // ...add more as needed
 };
 
+// Map of scripts that need attention
+const PROBLEMATIC_SCRIPTS = {
+  'cost-management-audit.js': {
+    issue: 'projectId not defined',
+    category: 'Cost Management',
+    priority: 'high'
+  },
+  'billing-audit.js': {
+    issue: 'projectId not defined',
+    category: 'Billing',
+    priority: 'high'
+  }
+};
+
+// Map of scripts with JSON parsing issues
+const JSON_PARSING_ISSUES = [
+  'scheduler_audit.js',
+  'composer_dag_audit.js',
+  'cross_project_audit.js',
+  'advanced_audits.js'
+];
+
+// Map of scripts with missing results
+const MISSING_RESULTS = [
+  'label_consistency.js'
+];
+
 function parseChecklist() {
   const content = fs.readFileSync(CHECKLIST_PATH, 'utf-8');
   const lines = content.split('\n');
@@ -276,288 +304,125 @@ function parseChecklist() {
   return items;
 }
 
-function runAuditScript(scriptName) {
+async function runAuditScript(scriptName) {
   try {
+    console.log(`\n=== Running ${scriptName} ===`);
+    console.log(`Started at: ${new Date().toISOString()}`);
+    
     const scriptPath = path.join(__dirname, scriptName);
-    execSync(`node ${scriptPath}`, { stdio: 'inherit', env: { ...process.env, GOOGLE_APPLICATION_CREDENTIALS: CREDENTIALS_PATH } });
+    const projectId = await getProjectId();
+    
+    // Set environment variables
+    const env = {
+      ...process.env,
+      GOOGLE_APPLICATION_CREDENTIALS: CREDENTIALS_PATH,
+      GOOGLE_CLOUD_PROJECT: projectId
+    };
+    
+    execSync(`node ${scriptPath}`, { 
+      stdio: 'inherit',
+      env
+    });
+    
     return { status: '✓', error: null };
   } catch (err) {
     return { status: '✗', error: err.message };
   }
 }
 
-function main() {
-  const items = parseChecklist();
-  const results = [];
-  const summary = { total: 0, passed: 0, failed: 0, notImplemented: 0 };
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-
-  // Build results in the format: { category: { item: { ...result } } }
-  const resultsByCategory = {};
-
-  // Preload compute audit results if available
-  let computeAuditResults = null;
-  const computeAuditPath = path.join(__dirname, 'compute-audit-results.json');
-  if (fs.existsSync(computeAuditPath)) {
-    computeAuditResults = JSON.parse(fs.readFileSync(computeAuditPath, 'utf-8'));
-  }
-  // Preload storage audit results if available
-  let storageAuditResults = null;
-  const storageAuditPath = path.join(__dirname, 'storage-audit-results.json');
-  if (fs.existsSync(storageAuditPath)) {
-    storageAuditResults = JSON.parse(fs.readFileSync(storageAuditPath, 'utf-8'));
-  }
-  // Preload networking audit results if available
-  let networkingAuditResults = null;
-  const networkingAuditPath = path.join(__dirname, 'networking-audit-results.json');
-  if (fs.existsSync(networkingAuditPath)) {
-    networkingAuditResults = JSON.parse(fs.readFileSync(networkingAuditPath, 'utf-8'));
-  }
-  // Preload billing audit results if available
-  let billingAuditResults = null;
-  const billingAuditPath = path.join(__dirname, 'billing-audit-results.json');
-  if (fs.existsSync(billingAuditPath)) {
-    billingAuditResults = JSON.parse(fs.readFileSync(billingAuditPath, 'utf-8'));
-  }
-  // Preload utilization audit results if available
-  let utilizationAuditResults = null;
-  const utilizationAuditPath = path.join(__dirname, 'resource-utilization-audit-results.json');
-  if (fs.existsSync(utilizationAuditPath)) {
-    utilizationAuditResults = JSON.parse(fs.readFileSync(utilizationAuditPath, 'utf-8'));
-  }
-  // Preload storage lifecycle audit results if available
-  let storageLifecycleAuditResults = null;
-  const storageLifecycleAuditPath = path.join(__dirname, 'storage-lifecycle-audit-results.json');
-  if (fs.existsSync(storageLifecycleAuditPath)) {
-    storageLifecycleAuditResults = JSON.parse(fs.readFileSync(storageLifecycleAuditPath, 'utf-8'));
-  }
-  // Preload security audit results if available
-  let securityAuditResults = null;
-  const securityAuditPath = path.join(__dirname, 'security-audit-results.json');
-  if (fs.existsSync(securityAuditPath)) {
-    securityAuditResults = JSON.parse(fs.readFileSync(securityAuditPath, 'utf-8'));
-  }
-  // Preload results for all new audit scripts
-  let gkeAuditResults = null;
-  const gkeAuditPath = path.join(__dirname, 'gke-audit-results.json');
-  if (fs.existsSync(gkeAuditPath)) {
-    gkeAuditResults = JSON.parse(fs.readFileSync(gkeAuditPath, 'utf-8'));
-  }
-  let diskAuditResults = null;
-  const diskAuditPath = path.join(__dirname, 'disk-audit-results.json');
-  if (fs.existsSync(diskAuditPath)) {
-    diskAuditResults = JSON.parse(fs.readFileSync(diskAuditPath, 'utf-8'));
-  }
-  let iamAuditResults = null;
-  const iamAuditPath = path.join(__dirname, 'iam-audit-results.json');
-  if (fs.existsSync(iamAuditPath)) {
-    iamAuditResults = JSON.parse(fs.readFileSync(iamAuditPath, 'utf-8'));
-  }
-  let orgPolicyAuditResults = null;
-  const orgPolicyAuditPath = path.join(__dirname, 'org-policy-audit-results.json');
-  if (fs.existsSync(orgPolicyAuditPath)) {
-    orgPolicyAuditResults = JSON.parse(fs.readFileSync(orgPolicyAuditPath, 'utf-8'));
-  }
-  let sccAuditResults = null;
-  const sccAuditPath = path.join(__dirname, 'securitycenter-audit-results.json');
-  if (fs.existsSync(sccAuditPath)) {
-    sccAuditResults = JSON.parse(fs.readFileSync(sccAuditPath, 'utf-8'));
-  }
-  let billingAdvAuditResults = null;
-  const billingAdvAuditPath = path.join(__dirname, 'billing-advanced-audit-results.json');
-  if (fs.existsSync(billingAdvAuditPath)) {
-    billingAdvAuditResults = JSON.parse(fs.readFileSync(billingAdvAuditPath, 'utf-8'));
-  }
-  let complianceAuditResults = null;
-  const complianceAuditPath = path.join(__dirname, 'compliance-audit-results.json');
-  if (fs.existsSync(complianceAuditPath)) {
-    complianceAuditResults = JSON.parse(fs.readFileSync(complianceAuditPath, 'utf-8'));
-  }
-  let devopsAuditResults = null;
-  const devopsAuditPath = path.join(__dirname, 'devops-audit-results.json');
-  if (fs.existsSync(devopsAuditPath)) {
-    devopsAuditResults = JSON.parse(fs.readFileSync(devopsAuditPath, 'utf-8'));
-  }
-  let monitoringAuditResults = null;
-  const monitoringAuditPath = path.join(__dirname, 'monitoring-audit-results.json');
-  if (fs.existsSync(monitoringAuditPath)) {
-    monitoringAuditResults = JSON.parse(fs.readFileSync(monitoringAuditPath, 'utf-8'));
-  }
-  let costAllocAuditResults = null;
-  const costAllocAuditPath = path.join(__dirname, 'cost-allocation-audit-results.json');
-  if (fs.existsSync(costAllocAuditPath)) {
-    costAllocAuditResults = JSON.parse(fs.readFileSync(costAllocAuditPath, 'utf-8'));
-  }
-  let dataProtAuditResults = null;
-  const dataProtAuditPath = path.join(__dirname, 'data-protection-audit-results.json');
-  if (fs.existsSync(dataProtAuditPath)) {
-    dataProtAuditResults = JSON.parse(fs.readFileSync(dataProtAuditPath, 'utf-8'));
-  }
-  let storageAdvAuditResults = null;
-  const storageAdvAuditPath = path.join(__dirname, 'storage-advanced-audit-results.json');
-  if (fs.existsSync(storageAdvAuditPath)) {
-    storageAdvAuditResults = JSON.parse(fs.readFileSync(storageAdvAuditPath, 'utf-8'));
-  }
-
-  for (const { category, item } of items) {
-    summary.total++;
-    let script = null;
-    let result;
-    // Check if this is a compute sub-item
-    if (category === 'Virtual Machines' && COMPUTE_SUBITEMS_MAP[item] && computeAuditResults) {
-      const implemented = COMPUTE_SUBITEMS_MAP[item](computeAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'compute-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a storage sub-item
-    } else if (category === 'Cloud Storage' && STORAGE_SUBITEMS_MAP[item] && storageAuditResults) {
-      const implemented = STORAGE_SUBITEMS_MAP[item](storageAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'storage-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a networking sub-item
-    } else if ((category === 'VPC' || category === 'Load Balancing' || category === 'Cloud DNS') && NETWORKING_SUBITEMS_MAP[item] && networkingAuditResults) {
-      const implemented = NETWORKING_SUBITEMS_MAP[item](networkingAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'networking-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a billing sub-item
-    } else if (category === 'Billing & Cost Management' && BILLING_SUBITEMS_MAP[item] && billingAuditResults) {
-      const implemented = BILLING_SUBITEMS_MAP[item](billingAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'billing-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a resource utilization sub-item
-    } else if (category === 'Resource Utilization' && UTILIZATION_SUBITEMS_MAP[item] && utilizationAuditResults) {
-      const implemented = UTILIZATION_SUBITEMS_MAP[item](utilizationAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'resource-utilization-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a storage lifecycle sub-item
-    } else if (category === 'Storage Optimization' && STORAGE_LIFECYCLE_SUBITEMS_MAP[item] && storageLifecycleAuditResults) {
-      const implemented = STORAGE_LIFECYCLE_SUBITEMS_MAP[item](storageLifecycleAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'storage-lifecycle-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a security sub-item
-    } else if (category === 'Security & Compliance' && SECURITY_SUBITEMS_MAP[item] && securityAuditResults) {
-      const implemented = SECURITY_SUBITEMS_MAP[item](securityAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'security-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a GKE sub-item
-    } else if (category === 'Kubernetes (GKE)' && GKE_SUBITEMS_MAP[item] && gkeAuditResults) {
-      const implemented = GKE_SUBITEMS_MAP[item](gkeAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'gke-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a disk sub-item
-    } else if (category === 'Storage' && DISK_SUBITEMS_MAP[item] && diskAuditResults) {
-      const implemented = DISK_SUBITEMS_MAP[item](diskAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'disk-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is an IAM sub-item
-    } else if (category === 'Identity & Access Management' && IAM_SUBITEMS_MAP[item] && iamAuditResults) {
-      const implemented = IAM_SUBITEMS_MAP[item](iamAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'iam-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is an Org Policy sub-item
-    } else if (category === 'Organization Policy' && ORG_POLICY_SUBITEMS_MAP[item] && orgPolicyAuditResults) {
-      const implemented = ORG_POLICY_SUBITEMS_MAP[item](orgPolicyAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'org-policy-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Security Center sub-item
-    } else if (category === 'Security Center' && SCC_SUBITEMS_MAP[item] && sccAuditResults) {
-      const implemented = SCC_SUBITEMS_MAP[item](sccAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'securitycenter-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Billing Advanced sub-item
-    } else if (category === 'Billing & Cost Management' && BILLING_ADV_SUBITEMS_MAP[item] && billingAdvAuditResults) {
-      const implemented = BILLING_ADV_SUBITEMS_MAP[item](billingAdvAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'billing-advanced-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Compliance sub-item
-    } else if (category === 'Security & Compliance' && COMPLIANCE_SUBITEMS_MAP[item] && complianceAuditResults) {
-      const implemented = COMPLIANCE_SUBITEMS_MAP[item](complianceAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'compliance-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a DevOps sub-item
-    } else if (category === 'DevOps' && DEVOPS_SUBITEMS_MAP[item] && devopsAuditResults) {
-      const implemented = DEVOPS_SUBITEMS_MAP[item](devopsAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'devops-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Monitoring sub-item
-    } else if (category === 'Monitoring' && MONITORING_SUBITEMS_MAP[item] && monitoringAuditResults) {
-      const implemented = MONITORING_SUBITEMS_MAP[item](monitoringAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'monitoring-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Cost Allocation sub-item
-    } else if (category === 'Billing & Cost Management' && COST_ALLOC_SUBITEMS_MAP[item] && costAllocAuditResults) {
-      const implemented = COST_ALLOC_SUBITEMS_MAP[item](costAllocAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'cost-allocation-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Data Protection sub-item
-    } else if (category === 'Data Protection' && DATA_PROT_SUBITEMS_MAP[item] && dataProtAuditResults) {
-      const implemented = DATA_PROT_SUBITEMS_MAP[item](dataProtAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'data-protection-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    // Check if this is a Storage Advanced sub-item
-    } else if (category === 'Storage' && STORAGE_ADV_SUBITEMS_MAP[item] && storageAdvAuditResults) {
-      const implemented = STORAGE_ADV_SUBITEMS_MAP[item](storageAdvAuditResults);
-      result = { status: implemented ? '✓' : 'not implemented', error: null };
-      script = 'storage-advanced-audit.js';
-      if (implemented) summary.passed++; else summary.notImplemented++;
-    } else {
-      // Find script
-      for (const [key, val] of Object.entries(AUDIT_SCRIPT_MAP)) {
-        if (item.includes(key) || category.includes(key)) {
-          script = val;
-          break;
-        }
-      }
-      if (script && fs.existsSync(path.join(__dirname, script))) {
-        result = runAuditScript(script);
-        if (result.status === '✓') summary.passed++;
-        else summary.failed++;
-      } else {
-        result = { status: 'not implemented', error: null };
-        summary.notImplemented++;
-      }
+async function main() {
+  console.log('Starting focused GCP audit for problematic scripts...');
+  
+  const results = {
+    timestamp: new Date().toISOString(),
+    projectId: await getProjectId(),
+    problematicScripts: {},
+    jsonParsingIssues: {},
+    missingResults: {},
+    summary: {
+      total: 0,
+      passed: 0,
+      failed: 0,
+      notImplemented: 0
     }
-    if (!resultsByCategory[category]) resultsByCategory[category] = {};
-    resultsByCategory[category][item] = {
-      ...result,
-      script: script || null,
+  };
+
+  // Run problematic scripts
+  for (const [script, info] of Object.entries(PROBLEMATIC_SCRIPTS)) {
+    results.summary.total++;
+    console.log(`\nRunning problematic script: ${script}`);
+    const result = await runAuditScript(script);
+    results.problematicScripts[script] = {
+      ...info,
+      result,
       timestamp: new Date().toISOString()
     };
-    results.push({ category, item, script: script || null, status: result.status, error: result.error });
-    console.log(`[${result.status}] ${category} - ${item}`);
+    if (result.status === '✓') results.summary.passed++;
+    else results.summary.failed++;
   }
 
-  // Add summary and timestamp as extra fields
-  resultsByCategory._summary = summary;
-  resultsByCategory._timestamp = new Date().toISOString();
+  // Check JSON parsing issues
+  for (const script of JSON_PARSING_ISSUES) {
+    results.summary.total++;
+    console.log(`\nChecking JSON parsing for: ${script}`);
+    const result = await runAuditScript(script);
+    results.jsonParsingIssues[script] = {
+      result,
+      timestamp: new Date().toISOString()
+    };
+    if (result.status === '✓') results.summary.passed++;
+    else results.summary.failed++;
+  }
 
-  const outPathTimestamped = path.join(OUTPUT_DIR, `audit-results-${timestamp}.json`);
-  const outPathPublic = path.resolve(__dirname, '../../../../public/audit-results.json');
-  fs.writeFileSync(outPathTimestamped, JSON.stringify(resultsByCategory, null, 2));
-  fs.writeFileSync(outPathPublic, JSON.stringify(resultsByCategory, null, 2));
-  console.log(`\nAudit complete. Results written to ${outPathTimestamped} and public/audit-results.json`);
+  // Check missing results
+  for (const script of MISSING_RESULTS) {
+    results.summary.total++;
+    console.log(`\nChecking missing results for: ${script}`);
+    const result = await runAuditScript(script);
+    results.missingResults[script] = {
+      result,
+      timestamp: new Date().toISOString()
+    };
+    if (result.status === '✓') results.summary.passed++;
+    else results.summary.failed++;
+  }
+
+  // Calculate pass rate
+  results.summary.passRate = 
+    `${((results.summary.passed / results.summary.total) * 100).toFixed(2)}%`;
+
+  // Save results
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const outPathTimestamped = path.join(OUTPUT_DIR, `focused-audit-results-${timestamp}.json`);
+  const outPathPublic = path.resolve(__dirname, '../../../../public/focused-audit-results.json');
+  
+  fs.writeFileSync(outPathTimestamped, JSON.stringify(results, null, 2));
+  fs.writeFileSync(outPathPublic, JSON.stringify(results, null, 2));
+  
+  console.log('\nFocused audit complete!');
+  console.log('Results saved to:', outPathTimestamped);
+  console.log('\nSummary:');
+  console.log(`Total Checks: ${results.summary.total}`);
+  console.log(`Passed: ${results.summary.passed}`);
+  console.log(`Failed: ${results.summary.failed}`);
+  console.log(`Pass Rate: ${results.summary.passRate}`);
+  
+  // Write final results
+const findings = [];
+  const summary = {
+    totalChecks: results.summary.total,
+    passed: results.summary.passed,
+    failed: results.summary.failed,
+    costSavingsPotential: 0
+  };
+  const errors = Object.entries(results.problematicScripts)
+    .filter(([_, info]) => info.result.status === '✗')
+    .map(([script, info]) => ({
+      check: script,
+      error: info.result.error
+    }));
+  
+  writeAuditResults("focused-gcp-checklist-audit", findings, summary, errors);
 }
 
-main(); 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("run-full-gcp-checklist-audit", findings, summary, errors);
+main().catch(console.error); 

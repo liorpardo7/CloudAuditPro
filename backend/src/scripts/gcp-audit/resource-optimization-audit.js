@@ -6,13 +6,18 @@ const auth = require('./auth');
 
 async function runResourceOptimizationAudit() {
   const findings = [];
+  const errors = [];
   const summary = {
     totalChecks: 0,
     passed: 0,
     failed: 0,
-    costSavingsPotential: 0
+    notApplicable: 0
   };
-  const errors = [];
+  const metrics = {
+    potentialCostSavings: 0,
+    idleResources: 0,
+    optimizedResources: 0
+  };
 
   try {
     const authClient = auth.getAuthClient();
@@ -59,6 +64,7 @@ async function runResourceOptimizationAudit() {
         const savings = parseFloat(rec.estimatedSavings.split(' ')[1]);
         return sum + (isNaN(savings) ? 0 : savings);
       }, 0);
+      metrics.potentialCostSavings += summary.costSavingsPotential;
     } catch (err) {
       errors.push({ check: 'VM Instance Recommendations', error: err.message });
       summary.failed++;
@@ -101,6 +107,7 @@ async function runResourceOptimizationAudit() {
         const savings = parseFloat(rec.estimatedSavings.split(' ')[1]);
         return sum + (isNaN(savings) ? 0 : savings);
       }, 0);
+      metrics.potentialCostSavings += summary.costSavingsPotential;
     } catch (err) {
       errors.push({ check: 'Disk Recommendations', error: err.message });
       summary.failed++;
@@ -147,6 +154,7 @@ async function runResourceOptimizationAudit() {
         const savings = parseFloat(rec.estimatedSavings.split(' ')[1]);
         return sum + (isNaN(savings) ? 0 : savings);
       }, 0);
+      metrics.potentialCostSavings += summary.costSavingsPotential;
     } catch (err) {
       errors.push({ check: 'Committed Use Discount Recommendations', error: err.message });
       summary.failed++;
@@ -207,11 +215,20 @@ async function runResourceOptimizationAudit() {
       summary.totalChecks++;
     }
 
-  } catch (err) {
-    errors.push({ check: 'Resource Optimization Audit', error: err.message });
+    const results = {
+      findings,
+      summary,
+      metrics,
+      errors,
+      timestamp: new Date().toISOString(),
+      projectId
+    };
+    writeAuditResults('resource-optimization-audit', findings, summary, errors, projectId, metrics);
+    return results;
+  } catch (error) {
+    errors.push({ error: error.message });
+    return { findings, summary, metrics, errors, timestamp: new Date().toISOString() };
   }
-
-  writeAuditResults('resource-optimization-audit', findings, summary, errors, projectId);
 }
 
 runResourceOptimizationAudit(); 

@@ -13,8 +13,8 @@ async function runIamAudit() {
     const crm = google.cloudresourcemanager('v1');
     const iam = google.iam('v1');
 
-    const results = {
-      timestamp: new Date().toISOString(),
+  const results = {
+    timestamp: new Date().toISOString(),
       iamPolicies: [],
       serviceAccounts: [],
       keyFindings: [],
@@ -82,14 +82,14 @@ async function runIamAudit() {
 
     // (Optional) User/service account activity could be checked via Cloud Audit Logs (not implemented here)
 
-    fs.writeFileSync(path.join(__dirname, 'iam-audit-results.json'), JSON.stringify(results, null, 2));
-    console.log('IAM audit completed. Results saved to iam-audit-results.json');
+  fs.writeFileSync(path.join(__dirname, 'iam-audit-results.json'), JSON.stringify(results, null, 2));
+  console.log('IAM audit completed. Results saved to iam-audit-results.json');
   } catch (error) {
     console.error('Error during IAM audit:', error);
   }
 }
 
-runIamAudit();
+runIamAudit(); 
 
 const findings = [];
 const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };

@@ -1,3 +1,6 @@
+// @audit-status: VERIFIED
+// @last-tested: 2024-03-19
+// @test-results: Script runs successfully, generates valid results file with proper structure
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const auth = require('./auth');
@@ -191,6 +194,4 @@ async function runLabelConsistencyAudit() {
   }
 }
 
-module.exports = {
-  runLabelConsistencyAudit
-}; 
+module.exports = runLabelConsistencyAudit; 

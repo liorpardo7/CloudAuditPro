@@ -1,0 +1,3 @@
+function getResultsForScript(scriptFile: string) {
+  // ... existing function body ...
+} 

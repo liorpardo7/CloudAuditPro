@@ -1,15 +1,5 @@
 const { google } = require('googleapis');
-const { execSync } = require('child_process');
-
-// Get access token from gcloud
-function getAccessToken() {
-  try {
-    return execSync('gcloud auth print-access-token').toString().trim();
-  } catch (error) {
-    console.error('Error getting access token:', error);
-    throw error;
-  }
-}
+const { getAuthClient, getProjectId } = require('./auth');
 
 class BaseValidator {
   constructor() {
@@ -31,17 +21,9 @@ class BaseValidator {
     try {
       console.log('Initializing GCP clients...');
       
-      // Get access token
-      const accessToken = getAccessToken();
-      console.log('Got access token');
-      
-      // Create auth client
-      this.authClient = new google.auth.OAuth2();
-      this.authClient.setCredentials({ access_token: accessToken });
-      
-      // Get project ID
-      this.projectId = 'dba-inventory-services-prod';
-      console.log(`Using project ID: ${this.projectId}`);
+      // Get auth client and project ID
+      this.authClient = await getAuthClient();
+      this.projectId = await getProjectId();
       
       // Initialize API clients with authenticated client
       this.compute = google.compute({ version: 'v1', auth: this.authClient });

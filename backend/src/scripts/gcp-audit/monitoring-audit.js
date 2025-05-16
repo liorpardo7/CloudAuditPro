@@ -4,6 +4,10 @@ const fs = require('fs');
 const path = require('path');
 const auth = require('./auth');
 
+/**
+ * Runs the monitoring audit for GCP resources
+ * @returns {Promise<Object>} Audit results
+ */
 async function runMonitoringAudit() {
   const findings = [];
   const summary = {
@@ -15,16 +19,46 @@ async function runMonitoringAudit() {
   const errors = [];
 
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    const authClient = await auth.getAuthClient();
+    const projectId = await auth.getProjectId();
+    
+    if (!projectId) {
+      throw new Error('Project ID not found. Please ensure proper authentication and project configuration.');
+    }
+
     const monitoring = google.monitoring({ version: 'v3', auth: authClient });
     const projectName = `projects/${projectId}`;
 
-    // 1. Check cost anomaly alerts
+    // 1. Check monitoring dashboards
+    try {
+      const dashboardsResp = await monitoring.projects.dashboards.list({
+        parent: projectName
+      });
+      const dashboards = dashboardsResp.data.dashboards || [];
+      findings.push({
+        check: 'Monitoring Dashboards',
+        result: `${dashboards.length} dashboards found`,
+        passed: dashboards.length > 0,
+        details: dashboards.map(dashboard => ({
+          name: dashboard.displayName,
+          type: dashboard.type,
+          lastUpdated: dashboard.updateTime
+        }))
+      });
+      summary.totalChecks++;
+      summary.passed += dashboards.length > 0 ? 1 : 0;
+      summary.failed += dashboards.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Monitoring Dashboards', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+    // 2. Check cost anomaly alerts
     try {
       const costAlertsResp = await monitoring.projects.alertPolicies.list({
         name: projectName,
-        filter: 'display_name:"cost" OR display_name:"billing"'
+        filter: 'display_name:"cost" OR display_name:"billing" OR display_name:"budget"'
       });
       const costAlerts = costAlertsResp.data.alertPolicies || [];
       findings.push({
@@ -34,7 +68,8 @@ async function runMonitoringAudit() {
         details: costAlerts.map(alert => ({
           name: alert.displayName,
           conditions: alert.conditions,
-          enabled: alert.enabled
+          enabled: alert.enabled,
+          severity: alert.conditions[0]?.severity || 'UNSPECIFIED'
         }))
       });
       summary.totalChecks++;
@@ -46,7 +81,7 @@ async function runMonitoringAudit() {
       summary.totalChecks++;
     }
 
-    // 2. Check for missing critical alerts
+    // 3. Check for missing critical alerts
     try {
       const criticalAlertsResp = await monitoring.projects.alertPolicies.list({
         name: projectName,
@@ -59,7 +94,12 @@ async function runMonitoringAudit() {
         'compute.googleapis.com/instance/disk/read_bytes_count',
         'compute.googleapis.com/instance/disk/write_bytes_count',
         'compute.googleapis.com/instance/network/received_bytes_count',
-        'compute.googleapis.com/instance/network/sent_bytes_count'
+        'compute.googleapis.com/instance/network/sent_bytes_count',
+        'cloudsql.googleapis.com/database/cpu/utilization',
+        'cloudsql.googleapis.com/database/memory/utilization',
+        'cloudsql.googleapis.com/database/disk/utilization',
+        'container.googleapis.com/node/cpu/core_usage_time',
+        'container.googleapis.com/node/memory/used_bytes'
       ];
       const missingMetrics = requiredMetrics.filter(metric => 
         !criticalAlerts.some(alert => 
@@ -75,7 +115,8 @@ async function runMonitoringAudit() {
         details: {
           existingAlerts: criticalAlerts.map(alert => ({
             name: alert.displayName,
-            conditions: alert.conditions
+            conditions: alert.conditions,
+            severity: alert.conditions[0]?.severity || 'UNSPECIFIED'
           })),
           missingMetrics
         }
@@ -89,21 +130,29 @@ async function runMonitoringAudit() {
       summary.totalChecks++;
     }
 
-    // 3. Verify alert notification channels
+    // 4. Verify alert notification channels
     try {
       const channelsResp = await monitoring.projects.notificationChannels.list({
         name: projectName
       });
       const channels = channelsResp.data.notificationChannels || [];
+      const channelTypes = channels.reduce((acc, channel) => {
+        acc[channel.type] = (acc[channel.type] || 0) + 1;
+        return acc;
+      }, {});
       findings.push({
         check: 'Alert Notification Channels',
         result: `${channels.length} notification channels found`,
         passed: channels.length > 0,
-        details: channels.map(channel => ({
-          type: channel.type,
-          displayName: channel.displayName,
-          enabled: channel.enabled
-        }))
+        details: {
+          channelTypes,
+          channels: channels.map(channel => ({
+            type: channel.type,
+            displayName: channel.displayName,
+            enabled: channel.enabled,
+            verificationStatus: channel.verificationStatus
+          }))
+        }
       });
       summary.totalChecks++;
       summary.passed += channels.length > 0 ? 1 : 0;
@@ -114,7 +163,7 @@ async function runMonitoringAudit() {
       summary.totalChecks++;
     }
 
-    // 4. Analyze alert coverage
+    // 5. Analyze alert coverage
     try {
       const allAlertsResp = await monitoring.projects.alertPolicies.list({
         name: projectName
@@ -150,7 +199,34 @@ async function runMonitoringAudit() {
       summary.totalChecks++;
     }
 
-    // 5. Assess alert effectiveness
+    // 6. Check custom metrics
+    try {
+      const metricsResp = await monitoring.projects.metricDescriptors.list({
+        name: projectName,
+        filter: 'metric.type = starts_with("custom.googleapis.com/")'
+      });
+      const customMetrics = metricsResp.data.metricDescriptors || [];
+      findings.push({
+        check: 'Custom Metrics',
+        result: `${customMetrics.length} custom metrics found`,
+        passed: customMetrics.length > 0,
+        details: customMetrics.map(metric => ({
+          name: metric.displayName,
+          type: metric.type,
+          unit: metric.unit,
+          description: metric.description
+        }))
+      });
+      summary.totalChecks++;
+      summary.passed += customMetrics.length > 0 ? 1 : 0;
+      summary.failed += customMetrics.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Custom Metrics', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+    // 7. Assess alert effectiveness
     try {
       const now = new Date();
       const startTime = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); // Last 30 days
@@ -164,8 +240,13 @@ async function runMonitoringAudit() {
           CRITICAL: incidents.filter(i => i.severity === 'CRITICAL').length,
           WARNING: incidents.filter(i => i.severity === 'WARNING').length,
           INFO: incidents.filter(i => i.severity === 'INFO').length
-        }
+        },
+        byService: {}
       };
+      incidents.forEach(incident => {
+        const service = incident.resourceType;
+        alertEffectiveness.byService[service] = (alertEffectiveness.byService[service] || 0) + 1;
+      });
       findings.push({
         check: 'Alert Effectiveness',
         result: `${incidents.length} incidents in last 30 days`,
@@ -181,11 +262,116 @@ async function runMonitoringAudit() {
       summary.totalChecks++;
     }
 
-  } catch (err) {
-    errors.push({ check: 'Monitoring Audit', error: err.message });
-  }
+    // 8. Check monitoring security
+    try {
+      const iamResp = await monitoring.projects.getIamPolicy({
+        resource: projectName
+      });
+      const policy = iamResp.data;
+      const monitoringRoles = policy.bindings.filter(binding => 
+        binding.role.includes('monitoring') || 
+        binding.role.includes('monitor')
+      );
+      findings.push({
+        check: 'Monitoring Security',
+        result: `${monitoringRoles.length} monitoring-specific IAM roles found`,
+        passed: monitoringRoles.length > 0,
+        details: {
+          roles: monitoringRoles.map(role => ({
+            role: role.role,
+            members: role.members
+          }))
+        }
+      });
+      summary.totalChecks++;
+      summary.passed += monitoringRoles.length > 0 ? 1 : 0;
+      summary.failed += monitoringRoles.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Monitoring Security', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
 
-  writeAuditResults('monitoring-audit', findings, summary, errors, projectId);
+    // 9. Check monitoring automation
+    try {
+      const automationResp = await monitoring.projects.alertPolicies.list({
+        name: projectName,
+        filter: 'display_name:"automated" OR display_name:"auto"'
+      });
+      const automatedAlerts = automationResp.data.alertPolicies || [];
+      findings.push({
+        check: 'Monitoring Automation',
+        result: `${automatedAlerts.length} automated alerts found`,
+        passed: automatedAlerts.length > 0,
+        details: automatedAlerts.map(alert => ({
+          name: alert.displayName,
+          conditions: alert.conditions,
+          enabled: alert.enabled
+        }))
+      });
+      summary.totalChecks++;
+      summary.passed += automatedAlerts.length > 0 ? 1 : 0;
+      summary.failed += automatedAlerts.length > 0 ? 0 : 1;
+    } catch (err) {
+      errors.push({ check: 'Monitoring Automation', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+    // 10. Check monitoring cost optimization
+    try {
+      const metricsResp = await monitoring.projects.metricDescriptors.list({
+        name: projectName
+      });
+      const metrics = metricsResp.data.metricDescriptors || [];
+      const costOptimization = {
+        totalMetrics: metrics.length,
+        byService: {},
+        potentialOptimizations: []
+      };
+      metrics.forEach(metric => {
+        const service = metric.type.split('/')[0];
+        costOptimization.byService[service] = (costOptimization.byService[service] || 0) + 1;
+      });
+      findings.push({
+        check: 'Monitoring Cost Optimization',
+        result: `${metrics.length} total metrics`,
+        passed: true,
+        details: costOptimization
+      });
+      summary.totalChecks++;
+      summary.passed++;
+    } catch (err) {
+      errors.push({ check: 'Monitoring Cost Optimization', error: err.message });
+      summary.failed++;
+      summary.totalChecks++;
+    }
+
+    // Write results with proper error handling
+    try {
+      await writeAuditResults('monitoring-audit', findings, summary, errors, projectId);
+    } catch (writeError) {
+      console.error('Error writing audit results:', writeError);
+      errors.push({ check: 'Results Writing', error: writeError.message });
+    }
+
+    return { findings, summary, errors };
+  } catch (err) {
+    console.error('Error in monitoring audit:', err);
+    errors.push({ check: 'Monitoring Audit', error: err.message });
+    return { findings, summary, errors };
+  }
 }
 
-runMonitoringAudit();
+if (require.main === module) {
+  runMonitoringAudit()
+    .then(results => {
+      console.log('Monitoring audit completed with results:', JSON.stringify(results, null, 2));
+    })
+    .catch(error => {
+      console.error('Error running monitoring audit:', error);
+      process.exit(1);
+    });
+}
+
+module.exports = runMonitoringAudit;

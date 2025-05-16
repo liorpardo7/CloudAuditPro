@@ -1,19 +1,19 @@
 {
-  "timestamp": "2025-05-14T16:34:17.887Z",
+  "timestamp": "2025-05-15T16:20:05.741Z",
   "projectId": "dba-inventory-services-prod",
   "findings": [
     {
       "permission": "compute.instances.list",
-      "status": "PASSED",
-      "severity": "INFO",
-      "description": "Service account has compute.instances.list permission",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing compute.instances.list permission",
       "projectId": "dba-inventory-services-prod"
     },
     {
       "permission": "compute.disks.list",
-      "status": "PASSED",
-      "severity": "INFO",
-      "description": "Service account has compute.disks.list permission",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing compute.disks.list permission",
       "projectId": "dba-inventory-services-prod"
     },
     {
@@ -25,9 +25,9 @@
     },
     {
       "permission": "iam.serviceAccounts.list",
-      "status": "PASSED",
-      "severity": "INFO",
-      "description": "Service account has iam.serviceAccounts.list permission",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing iam.serviceAccounts.list permission",
       "projectId": "dba-inventory-services-prod"
     },
     {
@@ -40,8 +40,8 @@
   ],
   "summary": {
     "total": 5,
-    "passed": 5,
-    "failed": 0
+    "passed": 2,
+    "failed": 3
   },
   "errors": []
 }

@@ -1,0 +1,72 @@
+{
+  "timestamp": "2025-05-15T16:22:01.244Z",
+  "projectId": "dba-inventory-services-prod",
+  "problematicScripts": {
+    "cost-management-audit.js": {
+      "issue": "projectId not defined",
+      "category": "Cost Management",
+      "priority": "high",
+      "result": {
+        "status": "✗",
+        "error": "Command failed: node /Users/liorpardo/CloudAuditPro-1/backend/src/scripts/gcp-audit/cost-management-audit.js"
+      },
+      "timestamp": "2025-05-15T16:22:01.582Z"
+    },
+    "billing-audit.js": {
+      "issue": "projectId not defined",
+      "category": "Billing",
+      "priority": "high",
+      "result": {
+        "status": "✗",
+        "error": "Command failed: node /Users/liorpardo/CloudAuditPro-1/backend/src/scripts/gcp-audit/billing-audit.js"
+      },
+      "timestamp": "2025-05-15T16:22:01.964Z"
+    }
+  },
+  "jsonParsingIssues": {
+    "scheduler_audit.js": {
+      "result": {
+        "status": "✓",
+        "error": null
+      },
+      "timestamp": "2025-05-15T16:22:02.311Z"
+    },
+    "composer_dag_audit.js": {
+      "result": {
+        "status": "✓",
+        "error": null
+      },
+      "timestamp": "2025-05-15T16:22:02.626Z"
+    },
+    "cross_project_audit.js": {
+      "result": {
+        "status": "✓",
+        "error": null
+      },
+      "timestamp": "2025-05-15T16:22:02.946Z"
+    },
+    "advanced_audits.js": {
+      "result": {
+        "status": "✓",
+        "error": null
+      },
+      "timestamp": "2025-05-15T16:22:03.276Z"
+    }
+  },
+  "missingResults": {
+    "label_consistency.js": {
+      "result": {
+        "status": "✓",
+        "error": null
+      },
+      "timestamp": "2025-05-15T16:22:03.625Z"
+    }
+  },
+  "summary": {
+    "total": 7,
+    "passed": 5,
+    "failed": 2,
+    "notImplemented": 0,
+    "passRate": "71.43%"
+  }
+}

@@ -50,7 +50,7 @@ class ResourceUtilizationAudit extends BaseValidator {
     await this.auditGKE(results, auth.getProjectId());
 
     // Write results
-    writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, auth.getProjectId());
+    writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, auth.getProjectId(), computeResult.metrics);
     return results;
   }
 
@@ -63,6 +63,7 @@ class ResourceUtilizationAudit extends BaseValidator {
       failed: 0,
       costSavingsPotential: 0
     };
+    const metrics = [];
     try {
       const project = projectId;
       // Get all regions
@@ -80,9 +81,9 @@ class ResourceUtilizationAudit extends BaseValidator {
               const memoryFilter = `metric.type="compute.googleapis.com/instance/memory/balloon/ram_used" AND resource.labels.instance_id="${instance.id}"`;
               const diskFilter = `metric.type="compute.googleapis.com/instance/disk/read_bytes_count" AND resource.labels.instance_id="${instance.id}"`;
               const [cpuData, memoryData, diskData] = await Promise.all([
-                this.getMetricData(cpuFilter, instance.id),
-                this.getMetricData(memoryFilter, instance.id),
-                this.getMetricData(diskFilter, instance.id)
+                this.getMetricData('compute.googleapis.com/instance/cpu/utilization', instance.id),
+                this.getMetricData('compute.googleapis.com/instance/memory/balloon/ram_used', instance.id),
+                this.getMetricData('compute.googleapis.com/instance/disk/read_bytes_count', instance.id)
               ]);
               const cpuUtilization = cpuData.map(ts => ts.points.map(p => p.value.doubleValue)).flat();
               const memoryUtilization = memoryData.map(ts => ts.points.map(p => p.value.doubleValue)).flat();
@@ -120,6 +121,15 @@ class ResourceUtilizationAudit extends BaseValidator {
                 machineType: instance.machineType,
                 status: instance.status
               });
+              metrics.push({
+                resourceType: 'compute',
+                resourceId: instance.id,
+                name: instance.name,
+                zone: zone.name,
+                cpuUtilization: avgCpu,
+                memoryUtilization: avgMemory,
+                diskIO: diskIO.length ? diskIO.reduce((a, b) => a + b, 0) / diskIO.length : 0
+              });
             }
           }
           // Get persistent disks
@@ -133,6 +143,13 @@ class ResourceUtilizationAudit extends BaseValidator {
                 size: disk.sizeGb,
                 diskIO,
                 status: disk.status
+              });
+              metrics.push({
+                resourceType: 'compute',
+                resourceId: disk.id,
+                name: disk.name,
+                zone: zone.name,
+                diskIO: diskIO.length ? diskIO.reduce((a, b) => a + b, 0) / diskIO.length : 0
               });
             }
           }
@@ -149,6 +166,13 @@ class ResourceUtilizationAudit extends BaseValidator {
             traffic,
             status: lb.status
           });
+          metrics.push({
+            resourceType: 'compute',
+            resourceId: lb.id,
+            name: lb.name,
+            region: lb.region,
+            traffic: traffic.length ? traffic.reduce((a, b) => a + b, 0) / traffic.length : 0
+          });
         }
       }
       // Get unused IPs
@@ -161,10 +185,17 @@ class ResourceUtilizationAudit extends BaseValidator {
               region: ip.region,
               address: ip.address
             });
+            metrics.push({
+              resourceType: 'compute',
+              resourceId: ip.id,
+              name: ip.name,
+              region: ip.region,
+              address: ip.address
+            });
           }
         }
       }
-      return { findings, errors, summary };
+      return { findings, errors, summary, metrics };
     } catch (error) {
       errors.push({ error: error.message });
       findings.push({
@@ -173,7 +204,7 @@ class ResourceUtilizationAudit extends BaseValidator {
         description: `Error auditing Compute Engine: ${error.message}`,
         projectId
       });
-      return { findings, errors, summary };
+      return { findings, errors, summary, metrics };
     }
   }
 
@@ -232,11 +263,16 @@ class ResourceUtilizationAudit extends BaseValidator {
         parent: `projects/${projectId}/locations/-`
       });
 
-      if (clustersResponse.data.clusters) {
-        for (const cluster of clustersResponse.data.clusters) {
+      if (!clustersResponse.data.clusters || clustersResponse.data.clusters.length === 0) {
+        console.log('No GKE clusters found in the project');
+        return;
+      }
+
+      for (const cluster of clustersResponse.data.clusters) {
+        try {
           // Get node pool information
           const nodePoolsResponse = await this.container.projects.locations.clusters.nodePools.list({
-            parent: cluster.name
+            parent: `projects/${projectId}/locations/${cluster.location}/clusters/${cluster.name}`
           });
 
           const nodes = [];
@@ -269,6 +305,14 @@ class ResourceUtilizationAudit extends BaseValidator {
             nodes,
             status: cluster.status
           });
+        } catch (error) {
+          console.error(`Error auditing GKE cluster ${cluster.name}:`, error.message);
+          results.recommendations.push({
+            category: 'Resource Utilization',
+            issue: `Failed to audit GKE cluster ${cluster.name}`,
+            recommendation: 'Check API permissions and cluster status',
+            error: error.message
+          });
         }
       }
     } catch (error) {
@@ -282,26 +326,30 @@ class ResourceUtilizationAudit extends BaseValidator {
     }
   }
 
-  async getMetricData(filter, resourceId) {
+  async getMetricData(metricType, resourceId) {
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
     try {
-      const endTime = new Date();
-      const startTime = new Date(endTime);
-      startTime.setHours(startTime.getHours() - 24);
-      const response = await this.monitoring.projects.timeSeries.list({
+      // Determine the correct label key based on the metric type
+      let labelKey = 'instance_id';
+      if (metricType.startsWith('cloudsql.googleapis.com')) {
+        labelKey = 'database_id';
+      } else if (metricType.startsWith('container.googleapis.com')) {
+        labelKey = 'node_name';
+      }
+      const filter = `metric.type = "${metricType}" AND resource.labels.${labelKey} = "${resourceId}"`;
+      const request = {
         name: `projects/${process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod'}`,
         filter: filter,
-        interval: {
-          startTime: startTime.toISOString(),
-          endTime: endTime.toISOString()
-        },
-        aggregation: {
-          alignmentPeriod: '3600s',
-          perSeriesAligner: 'ALIGN_MEAN'
-        }
-      });
+        'interval.startTime': oneHourAgo.toISOString(),
+        'interval.endTime': now.toISOString(),
+        'aggregation.alignmentPeriod': '3600s',
+        'aggregation.perSeriesAligner': 'ALIGN_MEAN'
+      };
+      const response = await this.monitoring.projects.timeSeries.list(request);
       return response.data.timeSeries || [];
     } catch (error) {
-      console.error(`Error getting metric data for ${filter}:`, error.message);
+      console.error(`Error getting metric data for ${metricType} and resourceId ${resourceId}:`, error.message);
       return [];
     }
   }
@@ -332,4 +380,4 @@ if (require.main === module) {
   runResourceUtilizationAudit().catch(console.error);
 }
 
-module.exports = { runResourceUtilizationAudit };
+module.exports = runResourceUtilizationAudit;

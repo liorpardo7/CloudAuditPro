@@ -196,7 +196,7 @@ async function runBigQueryAudit() {
       summary.totalChecks++;
       summary.passed += costOptimization.length === 0 ? 1 : 0;
       summary.failed += costOptimization.length === 0 ? 0 : 1;
-    } catch (err) {
+  } catch (err) {
       errors.push({ check: 'Cost Optimization', error: err.message });
       summary.failed++;
       summary.totalChecks++;

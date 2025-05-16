@@ -9,7 +9,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const error = searchParams.get('error')
-  const state = searchParams.get('state')
 
   if (error) {
     return NextResponse.redirect(
@@ -17,7 +16,7 @@ export async function GET(request: Request) {
     )
   }
 
-  if (!code || !state) {
+  if (!code) {
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_APP_URL}/settings?error=${encodeURIComponent('Missing required parameters')}`
     )
@@ -48,7 +47,7 @@ export async function GET(request: Request) {
     // TODO: Store tokens securely (e.g., in a database)
     // For now, we'll just redirect back to settings with success
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/settings?success=true&project_id=${encodeURIComponent(state)}`
+      `${process.env.NEXT_PUBLIC_APP_URL}/settings?success=true`
     )
   } catch (error) {
     console.error('OAuth callback error:', error)

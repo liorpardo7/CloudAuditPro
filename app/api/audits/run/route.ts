@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
     // Define the script directory for the audit scripts
     const scriptDir = path.join(process.cwd(), 'backend/src/scripts/gcp-audit');
-
+    
     // Create a properly typed environment object
     const scriptEnv: NodeJS.ProcessEnv = {
       ...process.env,

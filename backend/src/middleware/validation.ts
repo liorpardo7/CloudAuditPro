@@ -1,6 +1,11 @@
 import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
+interface ValidationError {
+  message: string;
+  path: (string | number)[];
+}
+
 // Validation schemas
 const schemas = {
   // Auth schemas
@@ -134,9 +139,9 @@ export const validate = (schemaName: keyof typeof schemas) => {
     });
 
     if (error) {
-      const errors = error.details.map(detail => ({
-        field: detail.path.join('.'),
-        message: detail.message
+      const errors = error.details.map((detail) => ({
+        message: detail.message,
+        path: detail.path
       }));
 
       return res.status(400).json({
@@ -158,9 +163,9 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
     });
 
     if (error) {
-      const errors = error.details.map(detail => ({
-        field: detail.path.join('.'),
-        message: detail.message
+      const errors = error.details.map((detail) => ({
+        message: detail.message,
+        path: detail.path
       }));
 
       return res.status(400).json({
@@ -182,9 +187,9 @@ export const validateParams = (schema: Joi.ObjectSchema) => {
     });
 
     if (error) {
-      const errors = error.details.map(detail => ({
-        field: detail.path.join('.'),
-        message: detail.message
+      const errors = error.details.map((detail) => ({
+        message: detail.message,
+        path: detail.path
       }));
 
       return res.status(400).json({

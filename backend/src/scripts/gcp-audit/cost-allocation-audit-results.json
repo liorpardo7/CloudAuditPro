@@ -1,12 +1,25 @@
 {
-  "timestamp": "2025-05-14T16:31:04.175Z",
+  "timestamp": "2025-05-15T22:16:38.997Z",
   "projectId": "test-project",
-  "findings": [],
+  "findings": [
+    {
+      "category": "Cost Allocation",
+      "issue": "Failed to audit project",
+      "recommendation": "Check API permissions and try again",
+      "severity": "medium",
+      "impact": "Cost allocation and resource management"
+    }
+  ],
   "summary": {
     "totalChecks": 0,
     "passed": 0,
     "failed": 0,
     "costSavingsPotential": 0
   },
-  "errors": []
+  "errors": [
+    {
+      "message": "Login Required.",
+      "project": "dba-inventory-services-prod"
+    }
+  ]
 }

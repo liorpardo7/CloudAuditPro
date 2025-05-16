@@ -41,6 +41,12 @@ const fetchResourceUtilizationResults = async () => {
   }
 }
 
+// Add a type for vm
+interface VM {
+  status: string;
+  // add other properties as needed
+}
+
 export default function ResourceUtilizationPage() {
   const [data, setData] = React.useState<any>(null)
   const [loading, setLoading] = React.useState(true)
@@ -75,7 +81,7 @@ export default function ResourceUtilizationPage() {
             <CardDescription>Total: {data.computeEngine.vms.length}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.computeEngine.vms.filter(vm => vm.status === "RUNNING").length} Running</div>
+            <div className="text-2xl font-bold">{data.computeEngine.vms.filter((vm: VM) => vm.status === "RUNNING").length} Running</div>
           </CardContent>
         </Card>
         <Card>

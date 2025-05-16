@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-05-14T16:40:11.540Z",
+  "timestamp": "2025-05-15T22:16:43.950Z",
   "projectId": "test-project",
   "findings": {
-    "timestamp": "2025-05-14T16:40:11.540Z",
+    "timestamp": "2025-05-15T22:16:43.950Z",
     "project": "test-project",
     "findings": [
       {
@@ -22,7 +22,7 @@
         "severity": "ERROR",
         "description": "Failed to audit Storage resources",
         "details": {
-          "error": "lior@dbaplatform.com does not have storage.buckets.list access to the Google Cloud project. Permission 'storage.buckets.list' denied on resource (or it may not exist)."
+          "error": "costtesting@dba-inventory-services-prod.iam.gserviceaccount.com does not have storage.buckets.list access to the Google Cloud project. Permission 'storage.buckets.list' denied on resource (or it may not exist)."
         }
       },
       {

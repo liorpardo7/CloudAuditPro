@@ -1,8 +1,8 @@
 const { google } = require('googleapis');
+const { getAuthClient, getProjectId } = require('./auth');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
 async function runBillingAudit() {
   const findings = [];
@@ -15,15 +15,18 @@ async function runBillingAudit() {
   const errors = [];
 
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
-    const billing = google.cloudbilling({ version: 'v1', auth: authClient });
-    const compute = google.compute({ version: 'v1', auth: authClient });
-    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
+    // Get project ID and auth client
+    const projectId = await getProjectId();
+    const auth = await getAuthClient();
+    
+    // Initialize clients
+    const billingClient = google.cloudbilling({ version: 'v1', auth });
+    const computeClient = google.compute({ version: 'v1', auth });
+    const monitoring = google.monitoring({ version: 'v3', auth });
 
     // 1. List all billing accounts
     try {
-      const billingAccountsResp = await billing.billingAccounts.list();
+      const billingAccountsResp = await billingClient.billingAccounts.list();
       const billingAccounts = billingAccountsResp.data.billingAccounts || [];
       findings.push({
         check: 'Billing Accounts',
@@ -46,7 +49,7 @@ async function runBillingAudit() {
 
     // 2. Check billing export
     try {
-      const projectBillingInfo = await billing.projects.getBillingInfo({
+      const projectBillingInfo = await billingClient.projects.getBillingInfo({
         name: `projects/${projectId}`
       });
       const hasBillingExport = projectBillingInfo.data.billingEnabled;
@@ -67,7 +70,7 @@ async function runBillingAudit() {
 
     // 3. Check for committed use discounts
     try {
-      const commitmentsResp = await compute.regionCommitments.list({
+      const commitmentsResp = await computeClient.regionCommitments.list({
         project: projectId,
         region: '-'
       });
@@ -127,7 +130,7 @@ async function runBillingAudit() {
 
     // 5. Review cost allocation tags
     try {
-      const projectBillingInfo = await billing.projects.getBillingInfo({
+      const projectBillingInfo = await billingClient.projects.getBillingInfo({
         name: `projects/${projectId}`
       });
       const hasCostAllocation = projectBillingInfo.data.costAllocationTags;
@@ -178,11 +181,18 @@ async function runBillingAudit() {
       summary.totalChecks++;
     }
 
-  } catch (err) {
-    errors.push({ check: 'Billing Audit', error: err.message });
+    // Write results at the end
+    writeAuditResults('billing-audit', findings, summary, errors, projectId);
+    
+  } catch (error) {
+    console.error('Error in billing audit:', error);
+    errors.push({
+      check: 'Billing Audit',
+      error: error.message
+    });
+    writeAuditResults('billing-audit', findings, summary, errors, await getProjectId());
   }
-
-  writeAuditResults('billing-audit', findings, summary, errors, projectId);
 }
 
-runBillingAudit();
+// Run the audit
+runBillingAudit().catch(console.error);

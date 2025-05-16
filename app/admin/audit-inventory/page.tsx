@@ -335,7 +335,7 @@ export default function AdminAuditInventoryPage() {
 
   // Helper to render a section for each script
   function ScriptSection({ script, itemsInGroup, groupIdx }: { script: string, itemsInGroup: AuditItem[], groupIdx: number }) {
-    return (
+  return (
       <div key={script} className="mb-10 border rounded-lg bg-white shadow-sm">
         <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50">
           <div className="flex items-center gap-3">
@@ -343,65 +343,65 @@ export default function AdminAuditInventoryPage() {
             <span className="font-mono font-bold text-lg">{script}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              onClick={() => handleGroupTestApi(script)}
-              disabled={groupTestLoading[script]}
-            >
+                        <Button
+                          size="sm"
+                          onClick={() => handleGroupTestApi(script)}
+                          disabled={groupTestLoading[script]}
+                        >
               {groupTestLoading[script] ? <span className="animate-spin mr-2"><RefreshCw className="h-4 w-4" /></span> : null}
-              Run Audit
-            </Button>
-            {runSuccessStatus[script]?.success && (
-              <span className="text-xs text-green-600 ml-2 flex items-center gap-2">
+                          Run Audit
+                        </Button>
+                        {runSuccessStatus[script]?.success && (
+                          <span className="text-xs text-green-600 ml-2 flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4" />
                 Last run: {new Date(runSuccessStatus[script]?.timestamp || '').toLocaleTimeString()}
-              </span>
-            )}
+                          </span>
+                        )}
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-muted">
-              <tr>
+            <table className="min-w-full text-sm">
+              <thead className="bg-muted">
+                <tr>
                 <th className="px-2 py-2 text-left font-semibold w-8">#</th>
                 <th className="px-2 py-2 text-left font-semibold w-44">ID</th>
-                <th className="px-2 py-2 text-left font-semibold">Category</th>
-                <th className="px-2 py-2 text-left font-semibold">Name</th>
-                <th className="px-2 py-2 text-left font-semibold">Status</th>
-                <th className="px-2 py-2 text-left font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {itemsInGroup.map((item, idx) => {
+                  <th className="px-2 py-2 text-left font-semibold">Category</th>
+                  <th className="px-2 py-2 text-left font-semibold">Name</th>
+                  <th className="px-2 py-2 text-left font-semibold">Status</th>
+                  <th className="px-2 py-2 text-left font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                    {itemsInGroup.map((item, idx) => {
                 const globalIdx = groupIdx * 1000 + idx;
-                return (
+                      return (
                   <tr key={item.id} className={
-                    `${expanded === globalIdx ? "bg-primary/10" : idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-primary/5 cursor-pointer`}
-                    onClick={() => handleRowClick(globalIdx)}
-                    id={`item-${globalIdx}`}
-                  >
+                              `${expanded === globalIdx ? "bg-primary/10" : idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-primary/5 cursor-pointer`}
+                            onClick={() => handleRowClick(globalIdx)}
+                            id={`item-${globalIdx}`}
+                          >
                     <td className="px-2 py-2 font-bold">{idx + 1}</td>
                     <td className="px-2 py-2 font-mono text-xs flex items-center gap-2">
-                      {item.id}
-                      <button
-                        className="ml-1 p-1 rounded hover:bg-gray-200"
-                        title="Copy ID"
-                        onClick={e => { e.stopPropagation(); copyToClipboard(item.id); }}
-                      >
-                        <Clipboard className="h-4 w-4 text-gray-500" />
-                      </button>
-                    </td>
-                    <td className="px-2 py-2 font-medium whitespace-nowrap max-w-[120px] overflow-hidden text-ellipsis">{item.category}</td>
-                    <td className="px-2 py-2">{item.name}</td>
-                    <td className="px-2 py-2">
-                      <span className={`inline-block rounded px-2 py-1 text-xs font-semibold ${statusColors[item.status]}`}>{item.status}</span>
-                    </td>
-                    <td className="px-2 py-2">
-                      <Button size="sm" variant="outline" onClick={e => { e.stopPropagation(); handleRowClick(globalIdx); }}>
-                        {expanded === globalIdx ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />} Details
-                      </Button>
-                    </td>
-                  </tr>
+                              {item.id}
+                              <button
+                                className="ml-1 p-1 rounded hover:bg-gray-200"
+                                title="Copy ID"
+                                onClick={e => { e.stopPropagation(); copyToClipboard(item.id); }}
+                              >
+                                <Clipboard className="h-4 w-4 text-gray-500" />
+                              </button>
+                            </td>
+                            <td className="px-2 py-2 font-medium whitespace-nowrap max-w-[120px] overflow-hidden text-ellipsis">{item.category}</td>
+                            <td className="px-2 py-2">{item.name}</td>
+                            <td className="px-2 py-2">
+                              <span className={`inline-block rounded px-2 py-1 text-xs font-semibold ${statusColors[item.status]}`}>{item.status}</span>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Button size="sm" variant="outline" onClick={e => { e.stopPropagation(); handleRowClick(globalIdx); }}>
+                                {expanded === globalIdx ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />} Details
+                              </Button>
+                            </td>
+                          </tr>
                 );
               })}
             </tbody>
@@ -414,114 +414,114 @@ export default function AdminAuditInventoryPage() {
           return (
             <div key={item.id + '-details'} className="bg-primary/5 p-6 border-t">
               <div className="flex flex-col md:flex-row gap-8">
-                <div className="flex-1 space-y-4 min-w-[300px]">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <FileText className="h-5 w-5 text-primary" /> Description
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="mb-2 text-muted-foreground">{item.description}</div>
-                      <div className="text-xs text-muted-foreground">
-                        Page: <a href={item.page} className="underline text-primary">{item.page}</a>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Terminal className="h-5 w-5 text-primary" /> Script
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="font-mono text-xs bg-muted rounded p-2">{item.script}</div>
-                      <div className="text-xs text-muted-foreground mt-2">Last Run: {new Date(item.lastRun).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground mt-2">Reviewed: {item.reviewed ? 'Yes' : 'No'}</div>
-                      <Button size="sm" className="mt-2">View Code</Button>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="flex-1 space-y-4 min-w-[300px]">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Server className="h-5 w-5 text-primary" /> API Endpoint
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="font-mono text-xs bg-muted rounded p-2 mb-2 break-all">{item.endpoint}</div>
-                      <Button size="sm" className="mr-2" onClick={e => { e.stopPropagation(); handleTestApi(item.script); }} disabled={loading}>
-                        {loading ? <span className="animate-spin mr-2"><RefreshCw className="h-4 w-4" /></span> : null}
-                        Test API
-                      </Button>
-                      <Button size="sm" variant="outline">View Docs</Button>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <BarChart3 className="h-5 w-5 text-primary" /> Results
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {loading && <div className="text-xs text-blue-600 mb-2">Testing API...</div>}
-                      {testError[item.script] && <>
-                        <div className="text-xs text-red-600 mb-2">Error: {testError[item.script]}</div>
-                        <Button size="sm" variant="ghost" onClick={() => setShowNetworkError(prev => ({ ...prev, [item.script]: !prev[item.script] }))}>
-                          {showNetworkError[item.script] ? 'Hide' : 'Show'} Network Error
-                        </Button>
-                        {showNetworkError[item.script] && <pre className="text-xs bg-red-50 rounded p-2 overflow-auto max-h-32 mt-2">{testError[item.script]}</pre>}
-                      </>}
-                      {runSuccessStatus[item.script]?.success && (
-                        <div className="flex items-center text-green-600 mb-4 bg-green-50 p-2 rounded-md">
-                          <CheckCircle2 className="h-4 w-4 mr-2" />
-                          <span>Audit completed successfully at {new Date(runSuccessStatus[item.script]?.timestamp || '').toLocaleTimeString()}</span>
-                        </div>
-                      )}
-                      {item.results && Object.keys(item.results).length > 0 && (
-                        <Card className="mt-4">
-                          <CardHeader>
-                            <CardTitle>Results</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[400px]">
-                              {JSON.stringify(item.results, null, 2)}
-                            </pre>
-                          </CardContent>
-                        </Card>
-                      )}
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Status & Notes</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <select
-                        className="mb-2 border rounded px-2 py-1 text-sm w-full"
-                        value={item.status}
-                        onChange={e => handleStatusChange(globalIdx, e.target.value as keyof typeof statusColors)}
-                      >
-                        {Object.keys(statusColors).map(status => (
-                          <option key={status} value={status}>{status}</option>
-                        ))}
-                      </select>
-                      <textarea
-                        className="w-full text-sm border rounded px-2 py-1"
-                        rows={2}
-                        value={item.notes}
-                        onChange={e => handleNotesChange(globalIdx, e.target.value)}
-                        placeholder="Add notes or TODOs..."
-                      />
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
+                                  <div className="flex-1 space-y-4 min-w-[300px]">
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle className="flex items-center gap-2">
+                                          <FileText className="h-5 w-5 text-primary" /> Description
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <div className="mb-2 text-muted-foreground">{item.description}</div>
+                                        <div className="text-xs text-muted-foreground">
+                                          Page: <a href={item.page} className="underline text-primary">{item.page}</a>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle className="flex items-center gap-2">
+                                          <Terminal className="h-5 w-5 text-primary" /> Script
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <div className="font-mono text-xs bg-muted rounded p-2">{item.script}</div>
+                                        <div className="text-xs text-muted-foreground mt-2">Last Run: {new Date(item.lastRun).toLocaleString()}</div>
+                                        <div className="text-xs text-muted-foreground mt-2">Reviewed: {item.reviewed ? 'Yes' : 'No'}</div>
+                                        <Button size="sm" className="mt-2">View Code</Button>
+                                      </CardContent>
+                                    </Card>
+                                  </div>
+                                  <div className="flex-1 space-y-4 min-w-[300px]">
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle className="flex items-center gap-2">
+                                          <Server className="h-5 w-5 text-primary" /> API Endpoint
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <div className="font-mono text-xs bg-muted rounded p-2 mb-2 break-all">{item.endpoint}</div>
+                                        <Button size="sm" className="mr-2" onClick={e => { e.stopPropagation(); handleTestApi(item.script); }} disabled={loading}>
+                                          {loading ? <span className="animate-spin mr-2"><RefreshCw className="h-4 w-4" /></span> : null}
+                                          Test API
+                                        </Button>
+                                        <Button size="sm" variant="outline">View Docs</Button>
+                                      </CardContent>
+                                    </Card>
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle className="flex items-center gap-2">
+                                          <BarChart3 className="h-5 w-5 text-primary" /> Results
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        {loading && <div className="text-xs text-blue-600 mb-2">Testing API...</div>}
+                                        {testError[item.script] && <>
+                                          <div className="text-xs text-red-600 mb-2">Error: {testError[item.script]}</div>
+                                          <Button size="sm" variant="ghost" onClick={() => setShowNetworkError(prev => ({ ...prev, [item.script]: !prev[item.script] }))}>
+                                            {showNetworkError[item.script] ? 'Hide' : 'Show'} Network Error
+                                          </Button>
+                                          {showNetworkError[item.script] && <pre className="text-xs bg-red-50 rounded p-2 overflow-auto max-h-32 mt-2">{testError[item.script]}</pre>}
+                                        </>}
+                                        {runSuccessStatus[item.script]?.success && (
+                                          <div className="flex items-center text-green-600 mb-4 bg-green-50 p-2 rounded-md">
+                                            <CheckCircle2 className="h-4 w-4 mr-2" />
+                                            <span>Audit completed successfully at {new Date(runSuccessStatus[item.script]?.timestamp || '').toLocaleTimeString()}</span>
+                                          </div>
+                                        )}
+                                        {item.results && Object.keys(item.results).length > 0 && (
+                                          <Card className="mt-4">
+                                            <CardHeader>
+                                              <CardTitle>Results</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                              <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[400px]">
+                                                {JSON.stringify(item.results, null, 2)}
+                                              </pre>
+                                            </CardContent>
+                                          </Card>
+                                        )}
+                                      </CardContent>
+                                    </Card>
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle>Status & Notes</CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <select
+                                          className="mb-2 border rounded px-2 py-1 text-sm w-full"
+                                          value={item.status}
+                                          onChange={e => handleStatusChange(globalIdx, e.target.value as keyof typeof statusColors)}
+                                        >
+                                          {Object.keys(statusColors).map(status => (
+                                            <option key={status} value={status}>{status}</option>
+                                          ))}
+                                        </select>
+                                        <textarea
+                                          className="w-full text-sm border rounded px-2 py-1"
+                                          rows={2}
+                                          value={item.notes}
+                                          onChange={e => handleNotesChange(globalIdx, e.target.value)}
+                                          placeholder="Add notes or TODOs..."
+                                        />
+                                      </CardContent>
+                                    </Card>
+                                  </div>
+                                </div>
             </div>
-          );
-        })}
-      </div>
+                      );
+                    })}
+          </div>
     );
   }
 

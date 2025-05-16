@@ -1,8 +1,8 @@
 const { google } = require('googleapis');
+const { getAuthClient, getProjectId } = require('./auth');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
 async function runCostManagementAudit() {
   const findings = [];
@@ -15,12 +15,14 @@ async function runCostManagementAudit() {
   const errors = [];
 
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    // Get project ID and auth client
+    const projectId = await getProjectId();
+    const auth = await getAuthClient();
+    
     // Initialize APIs
-    const compute = google.compute({ version: 'v1', auth: authClient });
-    const cloudbilling = google.cloudbilling({ version: 'v1', auth: authClient });
-    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
+    const compute = google.compute({ version: 'v1', auth });
+    const cloudbilling = google.cloudbilling({ version: 'v1', auth });
+    const monitoring = google.monitoring({ version: 'v3', auth });
 
     // 1. Check for idle VMs
     try {
@@ -248,11 +250,18 @@ async function runCostManagementAudit() {
       summary.totalChecks++;
     }
 
-  } catch (err) {
-    errors.push({ check: 'Cost Management Audit', error: err.message });
+    // Write results at the end
+    writeAuditResults('cost-management-audit', findings, summary, errors, projectId);
+    
+  } catch (error) {
+    console.error('Error in cost management audit:', error);
+    errors.push({
+      check: 'Cost Management Audit',
+      error: error.message
+    });
+    writeAuditResults('cost-management-audit', findings, summary, errors, await getProjectId());
   }
-
-  writeAuditResults('cost-management-audit', findings, summary, errors, projectId);
 }
 
-runCostManagementAudit(); 
+// Run the audit
+runCostManagementAudit().catch(console.error); 

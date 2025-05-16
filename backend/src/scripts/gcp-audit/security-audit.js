@@ -1,21 +1,8 @@
 const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
+const { getAuthClient, getProjectId } = require('./auth');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-
-// Initialize authentication
-const auth = new google.auth.GoogleAuth({
-  credentials: credentials,
-  scopes: [
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/securitycenter.readonly',
-    'https://www.googleapis.com/auth/iam.readonly',
-    'https://www.googleapis.com/auth/cloudkms.readonly'
-  ]
-});
 
 // Initialize API clients with auth
 let cloudresourcemanager;
@@ -28,7 +15,7 @@ let kms;
 let logging;
 
 async function initializeClients() {
-  const authClient = await auth.getClient();
+  const authClient = await getAuthClient();
   cloudresourcemanager = google.cloudresourcemanager({
     version: 'v1',
     auth: authClient
@@ -152,21 +139,21 @@ writeAuditResults("security-audit", findings, summary, errors);
 
 class SecurityAudit {
   constructor() {
-    this.auth = new google.auth.GoogleAuth({
-      scopes: [
-        'https://www.googleapis.com/auth/cloud-platform',
-        'https://www.googleapis.com/auth/iam.readonly'
-      ]
-    });
+    this.authClient = null;
     this.iam = google.iam('v1');
     this.storage = google.storage('v1');
     this.compute = google.compute('v1');
   }
 
+  async initialize() {
+    this.authClient = await getAuthClient();
+    this.projectId = await getProjectId();
+  }
+
   async auditIAM() {
     const findings = [];
     try {
-      const auth = await this.auth.getClient();
+      const auth = await this.authClient;
       const project = process.env.GOOGLE_CLOUD_PROJECT || 'test-project';
 
       // Get service accounts
@@ -223,7 +210,7 @@ class SecurityAudit {
   async auditStorage() {
     const findings = [];
     try {
-      const auth = await this.auth.getClient();
+      const auth = await this.authClient;
       const project = process.env.GOOGLE_CLOUD_PROJECT || 'test-project';
 
       // Get buckets
@@ -294,7 +281,7 @@ class SecurityAudit {
   async auditCompute() {
     const findings = [];
     try {
-      const auth = await this.auth.getClient();
+      const auth = await this.authClient;
       const project = process.env.GOOGLE_CLOUD_PROJECT || 'test-project';
 
       // Get instances
@@ -389,6 +376,7 @@ class SecurityAudit {
 async function runSecurityAudit() {
   try {
     const audit = new SecurityAudit();
+    await audit.initialize();
     const results = await audit.auditAll();
     console.log('Security audit completed successfully');
     return results;

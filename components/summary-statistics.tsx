@@ -69,8 +69,7 @@ function SummaryStat({
           <div className="space-y-1">
             <Progress 
               value={progressValue} 
-              className="h-1.5" 
-              indicatorColor={progressColor}
+              className="h-1.5"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>{progressValue}%</span>

@@ -1,121 +1,117 @@
 {
-  "timestamp": "2025-05-04T15:18:01.739Z",
+  "timestamp": "2025-05-15T22:16:18.716Z",
   "projectId": "dba-inventory-services-prod",
-  "status": {
-    "compute": {
-      "vmInventory": "✓",
-      "machineTypes": "✓",
-      "instanceTypes": "✓",
-      "labels": "✓",
-      "optimization": {
-        "cpuUtilization": "✓",
-        "memoryUtilization": "✓",
-        "costRecommendations": "✗"
-      },
-      "security": {
-        "shieldedVm": "✓",
-        "confidentialComputing": "✗",
-        "osLogin": "✗",
-        "serviceAccounts": "✓"
-      },
-      "gkeClusters": "✓",
-      "gke": {
-        "privateCluster": "✗",
-        "workloadIdentity": "✓",
-        "networkPolicy": "✗",
-        "binaryAuthorization": "✗",
-        "podSecurityPolicy": "✗",
-        "regionalClusters": "✓"
-      }
+  "findings": [
+    {
+      "resource": "ads-api-service-account@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 913 days old",
+      "recommendation": "Rotate service account key every 90 days"
     },
-    "storage": {
-      "bucketInventory": "✓",
-      "bucketSecurity": {
-        "uniformAccess": "✓",
-        "noPublicAccess": "✓",
-        "encryption": "✗",
-        "versioning": "✓",
-        "logging": "✗",
-        "retentionPolicies": "✗",
-        "lifecycleManagement": "✓"
-      },
-      "bucketManagement": "✓",
-      "persistentDisks": "✓",
-      "diskSecurity": {
-        "encryption": "✗",
-        "backupPolicies": "✗",
-        "managedDeletion": "✗",
-        "snapshots": "✗"
-      }
+    {
+      "resource": "ads-api-service-account@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 419 days old",
+      "recommendation": "Rotate service account key every 90 days"
     },
-    "networking": {
-      "vpcConfiguration": "✓",
-      "vpcSecurity": "✓",
-      "loadBalancers": "✓",
-      "dns": "✓",
-      "security": {
-        "firewalls": {
-          "hasRules": "✓",
-          "usesTags": "✓",
-          "noOverlyPermissive": "✗",
-          "restrictedSourceRanges": "✗"
-        },
-        "subnetworks": {
-          "privateGoogleAccess": "✓",
-          "flowLogs": "✗",
-          "secondaryRanges": "✓"
-        }
-      }
+    {
+      "resource": "ad-generator-sa@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 926 days old",
+      "recommendation": "Rotate service account key every 90 days"
     },
-    "security": {
-      "auditLogging": {
-        "enabled": "✓",
-        "monitoring": "✓"
-      },
-      "accessControl": {
-        "iamAdmin": "✓",
-        "computeAdmin": "✓",
-        "storageAdmin": "✓"
-      },
-      "monitoring": {
-        "loggingEnabled": "✓",
-        "monitoringEnabled": "✓",
-        "alertsConfigured": "✓"
-      }
+    {
+      "resource": "cfs-logswriter@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 798 days old",
+      "recommendation": "Rotate service account key every 90 days"
     },
-    "compliance": {
-      "dataProtection": {
-        "dlpTemplates": "✗",
-        "dlpJobs": "✗",
-        "infoTypes": "✗",
-        "apiEnabled": "✓"
-      },
-      "complianceStandards": "✓",
-      "auditLogging": "✓"
+    {
+      "resource": "google-my-business@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 883 days old",
+      "recommendation": "Rotate service account key every 90 days"
     },
-    "cost": {
-      "billing": {
-        "configured": "✓",
-        "projectBilling": "✓",
-        "costMonitoring": "✓"
-      },
-      "optimization": {
-        "commitments": "✓",
-        "recommendations": "✓",
-        "monitoring": "✓"
-      }
+    {
+      "resource": "autoinventory-ftp-service@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 869 days old",
+      "recommendation": "Rotate service account key every 90 days"
     },
-    "devops": {
-      "cicd": "✓",
-      "monitoring": "✓",
-      "logging": "✓"
+    {
+      "resource": "vwaudi-cfs-google-bing@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 590 days old",
+      "recommendation": "Rotate service account key every 90 days"
+    },
+    {
+      "resource": "preset-io@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 409 days old",
+      "recommendation": "Rotate service account key every 90 days"
+    },
+    {
+      "resource": "content-api-sa@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 917 days old",
+      "recommendation": "Rotate service account key every 90 days"
+    },
+    {
+      "resource": "pos-salesfeed-sa@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 792 days old",
+      "recommendation": "Rotate service account key every 90 days"
+    },
+    {
+      "resource": "website-verification@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 906 days old",
+      "recommendation": "Rotate service account key every 90 days"
+    },
+    {
+      "resource": "redash@dba-inventory-services-prod.iam.gserviceaccount.com",
+      "type": "SERVICE_ACCOUNT_KEY",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "description": "Service account key is 423 days old",
+      "recommendation": "Rotate service account key every 90 days"
     }
+  ],
+  "summary": {
+    "total": 53,
+    "passed": 41,
+    "failed": 12
   },
   "errors": [
     {
-      "section": "Compliance",
-      "error": "securityFindings is not defined",
-      "details": {}
+      "resource": "Compute Engine",
+      "error": "Missing required parameters: zone"
+    },
+    {
+      "resource": "Storage",
+      "error": "costtesting@dba-inventory-services-prod.iam.gserviceaccount.com does not have storage.buckets.getIamPolicy access to the Google Cloud Storage bucket. Permission 'storage.buckets.getIamPolicy' denied on resource (or it may not exist)."
     }
   ]
 }

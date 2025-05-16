@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-14T16:31:55.193Z",
+  "timestamp": "2025-05-15T16:23:26.902Z",
   "projectId": "dba-inventory-services-prod",
   "findings": [
     {
@@ -30,7 +30,7 @@
     },
     {
       "check": "Oversized Instances",
-      "error": "Invalid JSON payload received. Unknown name \"interval[startTime]\": Cannot bind query parameter. Field 'interval[startTime]' could not be found in request message.\nInvalid JSON payload received. Unknown name \"interval[endTime]\": Cannot bind query parameter. Field 'interval[endTime]' could not be found in request message."
+      "error": "Invalid JSON payload received. Unknown name \"interval[endTime]\": Cannot bind query parameter. Field 'interval[endTime]' could not be found in request message.\nInvalid JSON payload received. Unknown name \"interval[startTime]\": Cannot bind query parameter. Field 'interval[startTime]' could not be found in request message."
     }
   ]
 }

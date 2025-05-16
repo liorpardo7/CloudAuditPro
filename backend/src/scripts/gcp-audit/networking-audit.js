@@ -1,22 +1,15 @@
 const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
+const { getAuthClient, getProjectId } = require('./auth');
 const fs = require('fs');
 const path = require('path');
-
-// Load service account credentials
-const credentials = require('./dba-inventory-services-prod-8a97ca8265b5.json');
-
-// Initialize authentication
-const auth = new google.auth.GoogleAuth({
-  scopes: ['https://www.googleapis.com/auth/cloud-platform']
-});
 
 // Initialize API clients with auth
 let compute;
 let dns;
 
 async function initializeClients() {
-  const authClient = await auth.getClient();
+  const authClient = await getAuthClient();
   compute = google.compute({
     version: 'v1',
     auth: authClient
