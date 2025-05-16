@@ -1,6 +1,8 @@
 # GCP Service Account Credentials
 *dba-inventory-services*.json
 *credentials*.json
+backend/src/scripts/gcp-audit/audit-config.json
+backend/src/scripts/gcp-audit/oauth-tokens.json
 
 # Node.js
 node_modules/
@@ -68,5 +70,3 @@ next-env.d.ts
 
 # Include documentation
 !*.md
-backend/src/scripts/gcp-audit/audit-config.json
-backend/src/scripts/gcp-audit/oauth-tokens.json
