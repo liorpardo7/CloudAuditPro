@@ -44,10 +44,9 @@ export async function GET(request: Request) {
 
     const tokens = await tokenResponse.json()
 
-    // TODO: Store tokens securely (e.g., in a database)
-    // For now, we'll just redirect back to settings with success
+    // Redirect to settings with access_token in query string for frontend storage
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/settings?success=true`
+      `${process.env.NEXT_PUBLIC_APP_URL}/settings?access_token=${encodeURIComponent(tokens.access_token)}`
     )
   } catch (error) {
     console.error('OAuth callback error:', error)

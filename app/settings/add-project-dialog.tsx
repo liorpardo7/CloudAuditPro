@@ -23,15 +23,26 @@ export function AddProjectDialog({ open, onOpenChange, onProjectAdded, initialSt
   }, [open, initialStep]);
 
   React.useEffect(() => {
+    console.log("Dialog open:", open, "Step:", step);
     if (open && step === 'select') {
       setIsLoading(true)
-      fetch('/api/gcp/projects')
+      const accessToken = localStorage.getItem('google_access_token')
+      console.log("Fetching projects with token:", accessToken);
+      fetch('/api/gcp/projects', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
         .then(res => res.json())
         .then(data => {
+          console.log("Projects fetch result:", data);
           setProjects(data.projects || [])
           setIsLoading(false)
         })
-        .catch(() => setIsLoading(false))
+        .catch((err) => {
+          console.error("Projects fetch error:", err);
+          setIsLoading(false)
+        })
     }
   }, [open, step])
 

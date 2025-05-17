@@ -111,6 +111,19 @@ export default function SettingsPage() {
     }
   }
 
+  React.useEffect(() => {
+    const url = new URL(window.location.href);
+    const accessToken = url.searchParams.get('access_token');
+    if (accessToken) {
+      localStorage.setItem('google_access_token', accessToken);
+      // Remove the token from the URL for cleanliness
+      url.searchParams.delete('access_token');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+      setAddProjectInitialStep('select');
+      setIsAddProjectOpen(true);
+    }
+  }, []);
+
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between">
@@ -118,10 +131,15 @@ export default function SettingsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
           <p className="text-muted-foreground">Manage your application settings and connected projects</p>
         </div>
-        <Button onClick={() => setIsAddProjectOpen(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Project
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setIsAddProjectOpen(true)}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Project
+          </Button>
+          <Button variant="outline" onClick={() => { localStorage.removeItem('google_access_token'); window.location.reload(); }}>
+            Logout
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4">
