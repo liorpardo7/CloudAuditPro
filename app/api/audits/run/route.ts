@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       )
     }
     // Create AuditJob in DB
-    const job = await prisma.auditjob.create({
+    const job = await prisma.auditJob.create({
       data: {
         projectId,
         userId,
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     // Always use the test service account key
     const credentialPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json')
     if (!fs.existsSync(credentialPath)) {
-      await prisma.auditjob.update({ where: { id: jobId }, data: { status: 'error', error: 'Test service account key not found at backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json' } })
+      await prisma.auditJob.update({ where: { id: jobId }, data: { status: 'error', error: 'Test service account key not found at backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json' } })
       return NextResponse.json({ jobId, error: 'Test service account key not found' }, { status: 400 })
     }
     const scriptDir = path.join(process.cwd(), 'backend/src/scripts/gcp-audit');
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
             resultJson = null
           }
         }
-        await prisma.auditjob.update({
+        await prisma.auditJob.update({
           where: { id: jobId },
           data: {
             status: 'completed',
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
           },
         })
       } else {
-        await prisma.auditjob.update({
+        await prisma.auditJob.update({
           where: { id: jobId },
           data: {
             status: 'error',

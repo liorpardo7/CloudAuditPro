@@ -320,21 +320,18 @@ class DiscountAudit extends BaseValidator {
   }
 }
 
-if (require.main === module) {
-  const fs = require('fs');
-  const path = require('path');
-  (async () => {
-    const audit = new DiscountAudit();
-    const results = await audit.auditAll();
-    const resultsPath = path.join(__dirname, 'discount-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Discount Audit completed. Results written to', resultsPath);
-  })();
+async function run(projectId, tokens) {
+  const audit = new DiscountAudit();
+  // Set up OAuth2 client
+  const authClient = new google.auth.OAuth2();
+  authClient.setCredentials(tokens);
+  audit.authClient = authClient;
+  audit.projectId = projectId;
+  // Initialize API clients with OAuth
+  // ...
+  const results = await audit.auditAll();
+  await writeAuditResults('discount-audit', results.discountPrograms.commitments, results.discountPrograms.sustainedUse, results.recommendations, projectId);
+  return results;
 }
 
-module.exports = DiscountAudit; 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("discount-audit", findings, summary, errors);
+module.exports = { run };

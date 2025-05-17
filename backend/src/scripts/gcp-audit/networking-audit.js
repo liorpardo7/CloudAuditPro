@@ -1,33 +1,22 @@
 const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
-const { getAuthClient, getProjectId } = require('./auth');
 const fs = require('fs');
 const path = require('path');
 
-// Initialize API clients with auth
-let compute;
-let dns;
-
-async function initializeClients() {
-  const authClient = await getAuthClient();
-  compute = google.compute({
-    version: 'v1',
-    auth: authClient
-  });
-  dns = google.dns({
-    version: 'v1',
-    auth: authClient
-  });
-}
-
-async function auditNetworkingResources() {
+async function run(projectId, tokens) {
+  let compute, dns;
+  const findings = [];
+  const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+  const errors = [];
   try {
-    console.log('Starting networking audit...');
-    await initializeClients();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    compute = google.compute({ version: 'v1', auth: authClient });
+    dns = google.dns({ version: 'v1', auth: authClient });
     
     const results = {
       timestamp: new Date().toISOString(),
-      projectId: 'dba-inventory-services-prod',
+      projectId: projectId,
       networkingResources: {
         vpcs: [],
         subnets: [],
@@ -45,7 +34,7 @@ async function auditNetworkingResources() {
 
     // Get all regions first
     const regionsResponse = await compute.regions.list({
-      project: 'dba-inventory-services-prod'
+      project: projectId
     });
     const regions = regionsResponse.data.items.map(region => region.name);
     console.log(`Found ${regions.length} regions: ${regions.join(', ')}`);
@@ -53,7 +42,7 @@ async function auditNetworkingResources() {
     // Audit VPCs
     try {
       const vpcsResponse = await compute.networks.list({
-        project: 'dba-inventory-services-prod'
+        project: projectId
       });
       results.networkingResources.vpcs = vpcsResponse.data.items || [];
       console.log(`Found ${results.networkingResources.vpcs.length} VPCs`);
@@ -98,7 +87,7 @@ async function auditNetworkingResources() {
     try {
       for (const region of regions) {
         const subnetsResponse = await compute.subnetworks.list({
-          project: 'dba-inventory-services-prod',
+          project: projectId,
           region: region
         });
         if (subnetsResponse.data.items) {
@@ -118,7 +107,7 @@ async function auditNetworkingResources() {
     // Audit Firewall Rules
     try {
       const firewallResponse = await compute.firewalls.list({
-        project: 'dba-inventory-services-prod'
+        project: projectId
       });
       results.networkingResources.firewallRules = firewallResponse.data.items || [];
       console.log(`Found ${results.networkingResources.firewallRules.length} firewall rules`);
@@ -135,7 +124,7 @@ async function auditNetworkingResources() {
     try {
       for (const region of regions) {
         const forwardingRulesResponse = await compute.forwardingRules.list({
-          project: 'dba-inventory-services-prod',
+          project: projectId,
           region: region
         });
         if (forwardingRulesResponse.data.items) {
@@ -156,13 +145,13 @@ async function auditNetworkingResources() {
     try {
       for (const region of regions) {
         const routersResponse = await compute.routers.list({
-          project: 'dba-inventory-services-prod',
+          project: projectId,
           region: region
         });
         
         for (const router of routersResponse.data.items || []) {
           const natResponse = await compute.routers.get({
-            project: 'dba-inventory-services-prod',
+            project: projectId,
             region: region,
             router: router.name
           });
@@ -185,7 +174,7 @@ async function auditNetworkingResources() {
     // Audit Cloud DNS
     try {
       const dnsResponse = await dns.managedZones.list({
-        project: 'dba-inventory-services-prod'
+        project: projectId
       });
       results.networkingResources.cloudDns = dnsResponse.data.managedZones || [];
       console.log(`Found ${results.networkingResources.cloudDns.length} Cloud DNS zones`);
@@ -202,7 +191,7 @@ async function auditNetworkingResources() {
     try {
       for (const region of regions) {
         const vpnTunnelsResponse = await compute.vpnTunnels.list({
-          project: 'dba-inventory-services-prod',
+          project: projectId,
           region: region
         });
         if (vpnTunnelsResponse.data.items) {
@@ -223,7 +212,7 @@ async function auditNetworkingResources() {
     try {
       for (const region of regions) {
         const interconnectResponse = await compute.interconnectAttachments.list({
-          project: 'dba-inventory-services-prod',
+          project: projectId,
           region: region
         });
         if (interconnectResponse.data.items) {
@@ -244,7 +233,7 @@ async function auditNetworkingResources() {
     try {
       for (const region of regions) {
         const routersResponse = await compute.routers.list({
-          project: 'dba-inventory-services-prod',
+          project: projectId,
           region: region
         });
         if (routersResponse.data.items) {
@@ -264,7 +253,7 @@ async function auditNetworkingResources() {
     // Audit Routes
     try {
       const routesResponse = await compute.routes.list({
-        project: 'dba-inventory-services-prod'
+        project: projectId
       });
       results.networkingResources.routes = routesResponse.data.items || [];
       console.log(`Found ${results.networkingResources.routes.length} routes`);
@@ -284,8 +273,11 @@ async function auditNetworkingResources() {
     const resultsPath = path.join(__dirname, 'networking-audit-results.json');
     fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
     console.log('Networking audit completed. Results saved to networking-audit-results.json');
+
+    await writeAuditResults('networking-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (error) {
-    console.error('Error during networking audit:', error);
+    console.error('Error running networking audit:', error);
     throw error;
   }
 }
@@ -475,19 +467,4 @@ function generateNetworkingRecommendations(results) {
   });
 }
 
-// Run the audit if this script is run directly
-if (require.main === module) {
-  auditNetworkingResources().catch(error => {
-    console.error('Error running networking audit:', error);
-    process.exit(1);
-  });
-}
-
-module.exports = {
-  auditNetworkingResources
-}; 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("networking-audit", findings, summary, errors);
+module.exports = { run }; 

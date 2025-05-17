@@ -2,24 +2,13 @@ const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-let storage;
-
-async function initializeStorage() {
-  const authClient = auth.getAuthClient();
-  storage = google.storage({
-    version: 'v1',
-    auth: authClient
-  });
-}
-
-async function runStorageFolderLifecycleAudit() {
-  console.log('[runStorageFolderLifecycleAudit] Script started');
+async function run(projectId, tokens) {
+  let storage;
   try {
-    console.log('Starting storage folder lifecycle audit...');
-    await initializeStorage();
-    const projectId = auth.getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    storage = google.storage({ version: 'v1', auth: authClient });
     
     const results = {
       timestamp: new Date().toISOString(),
@@ -114,9 +103,8 @@ async function runStorageFolderLifecycleAudit() {
 
     // Write results
     console.log('[runStorageFolderLifecycleAudit] Writing results:', { findings: results.findings.length, summary: results.summary, errors: results.errors.length });
-    await writeAuditResults('storage-folder-lifecycle-audit', results.findings, results.summary, results.errors, results.projectId, {});
+    await writeAuditResults('storage-folder-lifecycle-audit', results.findings, results.summary, results.errors, projectId);
     return results;
-
   } catch (error) {
     console.error('Error during storage folder lifecycle audit:', error);
     throw error;
@@ -257,8 +245,8 @@ async function simulateLifecycleRules(bucketName) {
 // @audit-status: VERIFIED
 // @last-tested: 2024-03-19
 // @test-results: Script runs successfully, generates valid results file with proper structure. Found 22 buckets, 66 findings (40 passed, 26 failed), potential cost savings identified.
-module.exports = runStorageFolderLifecycleAudit;
+module.exports = { run };
 
 if (require.main === module) {
-  runStorageFolderLifecycleAudit().catch(console.error);
+  run('your-project-id', {}).catch(console.error);
 } 

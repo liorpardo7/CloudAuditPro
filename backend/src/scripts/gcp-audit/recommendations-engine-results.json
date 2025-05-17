@@ -1,0 +1,208 @@
+{
+  "timestamp": "2025-05-17T15:53:35.861Z",
+  "projectId": "all-projects",
+  "findings": [
+    {
+      "source": "bigquery-audit-results.json",
+      "check": "Query Optimization",
+      "resource": "",
+      "issue": "0 recent queries analyzed",
+      "recommendation": "Review: Query Optimization",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "bigquery-audit-results.json",
+      "check": "Cost Optimization",
+      "resource": "",
+      "issue": "8 large tables identified",
+      "recommendation": "Review: Cost Optimization",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "billing-audit-results.json",
+      "check": "Idle Resources",
+      "resource": "",
+      "issue": "1 resources with low utilization",
+      "recommendation": "Review: Idle Resources",
+      "costImpact": "Potential savings: review resource",
+      "priority": 3
+    },
+    {
+      "source": "monitoring-audit-results.json",
+      "check": "Cost Anomaly Alerts",
+      "resource": "",
+      "issue": "0 cost-related alerts found",
+      "recommendation": "Review: Cost Anomaly Alerts",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/MC-Feed-Creation",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Target Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/UNITE-CFS",
+      "issue": "Non-HTTPS endpoint configured",
+      "recommendation": "Use HTTPS endpoints for secure communication",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/UNITE-CFS",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Target Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/UNITE-CFS-PROCESS-DATA",
+      "issue": "Non-HTTPS endpoint configured",
+      "recommendation": "Use HTTPS endpoints for secure communication",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/UNITE-CFS-PROCESS-DATA",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Target Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/UNITE-CFS-PROCESS-DATA-2",
+      "issue": "Non-HTTPS endpoint configured",
+      "recommendation": "Use HTTPS endpoints for secure communication",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/UNITE-CFS-PROCESS-DATA-2",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Target Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/bing-cfs-premium-images-fix",
+      "issue": "Non-HTTPS endpoint configured",
+      "recommendation": "Use HTTPS endpoints for secure communication",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/bing-cfs-premium-images-fix",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/bucket-to-bigquery-images",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/image-overlay-fix",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/sftp-shovel-scheduler",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/store-code-update",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Target Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/unite-hyundai-email-processing",
+      "issue": "Non-HTTPS endpoint configured",
+      "recommendation": "Use HTTPS endpoints for secure communication",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/unite-hyundai-email-processing",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Target Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/unite-hyundai-microsoft-premium-leads",
+      "issue": "Non-HTTPS endpoint configured",
+      "recommendation": "Use HTTPS endpoints for secure communication",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "scheduler-audit-results.json",
+      "check": "Timezone Configuration",
+      "resource": "projects/dba-inventory-services-prod/locations/us-central1/jobs/unite-hyundai-microsoft-premium-leads",
+      "issue": "Non-UTC timezone configured",
+      "recommendation": "Consider using UTC for consistency across regions",
+      "costImpact": "N/A",
+      "priority": 3
+    },
+    {
+      "source": "bigquery-audit-results.json",
+      "check": "Job Monitoring",
+      "resource": "",
+      "issue": "0 running jobs",
+      "recommendation": "Review: Job Monitoring",
+      "costImpact": "N/A",
+      "priority": 2
+    }
+  ],
+  "summary": {
+    "totalRecommendations": 22
+  },
+  "errors": []
+}

@@ -1,0 +1,247 @@
+{
+  "timestamp": "2025-05-17T17:09:57.539Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "check": "Sensitive Data Detection",
+      "result": "0 inspect templates found",
+      "passed": false,
+      "details": []
+    },
+    {
+      "check": "Data Retention",
+      "result": "22 buckets with retention policies",
+      "passed": true,
+      "details": [
+        {
+          "name": "apple-inventory"
+        },
+        {
+          "name": "artifacts.dba-inventory-services-prod.appspot.com"
+        },
+        {
+          "name": "auto-inventory-prod-ftp"
+        },
+        {
+          "name": "auto-inventory-prod-vla-ftp"
+        },
+        {
+          "name": "autoinventory-cfs-service"
+        },
+        {
+          "name": "azure_cfs_files"
+        },
+        {
+          "name": "cloud-sql-dump-backup"
+        },
+        {
+          "name": "dba-inventory-services-prod-cloud-functions"
+        },
+        {
+          "name": "dba-inventory-services-prod.appspot.com"
+        },
+        {
+          "name": "gcf-sources-326969574199-us-central1"
+        },
+        {
+          "name": "gcf-v2-sources-326969574199-us-central1",
+          "lifecycle": {
+            "rule": [
+              {
+                "action": {
+                  "type": "Delete"
+                },
+                "condition": {
+                  "isLive": false,
+                  "numNewerVersions": 3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "gcf-v2-uploads-326969574199-us-central1",
+          "lifecycle": {
+            "rule": [
+              {
+                "action": {
+                  "type": "Delete"
+                },
+                "condition": {
+                  "age": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "generated-bing-cfs-files"
+        },
+        {
+          "name": "generated-cfs-files"
+        },
+        {
+          "name": "generated-vla-files",
+          "lifecycle": {
+            "rule": [
+              {
+                "action": {
+                  "type": "Delete"
+                },
+                "condition": {
+                  "age": 7
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "images_inventory_files"
+        },
+        {
+          "name": "marketcheck-data-prod"
+        },
+        {
+          "name": "msn-marketplace-reporting-files"
+        },
+        {
+          "name": "staging.dba-inventory-services-prod.appspot.com",
+          "lifecycle": {
+            "rule": [
+              {
+                "action": {
+                  "type": "Delete"
+                },
+                "condition": {
+                  "age": 15
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "test-bucket-for-filemage"
+        },
+        {
+          "name": "us-central1-dba-inventory-s-284706cf-bucket"
+        },
+        {
+          "name": "us.artifacts.dba-inventory-services-prod.appspot.com"
+        }
+      ]
+    },
+    {
+      "check": "Data Residency",
+      "result": "22 buckets with location settings",
+      "passed": true,
+      "details": [
+        {
+          "name": "apple-inventory",
+          "location": "US"
+        },
+        {
+          "name": "artifacts.dba-inventory-services-prod.appspot.com",
+          "location": "US"
+        },
+        {
+          "name": "auto-inventory-prod-ftp",
+          "location": "US"
+        },
+        {
+          "name": "auto-inventory-prod-vla-ftp",
+          "location": "US"
+        },
+        {
+          "name": "autoinventory-cfs-service",
+          "location": "US"
+        },
+        {
+          "name": "azure_cfs_files",
+          "location": "US"
+        },
+        {
+          "name": "cloud-sql-dump-backup",
+          "location": "US"
+        },
+        {
+          "name": "dba-inventory-services-prod-cloud-functions",
+          "location": "US"
+        },
+        {
+          "name": "dba-inventory-services-prod.appspot.com",
+          "location": "US"
+        },
+        {
+          "name": "gcf-sources-326969574199-us-central1",
+          "location": "US-CENTRAL1"
+        },
+        {
+          "name": "gcf-v2-sources-326969574199-us-central1",
+          "location": "US-CENTRAL1"
+        },
+        {
+          "name": "gcf-v2-uploads-326969574199-us-central1",
+          "location": "US-CENTRAL1"
+        },
+        {
+          "name": "generated-bing-cfs-files",
+          "location": "US"
+        },
+        {
+          "name": "generated-cfs-files",
+          "location": "US"
+        },
+        {
+          "name": "generated-vla-files",
+          "location": "US"
+        },
+        {
+          "name": "images_inventory_files",
+          "location": "US"
+        },
+        {
+          "name": "marketcheck-data-prod",
+          "location": "US"
+        },
+        {
+          "name": "msn-marketplace-reporting-files",
+          "location": "US"
+        },
+        {
+          "name": "staging.dba-inventory-services-prod.appspot.com",
+          "location": "US"
+        },
+        {
+          "name": "test-bucket-for-filemage",
+          "location": "US"
+        },
+        {
+          "name": "us-central1-dba-inventory-s-284706cf-bucket",
+          "location": "US-CENTRAL1"
+        },
+        {
+          "name": "us.artifacts.dba-inventory-services-prod.appspot.com",
+          "location": "US"
+        }
+      ]
+    },
+    {
+      "check": "Data Security",
+      "result": "0 deidentification templates found",
+      "passed": false,
+      "details": []
+    }
+  ],
+  "summary": {
+    "totalChecks": 5,
+    "passed": 2,
+    "failed": 3,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Data Encryption",
+      "error": "Missing required parameters: zone"
+    }
+  ]
+}

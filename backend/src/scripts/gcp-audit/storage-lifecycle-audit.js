@@ -3,15 +3,15 @@ const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
 class StorageLifecycleAudit extends BaseValidator {
-  async auditAll() {
+  async auditAll(projectId, tokens) {
     await this.initialize();
     console.log('Starting storage lifecycle policies audit...\n');
-
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    const storage = google.storage({ version: 'v1', auth: authClient });
+    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
     const results = {
       timestamp: new Date().toISOString(),
       projectId,
@@ -27,33 +27,19 @@ class StorageLifecycleAudit extends BaseValidator {
     };
     const summary = { totalChecks: 0, passed: 0, failed: 0 };
     const errors = [];
-
-    // Get all projects
-    const projects = await this.getAllProjects();
-    // Audit each project
-    for (const project of projects) {
-      await this.auditProject(project, results, summary, errors);
-    }
+    // Audit the provided project only
+    await this.auditProject({ projectId }, results, summary, errors, authClient);
     // Generate recommendations
     this.generateRecommendations(results);
-    writeAuditResults('storage-lifecycle-audit', results.storageLifecycle.buckets, summary, errors, projectId);
+    await writeAuditResults('storage-lifecycle-audit', results.storageLifecycle.buckets, summary, errors, projectId);
     return results;
   }
 
-  async getAllProjects() {
-    try {
-      const response = await this.resourceManager.projects.list();
-      return response.data.projects || [];
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async auditProject(project, results, summary, errors) {
+  async auditProject(project, results, summary, errors, authClient) {
     try {
       // Get all storage buckets
       const storage = google.storage('v1');
-      const bucketsResponse = await storage.buckets.list({ project: project.projectId });
+      const bucketsResponse = await storage.buckets.list({ project: project.projectId, auth: authClient });
       if (bucketsResponse.data.items) {
         for (const bucket of bucketsResponse.data.items) {
           const bucketInfo = {
@@ -245,11 +231,9 @@ class StorageLifecycleAudit extends BaseValidator {
   }
 }
 
-if (require.main === module) {
-  (async () => {
-    const audit = new StorageLifecycleAudit();
-    await audit.auditAll();
-  })();
+async function run(projectId, tokens) {
+  const audit = new StorageLifecycleAudit();
+  return await audit.auditAll(projectId, tokens);
 }
 
-module.exports = StorageLifecycleAudit;
+module.exports = { run };

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-05-17T15:53:06.284Z",
+  "projectId": {},
+  "findings": [],
+  "summary": {
+    "totalChecks": 5,
+    "passed": 0,
+    "failed": 5,
+    "notApplicable": 0
+  },
+  "errors": [
+    {
+      "check": "VM Instance Recommendations",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Disk Recommendations",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Committed Use Discount Recommendations",
+      "error": "Missing required parameters: region"
+    },
+    {
+      "check": "IAM Recommendations",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Service Account Recommendations",
+      "error": "authClient.request is not a function"
+    }
+  ]
+}

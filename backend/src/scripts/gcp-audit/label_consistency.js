@@ -3,11 +3,11 @@
 // @test-results: Script runs successfully, generates valid results file with proper structure
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const auth = require('./auth');
 
-async function runLabelConsistencyAudit() {
+async function run(projectId, tokens) {
   try {
-    const authClient = auth.getAuthClient();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const crm = google.cloudresourcemanager('v1');
     const findings = [];
     const errors = [];
@@ -23,7 +23,6 @@ async function runLabelConsistencyAudit() {
     console.log(`Found ${projects.length} active projects`);
 
     for (const project of projects) {
-      const projectId = project.projectId;
       // 1. Check project labels
       try {
         const labels = project.labels || {};
@@ -186,7 +185,7 @@ async function runLabelConsistencyAudit() {
     }
 
     // Write results
-    await writeAuditResults('label-consistency-audit', findings, summary, errors, 'all-projects');
+    await writeAuditResults('label-consistency-audit', findings, summary, errors, projectId);
     return { findings, summary, errors };
   } catch (error) {
     console.error('Error running label consistency audit:', error);
@@ -194,4 +193,4 @@ async function runLabelConsistencyAudit() {
   }
 }
 
-module.exports = runLabelConsistencyAudit; 
+module.exports = { run }; 

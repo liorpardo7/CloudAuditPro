@@ -3,11 +3,11 @@
 // @test-results: Script runs successfully, generates valid results file with proper structure
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const auth = require('./auth');
 
-async function runCrossProjectAudit() {
+async function run(projectId, tokens) {
   try {
-    const authClient = auth.getAuthClient();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const crm = google.cloudresourcemanager('v1');
     const billing = google.cloudbilling('v1');
     const findings = [];
@@ -122,4 +122,4 @@ async function runCrossProjectAudit() {
   }
 }
 
-module.exports = runCrossProjectAudit; 
+module.exports = { run }; 

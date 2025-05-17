@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-17T15:53:02.793Z",
+  "projectId": "dba-inventory-services-prod",
+  "budgetSettings": {
+    "budgets": [],
+    "forecasts": [],
+    "alerts": [],
+    "thresholds": []
+  },
+  "recommendations": []
+}

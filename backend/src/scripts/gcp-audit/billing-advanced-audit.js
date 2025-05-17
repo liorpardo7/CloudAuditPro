@@ -1,28 +1,17 @@
 const { writeAuditResults } = require('./writeAuditResults');
-// billing-advanced-audit.js
-// Scaffold for GCP Advanced Billing Audit
 const fs = require('fs');
 const path = require('path');
 
-async function runBillingAdvancedAudit() {
-  // TODO: Implement GCP API calls to collect advanced billing data
-  const results = {
-    timestamp: new Date().toISOString(),
-    costFindings: [], // Fill with cost optimization findings
-    anomalyFindings: [], // Fill with anomaly detection
-    budgetFindings: [], // Fill with budget tracking
-    recommendations: [
-      // Example:
-      // { issue: 'No budget alerts set', recommendation: 'Set up budget alerts for all billing accounts', severity: 'medium', estimatedSavings: null }
-    ]
-  };
-  fs.writeFileSync(path.join(__dirname, 'billing-advanced-audit-results.json'), JSON.stringify(results, null, 2));
-  console.log('Advanced Billing audit completed. Results saved to billing-advanced-audit-results.json');
+async function run(projectId, tokens) {
+  const findings = [
+    { check: 'Cost Optimization', result: 'Not implemented', passed: null },
+    { check: 'Anomaly Detection', result: 'Not implemented', passed: null },
+    { check: 'Budget Tracking', result: 'Not implemented', passed: null }
+  ];
+  const summary = { totalChecks: findings.length, passed: 0, failed: 0, costSavingsPotential: 0 };
+  const errors = [];
+  await writeAuditResults('billing-advanced-audit', findings, summary, errors, projectId);
+  return { findings, summary, errors };
 }
 
-runBillingAdvancedAudit(); 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("billing-advanced-audit", findings, summary, errors);
+module.exports = { run };

@@ -1,14 +1,7 @@
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const fs = require('fs');
-const path = require('path');
-const auth = require('./auth');
 
-/**
- * Runs the monitoring audit for GCP resources
- * @returns {Promise<Object>} Audit results
- */
-async function runMonitoringAudit() {
+async function run(projectId, tokens) {
   const findings = [];
   const summary = {
     totalChecks: 0,
@@ -17,15 +10,9 @@ async function runMonitoringAudit() {
     costSavingsPotential: 0
   };
   const errors = [];
-
   try {
-    const authClient = await auth.getAuthClient();
-    const projectId = await auth.getProjectId();
-    
-    if (!projectId) {
-      throw new Error('Project ID not found. Please ensure proper authentication and project configuration.');
-    }
-
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const monitoring = google.monitoring({ version: 'v3', auth: authClient });
     const projectName = `projects/${projectId}`;
 
@@ -356,22 +343,12 @@ async function runMonitoringAudit() {
     }
 
     return { findings, summary, errors };
-  } catch (err) {
-    console.error('Error in monitoring audit:', err);
-    errors.push({ check: 'Monitoring Audit', error: err.message });
-    return { findings, summary, errors };
+  } catch (error) {
+    console.error('Error in monitoring audit:', error);
+    errors.push({ check: 'Monitoring Audit', error: error.message });
+    await writeAuditResults('monitoring-audit', findings, summary, errors, projectId);
+    throw error;
   }
 }
 
-if (require.main === module) {
-  runMonitoringAudit()
-    .then(results => {
-      console.log('Monitoring audit completed with results:', JSON.stringify(results, null, 2));
-    })
-    .catch(error => {
-      console.error('Error running monitoring audit:', error);
-      process.exit(1);
-    });
-}
-
-module.exports = runMonitoringAudit;
+module.exports = { run };

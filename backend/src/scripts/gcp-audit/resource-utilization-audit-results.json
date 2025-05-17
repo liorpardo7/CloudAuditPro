@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-05-17T15:53:04.723Z",
+  "projectId": {},
+  "findings": [
+    {
+      "status": "ERROR",
+      "severity": "ERROR",
+      "description": "Error auditing Compute Engine: Invalid resource field value in the request.",
+      "projectId": {}
+    }
+  ],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "error": "Invalid resource field value in the request."
+    }
+  ]
+}

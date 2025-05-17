@@ -2,10 +2,8 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-async function runBigQueryDeepDiveAudit() {
-  console.log('[runBigQueryDeepDiveAudit] Script started');
+async function run(projectId, tokens) {
   const findings = [];
   const summary = {
     totalChecks: 0,
@@ -14,11 +12,11 @@ async function runBigQueryDeepDiveAudit() {
     costSavingsPotential: 0
   };
   const errors = [];
-
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const bigquery = google.bigquery({ version: 'v2', auth: authClient });
+    const monitoring = await auth.getMonitoring();
 
     // 1. Table Row Count + Age Check
     try {
@@ -322,18 +320,13 @@ async function runBigQueryDeepDiveAudit() {
 
     // Write results
     console.log('[runBigQueryDeepDiveAudit] Writing results:', { findings: findings.length, summary, errors: errors.length });
-    const results = {
-      findings,
-      summary,
-      errors,
-      projectId,
-      timestamp: new Date().toISOString()
-    };
-    await writeAuditResults('bigquery-deep-dive-audit', findings, summary, errors, projectId, {});
-    return results;
+    await writeAuditResults('bigquery-deep-dive', findings, summary, errors, projectId);
+    return { findings, summary, errors };
 
   } catch (error) {
     console.error('Error running BigQuery Deep Dive audit:', error);
+    errors.push({ error: error.message });
+    await writeAuditResults('bigquery-deep-dive', findings, summary, errors, projectId);
     throw error;
   }
 }
@@ -341,7 +334,7 @@ async function runBigQueryDeepDiveAudit() {
 // @audit-status: VERIFIED
 // @last-tested: 2024-03-19
 // @test-results: Script runs successfully, generates valid results file with proper structure. Found 8 datasets, 5 findings (3 passed, 2 failed).
-module.exports = runBigQueryDeepDiveAudit;
+module.exports = { run };
 
 if (require.main === module) {
   runBigQueryDeepDiveAudit().catch(console.error);

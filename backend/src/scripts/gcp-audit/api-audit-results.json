@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-05-14T16:30:08.960Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "api": "Compute Engine API",
+      "status": "ENABLED",
+      "usage": "HIGH",
+      "details": "API is actively used by 5 VM instances",
+      "recommendation": null,
+      "projectId": "dba-inventory-services-prod"
+    },
+    {
+      "api": "Cloud Storage API",
+      "status": "ENABLED",
+      "usage": "MEDIUM",
+      "details": "API is used by 3 buckets",
+      "recommendation": null,
+      "projectId": "dba-inventory-services-prod"
+    },
+    {
+      "api": "Cloud SQL API",
+      "status": "ENABLED",
+      "usage": "LOW",
+      "details": "API is enabled but no instances found",
+      "recommendation": "Consider disabling if not needed",
+      "projectId": "dba-inventory-services-prod"
+    },
+    {
+      "api": "Cloud Functions API",
+      "status": "ENABLED",
+      "usage": "HIGH",
+      "details": "API is actively used by 2 functions",
+      "recommendation": null,
+      "projectId": "dba-inventory-services-prod"
+    },
+    {
+      "api": "Cloud Run API",
+      "status": "DISABLED",
+      "usage": "NONE",
+      "details": "API is not enabled",
+      "recommendation": "Enable if you plan to use Cloud Run",
+      "projectId": "dba-inventory-services-prod"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 4,
+    "failed": 1
+  },
+  "errors": []
+}

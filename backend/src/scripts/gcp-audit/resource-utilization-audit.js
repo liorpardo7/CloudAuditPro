@@ -3,24 +3,23 @@ const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
 class ResourceUtilizationAudit extends BaseValidator {
-  constructor() {
+  constructor(authClient, projectId) {
     super();
-    this.compute = google.compute({ version: 'v1', auth: auth.getAuthClient() });
-    this.monitoring = google.monitoring({ version: 'v3', auth: auth.getAuthClient() });
-    this.sql = google.sqladmin({ version: 'v1beta4', auth: auth.getAuthClient() });
-    this.container = google.container({ version: 'v1', auth: auth.getAuthClient() });
+    this.authClient = authClient;
+    this.projectId = projectId;
+    this.compute = google.compute({ version: 'v1', auth: this.authClient });
+    this.monitoring = google.monitoring({ version: 'v3', auth: this.authClient });
+    this.sql = google.sqladmin({ version: 'v1beta4', auth: this.authClient });
+    this.container = google.container({ version: 'v1', auth: this.authClient });
   }
 
   async auditAll() {
-    await this.initialize();
     console.log('Starting resource utilization audit...\n');
-
     const results = {
       timestamp: new Date().toISOString(),
-      projectId: auth.getProjectId(),
+      projectId: this.projectId,
       resourceUtilization: {
         computeEngine: {
           vms: [],
@@ -41,16 +40,14 @@ class ResourceUtilizationAudit extends BaseValidator {
       idleDatabases: [],
       recommendations: []
     };
-
     // Audit Compute Engine resources
-    const computeResult = await this.auditComputeEngine(results, auth.getProjectId());
+    const computeResult = await this.auditComputeEngine(results, this.projectId);
     // Audit Cloud SQL instances
-    await this.auditCloudSQL(results, auth.getProjectId());
+    await this.auditCloudSQL(results, this.projectId);
     // Audit GKE resources
-    await this.auditGKE(results, auth.getProjectId());
-
+    await this.auditGKE(results, this.projectId);
     // Write results
-    writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, auth.getProjectId(), computeResult.metrics);
+    await writeAuditResults('resource-utilization-audit', computeResult.findings, computeResult.summary, computeResult.errors, this.projectId);
     return results;
   }
 
@@ -346,7 +343,12 @@ class ResourceUtilizationAudit extends BaseValidator {
         'aggregation.alignmentPeriod': '3600s',
         'aggregation.perSeriesAligner': 'ALIGN_MEAN'
       };
-      const response = await this.monitoring.projects.timeSeries.list(request);
+      const response = await this.monitoring.projects.timeSeries.list({
+        name: `projects/${this.projectId}`,
+        filter: request.filter,
+        'interval.startTime': request.startTime,
+        'interval.endTime': request.endTime
+      });
       return response.data.timeSeries || [];
     } catch (error) {
       console.error(`Error getting metric data for ${metricType} and resourceId ${resourceId}:`, error.message);
@@ -371,13 +373,12 @@ class ResourceUtilizationAudit extends BaseValidator {
   }
 }
 
-async function runResourceUtilizationAudit() {
-  const audit = new ResourceUtilizationAudit();
-  await audit.auditAll();
+async function run(projectId, tokens) {
+  const authClient = new google.auth.OAuth2();
+  authClient.setCredentials(tokens);
+  const audit = new ResourceUtilizationAudit(authClient, projectId);
+  const results = await audit.auditAll();
+  return results;
 }
 
-if (require.main === module) {
-  runResourceUtilizationAudit().catch(console.error);
-}
-
-module.exports = runResourceUtilizationAudit;
+module.exports = { run };

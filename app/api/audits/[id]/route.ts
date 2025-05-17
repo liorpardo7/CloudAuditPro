@@ -16,7 +16,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
     // Read individual audit results
     const results = {
       id,
-      name: 'GCP Audit - dba-inventory-services-prod',
+      name: `GCP Audit - ${auditSuiteResults.projectId || 'unknown project'}`,
+      projectId: auditSuiteResults.projectId,
       status: 'completed',
       startedAt: new Date(auditSuiteResults.timestamp).toISOString(),
       completedAt: new Date().toISOString(),

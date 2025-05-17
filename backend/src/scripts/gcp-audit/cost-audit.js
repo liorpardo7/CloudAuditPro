@@ -1,43 +1,34 @@
 const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
-const { getAuthClient, getProjectId } = require('./auth');
 const fs = require('fs');
 const path = require('path');
 
-// Initialize the necessary API clients
-const cloudbilling = google.cloudbilling('v1');
-const recommender = google.recommender('v1');
-const cloudresourcemanager = google.cloudresourcemanager('v1');
-const billingdata = google.cloudbilling('v1beta');
-
-async function auditCostSettings() {
+async function run(projectId, tokens) {
+  const findings = [];
+  const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+  const errors = [];
   try {
-    console.log('Starting cost audit...');
-    const auth = await getAuthClient();
-    const projectId = await getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    // Initialize APIs
+    const cloudbilling = google.cloudbilling({ version: 'v1', auth: authClient });
+    const recommender = google.recommender({ version: 'v1', auth: authClient });
+    const cloudresourcemanager = google.cloudresourcemanager({ version: 'v1', auth: authClient });
+    const billingdata = google.cloudbilling({ version: 'v1beta', auth: authClient });
     
     console.log('Using project ID:', projectId);
     
-    const findings = [];
-    const summary = {
-      totalChecks: 0,
-      passed: 0,
-      failed: 0,
-      costSavingsPotential: 0
-    };
-    const errors = [];
-
     // Get billing account information
     try {
       const projectResponse = await cloudresourcemanager.projects.get({
         projectId,
-        auth
+        auth: authClient
       });
       
       if (projectResponse.data.billingAccountName) {
         const billingResponse = await cloudbilling.billingAccounts.get({
           name: projectResponse.data.billingAccountName,
-          auth
+          auth: authClient
         });
         
         findings.push({
@@ -79,7 +70,7 @@ async function auditCostSettings() {
       
       const costResponse = await billingdata.projects.getCosts({
         name: `projects/${projectId}`,
-        auth,
+        auth: authClient,
         requestBody: {
           interval: {
             startTime: thirtyDaysAgo.toISOString(),
@@ -117,7 +108,7 @@ async function auditCostSettings() {
     try {
       const costRecommendationsResponse = await recommender.projects.locations.recommenders.recommendations.list({
         parent: `projects/${projectId}/locations/-/recommenders/google.compute.commitment.UsageCommitmentRecommender`,
-        auth
+        auth: authClient
       });
       
       if (costRecommendationsResponse.data.recommendations) {
@@ -144,7 +135,7 @@ async function auditCostSettings() {
     try {
       const resourceRecommendationsResponse = await recommender.projects.locations.recommenders.recommendations.list({
         parent: `projects/${projectId}/locations/-/recommenders/google.compute.instance.MachineTypeRecommender`,
-        auth
+        auth: authClient
       });
       
       if (resourceRecommendationsResponse.data.recommendations) {
@@ -171,7 +162,7 @@ async function auditCostSettings() {
     try {
       const skuRecommendationsResponse = await recommender.projects.locations.recommenders.recommendations.list({
         parent: `projects/${projectId}/locations/-/recommenders/google.compute.disk.IdleResourceRecommender`,
-        auth
+        auth: authClient
       });
       
       if (skuRecommendationsResponse.data.recommendations) {
@@ -209,19 +200,15 @@ async function auditCostSettings() {
     summary.costSavingsPotential = costSavings;
 
     // Write results
-    writeAuditResults("cost-audit", findings, summary, errors);
+    await writeAuditResults('cost-audit', findings, summary, errors, projectId);
     console.log('Cost audit completed successfully');
+    return { findings, summary, errors };
   } catch (error) {
     console.error('Error during cost audit:', error);
-    writeAuditResults("cost-audit", [], { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 }, [{
-      category: 'System',
-      message: 'Failed to complete cost audit',
-      error: error.message
-    }]);
+    errors.push({ error: error.message });
+    await writeAuditResults('cost-audit', findings, summary, errors, projectId);
     throw error;
   }
 }
 
-module.exports = {
-  auditCostSettings
-}; 
+module.exports = { run }; 

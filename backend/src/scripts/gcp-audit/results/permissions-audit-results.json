@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-05-17T17:25:53.405Z",
+  "projectId": "cloudauditpro",
+  "findings": [
+    {
+      "permission": "compute.instances.list",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has compute.instances.list permission",
+      "projectId": "cloudauditpro"
+    },
+    {
+      "permission": "compute.disks.list",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing compute.disks.list permission",
+      "projectId": "cloudauditpro"
+    },
+    {
+      "permission": "storage.buckets.list",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has storage.buckets.list permission",
+      "projectId": "cloudauditpro"
+    },
+    {
+      "permission": "iam.serviceAccounts.list",
+      "status": "FAILED",
+      "severity": "WARNING",
+      "description": "Service account is missing iam.serviceAccounts.list permission",
+      "projectId": "cloudauditpro"
+    },
+    {
+      "permission": "monitoring.timeSeries.list",
+      "status": "PASSED",
+      "severity": "INFO",
+      "description": "Service account has monitoring.timeSeries.list permission",
+      "projectId": "cloudauditpro"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 3,
+    "failed": 2
+  },
+  "errors": []
+}

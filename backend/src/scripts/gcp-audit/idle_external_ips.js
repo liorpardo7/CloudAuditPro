@@ -1,10 +1,10 @@
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const auth = require('./auth');
 
-async function runIdleExternalIPsAudit() {
+async function run(projectId, tokens) {
   try {
-    const authClient = auth.getAuthClient();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const crm = google.cloudresourcemanager('v1');
     const findings = [];
     const errors = [];
@@ -67,6 +67,4 @@ async function runIdleExternalIPsAudit() {
   }
 }
 
-module.exports = {
-  runIdleExternalIPsAudit
-}; 
+module.exports = { run }; 

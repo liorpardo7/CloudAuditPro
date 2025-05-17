@@ -2,35 +2,29 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-// Initialize auth client
-const authClient = auth.getAuthClient();
-
-async function runGkeAudit() {
+async function run(projectId, tokens) {
   try {
-    const projectId = auth.getProjectId();
-    
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    const container = google.container({ version: 'v1', auth: authClient });
     const findings = [];
     const errors = [];
-    
     // List all GKE clusters
     console.log('Starting GKE cluster audit...');
-    const clusters = await listAllClusters(authClient, projectId);
-    
+    const clusters = await listAllClusters(container, projectId);
     // Analyze each cluster
     for (const cluster of clusters) {
-      const clusterFindings = await analyzeCluster(authClient, projectId, cluster);
+      const clusterFindings = await analyzeCluster(cluster);
       findings.push(...clusterFindings);
     }
-    
     // Generate summary
     const summary = {
       totalClusters: clusters.length,
       findings: findings.length,
       errors: errors.length
     };
-    
+    await writeAuditResults('gke-audit', findings, summary, errors, projectId);
     return {
       findings,
       summary,
@@ -46,30 +40,24 @@ async function runGkeAudit() {
   }
 }
 
-async function listAllClusters(authClient, projectId) {
+async function listAllClusters(container, projectId) {
   const clusters = [];
   let pageToken;
-  
   do {
-    const response = await google.container('v1').projects.locations.clusters.list({
-      auth: authClient,
+    const response = await container.projects.locations.clusters.list({
       parent: `projects/${projectId}/locations/-`,
       pageToken
     });
-    
     if (response.data.clusters) {
       clusters.push(...response.data.clusters);
     }
-    
     pageToken = response.data.nextPageToken;
   } while (pageToken);
-  
   return clusters;
 }
 
-async function analyzeCluster(authClient, projectId, cluster) {
+async function analyzeCluster(cluster) {
   const findings = [];
-  
   // Check cluster version
   findings.push({
     type: 'cluster_version',
@@ -77,7 +65,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
     status: 'info',
     message: `Cluster running version ${cluster.currentMasterVersion}`
   });
-  
   // Check for private cluster
   if (!cluster.privateClusterConfig?.enablePrivateNodes) {
     findings.push({
@@ -87,7 +74,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Cluster is not private. Consider enabling private cluster for better security.'
     });
   }
-  
   // Check workload identity
   if (!cluster.workloadIdentityConfig?.workloadPool) {
     findings.push({
@@ -97,7 +83,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Workload identity is not configured. Consider enabling it for better security.'
     });
   }
-  
   // Check network policy
   if (!cluster.networkPolicy?.enabled) {
     findings.push({
@@ -107,7 +92,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Network policy is not enabled. Consider enabling it for better security.'
     });
   }
-  
   // Check binary authorization
   if (!cluster.binaryAuthorization?.enabled) {
     findings.push({
@@ -117,7 +101,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Binary authorization is not enabled. Consider enabling it for better security.'
     });
   }
-  
   // Check pod security policy
   if (!cluster.podSecurityPolicyConfig?.enabled) {
     findings.push({
@@ -127,7 +110,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Pod security policy is not enabled. Consider enabling it for better security.'
     });
   }
-  
   // Check container image scanning
   if (!cluster.binaryAuthorization?.evaluationMode) {
     findings.push({
@@ -137,7 +119,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Container image scanning is not configured. Consider enabling it for better security.'
     });
   }
-  
   // Check cluster security posture
   if (!cluster.securityPostureConfig?.mode) {
     findings.push({
@@ -147,7 +128,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Security posture is not configured. Consider enabling it for better security.'
     });
   }
-  
   // Check logging and monitoring
   if (!cluster.loggingService || !cluster.monitoringService) {
     findings.push({
@@ -157,9 +137,8 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Logging or monitoring services are not fully configured.'
     });
   }
-  
   // Check node pool sizing
-  for (const nodePool of cluster.nodePools) {
+  for (const nodePool of cluster.nodePools || []) {
     if (nodePool.initialNodeCount < 3) {
       findings.push({
         type: 'small_node_pool',
@@ -170,7 +149,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       });
     }
   }
-  
   // Check cluster autoscaling
   if (!cluster.autoscaling?.enableNodeAutoprovisioning) {
     findings.push({
@@ -180,7 +158,6 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Node auto-provisioning is not enabled. Consider enabling it for better resource management.'
     });
   }
-  
   // Check vertical pod autoscaling
   if (!cluster.verticalPodAutoscaling?.enabled) {
     findings.push({
@@ -190,131 +167,16 @@ async function analyzeCluster(authClient, projectId, cluster) {
       message: 'Vertical pod autoscaling is not enabled. Consider enabling it for better resource utilization.'
     });
   }
-  
   // Check resource quotas
   if (!cluster.resourceUsageExportConfig) {
     findings.push({
-      type: 'no_resource_export',
+      type: 'no_resource_quota',
       cluster: cluster.name,
       status: 'warning',
-      message: 'Resource usage export is not configured. Consider enabling it for better resource tracking.'
+      message: 'Resource usage export is not configured.'
     });
   }
-  
-  // Check node auto-provisioning
-  if (!cluster.autoscaling?.enableNodeAutoprovisioning) {
-    findings.push({
-      type: 'no_node_autoprovisioning',
-      cluster: cluster.name,
-      status: 'warning',
-      message: 'Node auto-provisioning is not enabled. Consider enabling it for better resource management.'
-    });
-  }
-  
-  // Check cluster resource utilization
-  try {
-    const utilization = await getClusterUtilization(authClient, projectId, cluster);
-    if (utilization.cpu < 30) {
-      findings.push({
-        type: 'low_cluster_utilization',
-        cluster: cluster.name,
-        status: 'warning',
-        message: `Low cluster CPU utilization: ${utilization.cpu}%`
-      });
-    }
-    if (utilization.memory < 30) {
-      findings.push({
-        type: 'low_cluster_memory',
-        cluster: cluster.name,
-        status: 'warning',
-        message: `Low cluster memory utilization: ${utilization.memory}%`
-      });
-    }
-  } catch (error) {
-    console.error(`Error getting utilization metrics for cluster ${cluster.name}:`, error);
-  }
-  
-  // Mark these as not implemented due to API limitations
-  findings.push({
-    type: 'pod_disruption_budgets',
-    cluster: cluster.name,
-    status: 'not_implemented',
-    message: 'Pod disruption budgets check not implemented due to API limitations'
-  });
-  
-  findings.push({
-    type: 'cost_optimized_node_pools',
-    cluster: cluster.name,
-    status: 'not_implemented',
-    message: 'Cost-optimized node pools check not implemented due to API limitations'
-  });
-  
-  findings.push({
-    type: 'workload_right_sizing',
-    cluster: cluster.name,
-    status: 'not_implemented',
-    message: 'GKE workload right-sizing check not implemented due to API limitations'
-  });
-  
-  findings.push({
-    type: 'idle_node_pool_detection',
-    cluster: cluster.name,
-    status: 'not_implemented',
-    message: 'GKE idle node pool detection not implemented due to API limitations'
-  });
-  
   return findings;
 }
 
-async function getClusterUtilization(authClient, projectId, cluster) {
-  const now = new Date();
-  const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-  
-  const [cpuResponse, memoryResponse] = await Promise.all([
-    google.monitoring('v3').projects.timeSeries.list({
-      auth: authClient,
-      name: `projects/${projectId}`,
-      filter: `metric.type = "container.googleapis.com/cluster/cpu/core_usage" AND resource.labels.cluster_name = "${cluster.name}"`,
-      interval: {
-        startTime: oneHourAgo.toISOString(),
-        endTime: now.toISOString()
-      }
-    }),
-    google.monitoring('v3').projects.timeSeries.list({
-      auth: authClient,
-      name: `projects/${projectId}`,
-      filter: `metric.type = "container.googleapis.com/cluster/memory/used_bytes" AND resource.labels.cluster_name = "${cluster.name}"`,
-      interval: {
-        startTime: oneHourAgo.toISOString(),
-        endTime: now.toISOString()
-      }
-    })
-  ]);
-  
-  const cpuPoints = cpuResponse.data.timeSeries[0]?.points || [];
-  const memoryPoints = memoryResponse.data.timeSeries[0]?.points || [];
-  
-  const cpuAvg = cpuPoints.reduce((sum, point) => sum + point.value.doubleValue, 0) / cpuPoints.length;
-  const memoryAvg = memoryPoints.reduce((sum, point) => sum + point.value.doubleValue, 0) / memoryPoints.length;
-  
-  return {
-    cpu: cpuAvg * 100,
-    memory: memoryAvg * 100
-  };
-}
-
-// Run the audit if this file is executed directly
-if (require.main === module) {
-  runGkeAudit()
-    .then(results => {
-      console.log('GKE audit completed. Results:', JSON.stringify(results, null, 2));
-    })
-    .catch(error => {
-      console.error('Error running GKE audit:', error);
-      process.exit(1);
-    });
-}
-
-module.exports = {
-  runGkeAudit
-};
+module.exports = { run };

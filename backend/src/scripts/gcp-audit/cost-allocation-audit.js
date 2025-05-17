@@ -1,18 +1,11 @@
 const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const { BaseValidator } = require('./base-validator');
-const { getAuthClient, getProjectId } = require('./auth');
-const fs = require('fs');
-const path = require('path');
 
 class CostAllocationAudit extends BaseValidator {
   async initialize() {
     try {
       console.log('Initializing GCP clients...');
-      
-      // Get auth client and project ID
-      this.authClient = await getAuthClient();
-      this.projectId = await getProjectId();
       
       // Initialize API clients with authenticated client
       this.compute = google.compute({ version: 'v1', auth: this.authClient });
@@ -221,48 +214,32 @@ class CostAllocationAudit extends BaseValidator {
   }
 }
 
-if (require.main === module) {
-  (async () => {
-    try {
-      const audit = new CostAllocationAudit();
-      const results = await audit.auditAll();
-      
-      // Save results to JSON file
-      const resultsPath = path.join(__dirname, 'cost-allocation-audit-results.json');
-      fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-      
-      // Write audit results using the common function
-      const findings = results.recommendations.map(rec => ({
-        category: rec.category,
-        issue: rec.issue,
-        recommendation: rec.recommendation,
-        severity: 'medium',
-        impact: 'Cost allocation and resource management'
-      }));
-      
-      const summary = {
-        totalChecks: results.costAllocation.taggingCoverage.total,
-        passed: results.costAllocation.taggingCoverage.tagged,
-        failed: results.costAllocation.taggingCoverage.total - results.costAllocation.taggingCoverage.tagged,
-        costSavingsPotential: 0 // This could be calculated based on recommendations
-      };
-      
-      const errors = results.recommendations
-        .filter(rec => rec.error)
-        .map(rec => ({
-          message: rec.error,
-          project: rec.project
-        }));
-      
-      await writeAuditResults("cost-allocation-audit", findings, summary, errors);
-      
-      console.log('Cost Allocation audit completed successfully.');
-      console.log(`Results saved to ${resultsPath}`);
-    } catch (error) {
-      console.error('Failed to complete cost allocation audit:', error);
-      process.exit(1);
-    }
-  })();
+async function run(projectId, tokens) {
+  const audit = new CostAllocationAudit();
+  // Set up OAuth2 client
+  const authClient = new google.auth.OAuth2();
+  authClient.setCredentials(tokens);
+  audit.authClient = authClient;
+  audit.projectId = projectId;
+  // Initialize API clients with OAuth
+  audit.compute = google.compute({ version: 'v1', auth: authClient });
+  audit.monitoring = google.monitoring({ version: 'v3', auth: authClient });
+  audit.monitoringDashboards = google.monitoring({ version: 'v1', auth: authClient });
+  audit.storage = google.storage({ version: 'v1', auth: authClient });
+  audit.securitycenter = google.securitycenter({ version: 'v1', auth: authClient });
+  audit.billing = google.cloudbilling({ version: 'v1', auth: authClient });
+  audit.iam = google.iam({ version: 'v1', auth: authClient });
+  audit.cloudasset = google.cloudasset({ version: 'v1', auth: authClient });
+  audit.container = google.container({ version: 'v1', auth: authClient });
+  audit.dns = google.dns({ version: 'v1', auth: authClient });
+  audit.cloudbuild = google.cloudbuild({ version: 'v1', auth: authClient });
+  audit.logging = google.logging({ version: 'v2', auth: authClient });
+  audit.dlp = google.dlp({ version: 'v2', auth: authClient });
+  audit.cloudresourcemanager = google.cloudresourcemanager({ version: 'v1', auth: authClient });
+  // ...
+  const results = await audit.auditAll();
+  await writeAuditResults('cost-allocation-audit', results.costAllocation.resources, results.costAllocation.taggingCoverage, results.recommendations, projectId);
+  return results;
 }
 
-module.exports = CostAllocationAudit;
+module.exports = { run };

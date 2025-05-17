@@ -3,51 +3,32 @@
 // @test-results: Script runs successfully, generates valid results file with proper structure
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const auth = require('./auth');
 
-const pubsub = google.pubsub('v1');
-
-async function runPubSubAudit() {
+async function run(projectId, tokens) {
+  const findings = [];
+  const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+  const errors = [];
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
-    const findings = [];
-    const errors = [];
-    const summary = {
-      totalChecks: 0,
-      passed: 0,
-      failed: 0,
-      notApplicable: 0
-    };
-    const metrics = {
-      totalTopics: 0,
-      totalSubscriptions: 0,
-      deadLetterSubscriptions: 0
-    };
-
-    console.log('Starting Pub/Sub audit...');
-
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    // Initialize APIs
+    const pubsub = google.pubsub({ version: 'v1', auth: authClient });
     // List all topics
     try {
       const topicsResponse = await pubsub.projects.topics.list({
         auth: authClient,
         project: `projects/${projectId}`
       });
-
       const topics = topicsResponse.data.topics || [];
-      console.log(`Found ${topics.length} topics`);
-
       // Audit each topic
       for (const topic of topics) {
         const topicName = topic.name.split('/').pop();
-        
         // Check topic IAM policy
         try {
           const iamResponse = await pubsub.projects.topics.getIamPolicy({
             auth: authClient,
             resource: topic.name
           });
-          
           findings.push({
             check: 'Topic IAM Policy',
             resource: topicName,
@@ -62,28 +43,22 @@ async function runPubSubAudit() {
           summary.failed++;
           summary.totalChecks++;
         }
-
         // Get topic subscriptions
         try {
           const subscriptionsResponse = await pubsub.projects.topics.subscriptions.list({
             auth: authClient,
             topic: topic.name
           });
-
           const subscriptions = subscriptionsResponse.data.subscriptions || [];
-          
           // Audit each subscription
           for (const subscription of subscriptions) {
             const subName = subscription.split('/').pop();
-            
             // Get subscription details
             const subResponse = await pubsub.projects.subscriptions.get({
               auth: authClient,
               name: subscription
             });
-            
             const subDetails = subResponse.data;
-            
             // Check for dead letter queue
             if (!subDetails.deadLetterPolicy) {
               findings.push({
@@ -105,7 +80,6 @@ async function runPubSubAudit() {
               summary.passed++;
             }
             summary.totalChecks++;
-
             // Check message retention
             if (subDetails.messageRetentionDuration) {
               const retentionHours = parseInt(subDetails.messageRetentionDuration.replace('s', '')) / 3600;
@@ -129,7 +103,6 @@ async function runPubSubAudit() {
               }
               summary.totalChecks++;
             }
-
             // Check for push endpoint configuration
             if (subDetails.pushConfig) {
               findings.push({
@@ -153,7 +126,6 @@ async function runPubSubAudit() {
               summary.passed++;
             }
             summary.totalChecks++;
-
             // Check for message ordering
             if (subDetails.enableMessageOrdering) {
               findings.push({
@@ -185,22 +157,15 @@ async function runPubSubAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // Write results
-    const results = {
-      findings,
-      summary,
-      metrics,
-      errors,
-      timestamp: new Date().toISOString(),
-      projectId
-    };
-    await writeAuditResults('pubsub-audit', findings, summary, errors, projectId, metrics);
-    return { findings, summary, errors, metrics, projectId, timestamp: results.timestamp };
+    await writeAuditResults('pubsub-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors, projectId, timestamp: new Date().toISOString() };
   } catch (error) {
     console.error('Error running Pub/Sub audit:', error);
-    return { findings: [], summary: {}, metrics: {}, errors: [{ error: error.message }], timestamp: new Date().toISOString() };
+    errors.push({ check: 'PubSub Audit', error: error.message });
+    await writeAuditResults('pubsub-audit', findings, summary, errors, projectId);
+    return { findings: [], summary: {}, errors: [{ error: error.message }], projectId, timestamp: new Date().toISOString() };
   }
 }
 
-module.exports = runPubSubAudit; 
+module.exports = { run }; 

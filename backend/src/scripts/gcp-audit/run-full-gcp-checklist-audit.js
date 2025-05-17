@@ -304,38 +304,32 @@ function parseChecklist() {
   return items;
 }
 
-async function runAuditScript(scriptName) {
+async function runAuditScript(scriptName, projectId, tokens) {
   try {
     console.log(`\n=== Running ${scriptName} ===`);
     console.log(`Started at: ${new Date().toISOString()}`);
-    
     const scriptPath = path.join(__dirname, scriptName);
-    const projectId = await getProjectId();
-    
-    // Set environment variables
-    const env = {
-      ...process.env,
-      GOOGLE_APPLICATION_CREDENTIALS: CREDENTIALS_PATH,
-      GOOGLE_CLOUD_PROJECT: projectId
-    };
-    
-    execSync(`node ${scriptPath}`, { 
-      stdio: 'inherit',
-      env
-    });
-    
-    return { status: '✓', error: null };
+    const scriptModule = require(scriptPath);
+    if (typeof scriptModule.run !== 'function') {
+      throw new Error(`Script ${scriptName} does not export a run(projectId, tokens) function.`);
+    }
+    const result = await scriptModule.run(projectId, tokens);
+    return { status: '✓', error: null, result };
   } catch (err) {
-    return { status: '✗', error: err.message };
+    return { status: '✗', error: err.message, result: null };
   }
 }
 
 async function main() {
-  console.log('Starting focused GCP audit for problematic scripts...');
-  
+  // Load tokens and projectId from a config file or environment
+  // For demonstration, assume tokens are loaded from oauth-tokens.json and projectId from selected-projects.json
+  const tokens = JSON.parse(fs.readFileSync(path.join(__dirname, 'oauth-tokens.json'), 'utf-8'));
+  const selectedProjects = JSON.parse(fs.readFileSync(path.join(__dirname, 'selected-projects.json'), 'utf-8'));
+  const projectId = Array.isArray(selectedProjects) ? selectedProjects[0] : selectedProjects;
+
   const results = {
     timestamp: new Date().toISOString(),
-    projectId: await getProjectId(),
+    projectId,
     problematicScripts: {},
     jsonParsingIssues: {},
     missingResults: {},
@@ -351,7 +345,7 @@ async function main() {
   for (const [script, info] of Object.entries(PROBLEMATIC_SCRIPTS)) {
     results.summary.total++;
     console.log(`\nRunning problematic script: ${script}`);
-    const result = await runAuditScript(script);
+    const result = await runAuditScript(script, projectId, tokens);
     results.problematicScripts[script] = {
       ...info,
       result,
@@ -365,7 +359,7 @@ async function main() {
   for (const script of JSON_PARSING_ISSUES) {
     results.summary.total++;
     console.log(`\nChecking JSON parsing for: ${script}`);
-    const result = await runAuditScript(script);
+    const result = await runAuditScript(script, projectId, tokens);
     results.jsonParsingIssues[script] = {
       result,
       timestamp: new Date().toISOString()
@@ -378,7 +372,7 @@ async function main() {
   for (const script of MISSING_RESULTS) {
     results.summary.total++;
     console.log(`\nChecking missing results for: ${script}`);
-    const result = await runAuditScript(script);
+    const result = await runAuditScript(script, projectId, tokens);
     results.missingResults[script] = {
       result,
       timestamp: new Date().toISOString()
@@ -395,10 +389,9 @@ async function main() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const outPathTimestamped = path.join(OUTPUT_DIR, `focused-audit-results-${timestamp}.json`);
   const outPathPublic = path.resolve(__dirname, '../../../../public/focused-audit-results.json');
-  
   fs.writeFileSync(outPathTimestamped, JSON.stringify(results, null, 2));
   fs.writeFileSync(outPathPublic, JSON.stringify(results, null, 2));
-  
+
   console.log('\nFocused audit complete!');
   console.log('Results saved to:', outPathTimestamped);
   console.log('\nSummary:');
@@ -406,9 +399,9 @@ async function main() {
   console.log(`Passed: ${results.summary.passed}`);
   console.log(`Failed: ${results.summary.failed}`);
   console.log(`Pass Rate: ${results.summary.passRate}`);
-  
+
   // Write final results
-const findings = [];
+  const findings = [];
   const summary = {
     totalChecks: results.summary.total,
     passed: results.summary.passed,
@@ -421,8 +414,8 @@ const findings = [];
       check: script,
       error: info.result.error
     }));
-  
-  writeAuditResults("focused-gcp-checklist-audit", findings, summary, errors);
+
+  writeAuditResults("focused-gcp-checklist-audit", findings, summary, errors, results.projectId);
 }
 
 main().catch(console.error); 

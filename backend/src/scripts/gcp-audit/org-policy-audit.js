@@ -2,14 +2,16 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-async function runOrgPolicyAudit() {
+async function run(projectId, tokens) {
+  const findings = [];
+  const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
+  const errors = [];
   try {
-    const authClient = await auth.getAuthClient();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const orgPolicy = google.orgpolicy('v2');
     const crm = google.cloudresourcemanager('v1');
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
 
     const results = {
       timestamp: new Date().toISOString(),
@@ -23,7 +25,7 @@ async function runOrgPolicyAudit() {
       parent: `projects/${projectId}`,
       auth: authClient
     });
-    results.orgPolicies = policiesResp.data.policies || [];
+    const orgPolicies = policiesResp.data.policies || [];
 
     // Check for key constraints
     const keyConstraints = [
@@ -140,27 +142,33 @@ async function runOrgPolicyAudit() {
     ];
 
     for (const constraint of keyConstraints) {
-      const found = results.orgPolicies.find(p => p.name.endsWith(constraint));
-      if (!found) {
-        results.recommendations.push({
-          issue: `Missing org policy constraint: ${constraint}`,
-          recommendation: `Review and consider enforcing the ${constraint} constraint for compliance and security.`,
-          severity: 'high',
-          constraint
-        });
-      }
+      const found = orgPolicies.find(p => p.name.endsWith(constraint));
+      findings.push({
+        check: `Constraint: ${constraint}`,
+        result: found ? 'Enforced' : 'Missing',
+        passed: !!found,
+        details: found || null
+      });
+      summary.totalChecks++;
+      if (found) summary.passed++;
+      else summary.failed++;
     }
 
-    fs.writeFileSync(path.join(__dirname, 'org-policy-audit-results.json'), JSON.stringify(results, null, 2));
-    console.log('Org Policy audit completed. Results saved to org-policy-audit-results.json');
-  } catch (error) {
-    console.error('Error during Org Policy audit:', error);
+    // Recommendations for missing constraints
+    const recommendations = keyConstraints.filter(constraint => !orgPolicies.find(p => p.name.endsWith(constraint)))
+      .map(constraint => ({
+        issue: `Missing org policy constraint: ${constraint}`,
+        recommendation: `Review and consider enforcing the ${constraint} constraint for compliance and security.`,
+        severity: 'high',
+        constraint
+      }));
+    await writeAuditResults('org-policy-audit', findings, summary, errors.concat(recommendations), projectId);
+    return { findings, summary, errors };
+  } catch (err) {
+    errors.push({ check: 'Org Policy Audit', error: err.message });
+    await writeAuditResults('org-policy-audit', findings, summary, errors, projectId);
+    throw err;
   }
 }
 
-runOrgPolicyAudit();
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("org-policy-audit", findings, summary, errors);
+module.exports = { run };

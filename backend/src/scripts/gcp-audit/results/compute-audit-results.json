@@ -1,0 +1,336 @@
+{
+  "timestamp": "2025-05-17T17:37:30.551Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "type": "instance_type",
+      "instance": "auto-inventory-service-1",
+      "status": "info",
+      "message": "Instance using e2-standard-2 (Efficient Instance, 2 vCPUs, 8 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "auto-inventory-service-1",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "auto-inventory-service-1",
+      "disk": "cfs-service",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "auto-inventory-service-1",
+      "status": "warning",
+      "message": "Low CPU utilization: 0.7569189443073674%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "auto-inventory-service-2",
+      "status": "info",
+      "message": "Instance using e2-standard-2 (Efficient Instance, 2 vCPUs, 8 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "auto-inventory-service-2",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "auto-inventory-service-2",
+      "disk": "cfs-service",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "auto-inventory-service-2",
+      "status": "warning",
+      "message": "Low CPU utilization: 0.6399336832006136%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "cfs-service",
+      "status": "info",
+      "message": "Instance using e2-highmem-8 (Efficient Instance, 8 vCPUs, 64 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "cfs-service",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "cfs-service",
+      "disk": "cfs-service",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "cfs-service",
+      "status": "warning",
+      "message": "Low CPU utilization: 0.2635807620641446%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+      "status": "info",
+      "message": "Instance using n1-standard-1 (1 vCPU, 3.75 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+      "status": "info",
+      "message": "Instance using n1-standard-1 (1 vCPU, 3.75 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+      "status": "info",
+      "message": "Instance using n1-standard-1 (1 vCPU, 3.75 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+      "disk": "pvc-d1985ba8-a040-47b7-b8f5-381ece5117b6",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "unite-google-cfs",
+      "status": "info",
+      "message": "Instance using e2-highmem-2 (Efficient Instance, 2 vCPUs, 16 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "unite-google-cfs",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "unite-google-cfs",
+      "disk": "unite-google-cfs",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "utility-service",
+      "status": "info",
+      "message": "Instance using e2-standard-2 (Efficient Instance, 2 vCPUs, 8 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "utility-service",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "utility-service",
+      "disk": "cfs-service",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "utility-service",
+      "status": "warning",
+      "message": "Low CPU utilization: 0.6343980926010709%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "dbaops",
+      "status": "info",
+      "message": "Instance using e2-medium (Efficient Instance, 2 vCPU (1/2 shared physical core) and 4 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "dbaops",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "dbaops",
+      "disk": "dbaops",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "filemage-gateway-linux-dba-vm",
+      "status": "info",
+      "message": "Instance using n2-standard-2 (2 vCPUs 8 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "filemage-gateway-linux-dba-vm",
+      "disk": "filemage-gateway-vm-linux-vm-tmpl-boot-disk",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "googleproductswin",
+      "status": "info",
+      "message": "Instance using c2-standard-8 (Compute Optimized: 8 vCPUs, 32 GB RAM)"
+    },
+    {
+      "type": "missing_labels",
+      "instance": "googleproductswin",
+      "status": "warning",
+      "message": "Instance has no labels"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "googleproductswin",
+      "disk": "googleproductswin",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "status": "info",
+      "message": "Instance using e2-standard-4 (Efficient Instance, 4 vCPUs, 16 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "status": "warning",
+      "message": "Low CPU utilization: 4.6218728419023964%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "status": "info",
+      "message": "Instance using e2-standard-4 (Efficient Instance, 4 vCPUs, 16 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "status": "warning",
+      "message": "Low CPU utilization: 7.595258549473987%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "status": "info",
+      "message": "Instance using e2-standard-2 (Efficient Instance, 2 vCPUs, 8 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "status": "warning",
+      "message": "Low CPU utilization: 6.924545448668161%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+      "status": "info",
+      "message": "Instance using e2-standard-2 (Efficient Instance, 2 vCPUs, 8 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "status": "info",
+      "message": "Instance using e2-standard-4 (Efficient Instance, 4 vCPUs, 16 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "status": "warning",
+      "message": "Low CPU utilization: 4.584243264512276%"
+    },
+    {
+      "type": "instance_type",
+      "instance": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "status": "info",
+      "message": "Instance using e2-standard-4 (Efficient Instance, 4 vCPUs, 16 GB RAM)"
+    },
+    {
+      "type": "unencrypted_disk",
+      "instance": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "disk": "persistent-disk-0",
+      "status": "warning",
+      "message": "Disk is not encrypted"
+    },
+    {
+      "type": "low_cpu_utilization",
+      "instance": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "status": "warning",
+      "message": "Low CPU utilization: 7.00112461745699%"
+    }
+  ],
+  "summary": {
+    "totalInstances": 17,
+    "findings": 51,
+    "errors": 0
+  },
+  "errors": []
+}

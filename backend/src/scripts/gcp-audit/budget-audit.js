@@ -211,21 +211,18 @@ class BudgetAudit extends BaseValidator {
   }
 }
 
-if (require.main === module) {
-  const fs = require('fs');
-  const path = require('path');
-  (async () => {
-    const audit = new BudgetAudit();
-    const results = await audit.auditAll();
-    const resultsPath = path.join(__dirname, 'budget-audit-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(results, null, 2));
-    console.log('Budget Audit completed. Results written to', resultsPath);
-  })();
+async function run(projectId, tokens) {
+  const audit = new BudgetAudit();
+  // Set up OAuth2 client
+  const authClient = new google.auth.OAuth2();
+  authClient.setCredentials(tokens);
+  audit.authClient = authClient;
+  audit.projectId = projectId;
+  // Initialize API clients with OAuth
+  // ...
+  const results = await audit.auditAll();
+  await writeAuditResults('budget-audit', results.budgetSettings.budgets, results.budgetSettings.forecasts, results.recommendations, projectId);
+  return results;
 }
 
-module.exports = BudgetAudit; 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("budget-audit", findings, summary, errors);
+module.exports = { run }; 

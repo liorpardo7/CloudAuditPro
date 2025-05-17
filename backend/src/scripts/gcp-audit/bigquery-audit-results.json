@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-05-17T17:09:52.533Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [],
+  "summary": {
+    "totalChecks": 6,
+    "passed": 0,
+    "failed": 6,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Stale Partitioning",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Deprecated UDFs",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Query Optimization",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Cost Optimization",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Dataset Access Controls",
+      "error": "authClient.request is not a function"
+    },
+    {
+      "check": "Job Monitoring",
+      "error": "authClient.request is not a function"
+    }
+  ]
+}

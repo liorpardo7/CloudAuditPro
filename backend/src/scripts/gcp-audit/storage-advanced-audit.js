@@ -3,27 +3,20 @@ const { writeAuditResults } = require('./writeAuditResults');
 // Scaffold for GCP Advanced Storage Audit
 const fs = require('fs');
 const path = require('path');
+const gcpClient = require('./gcpClient');
+const { getProjectId } = require('./getProjectId');
 
-async function runStorageAdvancedAudit() {
-  // TODO: Implement GCP API calls to collect advanced storage info
-  const results = {
-    timestamp: new Date().toISOString(),
-    versioningFindings: [], // Fill with versioning findings
-    lockFindings: [], // Fill with lock findings
-    immutabilityFindings: [], // Fill with object immutability
-    accessLogFindings: [], // Fill with access log findings
-    recommendations: [
-      // Example:
-      // { issue: 'No bucket versioning', recommendation: 'Enable versioning for critical buckets', severity: 'medium', estimatedSavings: null }
-    ]
-  };
-  fs.writeFileSync(path.join(__dirname, 'storage-advanced-audit-results.json'), JSON.stringify(results, null, 2));
-  console.log('Advanced Storage audit completed. Results saved to storage-advanced-audit-results.json');
+async function run(projectId, tokens) {
+  const findings = [
+    { check: 'Versioning', result: 'Not implemented', passed: null },
+    { check: 'Lock', result: 'Not implemented', passed: null },
+    { check: 'Immutability', result: 'Not implemented', passed: null },
+    { check: 'Access Logs', result: 'Not implemented', passed: null }
+  ];
+  const summary = { totalChecks: findings.length, passed: 0, failed: 0, costSavingsPotential: 0 };
+  const errors = [];
+  await writeAuditResults('storage-advanced-audit', findings, summary, errors, projectId);
+  return { findings, summary, errors };
 }
 
-runStorageAdvancedAudit(); 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("storage-advanced-audit", findings, summary, errors);
+module.exports = { run }; 

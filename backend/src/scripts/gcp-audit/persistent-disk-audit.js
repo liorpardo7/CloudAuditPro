@@ -2,17 +2,14 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-const compute = google.compute('v1');
-
-async function runPersistentDiskAudit() {
+async function run(projectId, tokens) {
+  const compute = google.compute('v1');
+  const findings = [];
+  const errors = [];
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
-    const findings = [];
-    const errors = [];
-
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     // List all disks
     const disks = await listAllDisks(authClient, projectId);
     // List all snapshots
@@ -25,7 +22,6 @@ async function runPersistentDiskAudit() {
         attachedDiskIds.add(disk.source.split('/').pop());
       }
     }
-
     for (const disk of disks) {
       // Check encryption
       if (!disk.diskEncryptionKey || !disk.diskEncryptionKey.kmsKeyName) {
@@ -78,14 +74,13 @@ async function runPersistentDiskAudit() {
         });
       }
     }
-
     // Generate summary
     const summary = {
       totalDisks: disks.length,
       findings: findings.length,
       errors: errors.length
     };
-
+    await writeAuditResults('persistent-disk-audit', findings, summary, errors, projectId);
     return { findings, summary, errors };
   } catch (error) {
     console.error('Error in persistent disk audit:', error);
@@ -150,7 +145,7 @@ async function listAllInstances(authClient, projectId) {
 
 // Run the audit if this file is executed directly
 if (require.main === module) {
-  runPersistentDiskAudit()
+  run(process.argv[2], process.argv[3])
     .then(results => {
       console.log('Persistent Disk audit completed. Results:', JSON.stringify(results, null, 2));
     })
@@ -160,6 +155,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = {
-  runPersistentDiskAudit
-}; 
+module.exports = { run }; 

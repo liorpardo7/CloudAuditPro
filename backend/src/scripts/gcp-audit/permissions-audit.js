@@ -1,14 +1,10 @@
 const { writeAuditResults } = require('./writeAuditResults');
 
-async function auditPermissions() {
+async function run(projectId, tokens) {
   const findings = [];
   const summary = { total: 0, passed: 0, failed: 0 };
   const errors = [];
-
   try {
-    // Always use the correct project ID
-    const projectId = process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod';
-    
     // Check IAM permissions
     const iamPermissions = [
       'compute.instances.list',
@@ -17,7 +13,6 @@ async function auditPermissions() {
       'iam.serviceAccounts.list',
       'monitoring.timeSeries.list'
     ];
-
     for (const permission of iamPermissions) {
       try {
         // Here you would actually check if the service account has this permission
@@ -49,18 +44,19 @@ async function auditPermissions() {
         });
       }
     }
-    writeAuditResults('permissions-audit', findings, summary, errors, projectId);
+    await writeAuditResults('permissions-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (error) {
     errors.push({ error: error.message });
     findings.push({
       status: 'ERROR',
       severity: 'ERROR',
       description: `General error: ${error.message}`,
-      projectId: process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod'
+      projectId: projectId
     });
-    writeAuditResults('permissions-audit', findings, summary, errors, process.env.GCP_PROJECT_ID || 'dba-inventory-services-prod');
+    await writeAuditResults('permissions-audit', findings, summary, errors, projectId);
+    throw error;
   }
 }
 
-// Run the audit
-auditPermissions(); 
+module.exports = { run }; 

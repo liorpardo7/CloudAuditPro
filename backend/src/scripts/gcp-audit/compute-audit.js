@@ -2,35 +2,26 @@ const { writeAuditResults } = require('./writeAuditResults');
 const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-// Initialize the Compute API client with auth
-const compute = google.compute('v1');
-const monitoring = google.monitoring('v3');
-
-const recommender = google.recommender({
-  version: 'v1',
-  auth: auth.getAuthClient()
-});
-
-async function runComputeAudit() {
+async function run(projectId, tokens) {
+  const findings = [];
+  const errors = [];
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
-    
-    const findings = [];
-    const errors = [];
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
+    const compute = google.compute({ version: 'v1', auth: authClient });
+    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
     
     // VM Instance Inventory
     console.log('Starting VM instance inventory...');
-    const instances = await listAllInstances(authClient, projectId);
+    const instances = await listAllInstances(compute, projectId);
     
     // Check instance types and sizes
-    const machineTypes = await listMachineTypes(authClient, projectId);
+    const machineTypes = await listMachineTypes(compute, projectId);
     
     // Analyze each instance
     for (const instance of instances) {
-      const instanceFindings = await analyzeInstance(authClient, projectId, instance, machineTypes);
+      const instanceFindings = await analyzeInstance(compute, monitoring, projectId, instance, machineTypes);
       findings.push(...instanceFindings);
     }
     
@@ -41,6 +32,9 @@ async function runComputeAudit() {
       errors: errors.length
     };
     
+    // Write results
+    await writeAuditResults('compute-audit', findings, summary, errors, projectId);
+    
     return {
       findings,
       summary,
@@ -48,21 +42,18 @@ async function runComputeAudit() {
     };
   } catch (error) {
     console.error('Error in compute audit:', error);
-    return {
-      findings: [],
-      summary: {},
-      errors: [error.message]
-    };
+    errors.push({ error: error.message });
+    await writeAuditResults('compute-audit', findings, summary, errors, projectId);
+    throw error;
   }
 }
 
-async function listAllInstances(authClient, projectId) {
+async function listAllInstances(compute, projectId) {
   const instances = [];
   let pageToken;
   
   do {
     const response = await compute.instances.aggregatedList({
-      auth: authClient,
       project: projectId,
       pageToken
     });
@@ -79,13 +70,12 @@ async function listAllInstances(authClient, projectId) {
   return instances;
 }
 
-async function listMachineTypes(authClient, projectId) {
+async function listMachineTypes(compute, projectId) {
   const machineTypes = new Map();
   let pageToken;
   
   do {
     const response = await compute.machineTypes.aggregatedList({
-      auth: authClient,
       project: projectId,
       pageToken
     });
@@ -104,7 +94,7 @@ async function listMachineTypes(authClient, projectId) {
   return machineTypes;
 }
 
-async function analyzeInstance(authClient, projectId, instance, machineTypes) {
+async function analyzeInstance(compute, monitoring, projectId, instance, machineTypes) {
   const findings = [];
   
   // Check instance type
@@ -153,7 +143,7 @@ async function analyzeInstance(authClient, projectId, instance, machineTypes) {
   
   // Check utilization
   try {
-    const utilization = await getInstanceUtilization(authClient, projectId, instance);
+    const utilization = await getInstanceUtilization(monitoring, projectId, instance);
     if (utilization.cpu < 10) {
       findings.push({
         type: 'low_cpu_utilization',
@@ -177,28 +167,22 @@ async function analyzeInstance(authClient, projectId, instance, machineTypes) {
   return findings;
 }
 
-async function getInstanceUtilization(authClient, projectId, instance) {
+async function getInstanceUtilization(monitoring, projectId, instance) {
   const now = new Date();
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
   
   const [cpuResponse, memoryResponse] = await Promise.all([
     monitoring.projects.timeSeries.list({
-      auth: authClient,
       name: `projects/${projectId}`,
       filter: `metric.type = "compute.googleapis.com/instance/cpu/utilization" AND resource.labels.instance_id = "${instance.id}"`,
-      interval: {
-        startTime: oneHourAgo.toISOString(),
-        endTime: now.toISOString()
-      }
+      'interval.startTime': oneHourAgo.toISOString(),
+      'interval.endTime': now.toISOString()
     }),
     monitoring.projects.timeSeries.list({
-      auth: authClient,
       name: `projects/${projectId}`,
       filter: `metric.type = "compute.googleapis.com/instance/memory/balloon/ram_used" AND resource.labels.instance_id = "${instance.id}"`,
-      interval: {
-        startTime: oneHourAgo.toISOString(),
-        endTime: now.toISOString()
-      }
+      'interval.startTime': oneHourAgo.toISOString(),
+      'interval.endTime': now.toISOString()
     })
   ]);
   
@@ -214,23 +198,9 @@ async function getInstanceUtilization(authClient, projectId, instance) {
   };
 }
 
+module.exports = { run };
+
 // Run the audit if this file is executed directly
 if (require.main === module) {
-  runComputeAudit()
-    .then(results => {
-      console.log('Compute audit completed. Results:', JSON.stringify(results, null, 2));
-    })
-    .catch(error => {
-    console.error('Error running compute audit:', error);
-    process.exit(1);
-  });
-}
-
-module.exports = {
-  runComputeAudit
-}; 
-
-const findings = [];
-const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
-const errors = [];
-writeAuditResults("compute-audit", findings, summary, errors);
+  run().catch(console.error);
+} 

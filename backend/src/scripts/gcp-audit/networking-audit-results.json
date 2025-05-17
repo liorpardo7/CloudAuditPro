@@ -1,0 +1,3587 @@
+{
+  "timestamp": "2025-05-17T17:19:41.570Z",
+  "projectId": "dba-inventory-services-prod",
+  "networkingResources": {
+    "vpcs": [
+      {
+        "kind": "compute#network",
+        "id": "9138700178595194601",
+        "creationTimestamp": "2022-10-27T07:39:02.099-07:00",
+        "name": "ad-generator-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/9138700178595194601",
+        "autoCreateSubnetworks": false,
+        "subnetworks": [
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/ad-generator-private",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/ad-generator-database",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/ad-generator-public"
+        ],
+        "routingConfig": {
+          "routingMode": "REGIONAL",
+          "bgpBestPathSelectionMode": "LEGACY"
+        },
+        "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+      },
+      {
+        "kind": "compute#network",
+        "id": "6113397074375440669",
+        "creationTimestamp": "2022-12-21T00:46:42.904-08:00",
+        "name": "auto-inventory-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/6113397074375440669",
+        "autoCreateSubnetworks": false,
+        "subnetworks": [
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/auto-inventory-public",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/auto-inventory-private"
+        ],
+        "routingConfig": {
+          "routingMode": "REGIONAL",
+          "bgpBestPathSelectionMode": "LEGACY"
+        },
+        "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+      },
+      {
+        "kind": "compute#network",
+        "id": "2619548587629245927",
+        "creationTimestamp": "2022-09-20T07:15:36.124-07:00",
+        "name": "dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/2619548587629245927",
+        "autoCreateSubnetworks": false,
+        "subnetworks": [
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/dba-inventory-services-prod-database",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/dba-inventory-services-prod-public",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/dba-inventory-services-prod-private"
+        ],
+        "routingConfig": {
+          "routingMode": "REGIONAL",
+          "bgpBestPathSelectionMode": "LEGACY"
+        },
+        "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+      },
+      {
+        "kind": "compute#network",
+        "id": "6771340206767212786",
+        "creationTimestamp": "2022-08-22T10:00:13.355-07:00",
+        "name": "default",
+        "description": "Default network for the project",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/6771340206767212786",
+        "autoCreateSubnetworks": true,
+        "subnetworks": [
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west8/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east5/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-south1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-west1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west9/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-southwest1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/africa-south1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west10/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast3/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west3/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-east1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west3/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-south1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west4/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east7/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west6/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west4/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west12/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-west1/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west8/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-central2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east2/subnetworks/default",
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east4/subnetworks/default"
+        ],
+        "routingConfig": {
+          "routingMode": "REGIONAL",
+          "bgpBestPathSelectionMode": "LEGACY"
+        },
+        "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+      },
+      {
+        "kind": "compute#network",
+        "id": "4946170339291452087",
+        "creationTimestamp": "2024-07-29T12:24:09.007-07:00",
+        "name": "grafana",
+        "description": "",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/grafana",
+        "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/4946170339291452087",
+        "autoCreateSubnetworks": false,
+        "subnetworks": [
+          "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1/subnetworks/grafana-subnet"
+        ],
+        "routingConfig": {
+          "routingMode": "REGIONAL",
+          "bgpBestPathSelectionMode": "LEGACY"
+        },
+        "mtu": 1460,
+        "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+      }
+    ],
+    "subnets": [
+      {
+        "kind": "compute#subnetwork",
+        "id": "6583468072212586250",
+        "creationTimestamp": "2023-09-05T01:08:05.707-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.218.0.0/20",
+        "gatewayAddress": "10.218.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/africa-south1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/africa-south1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "hAItyYz4MVc=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4924716509591111880",
+        "creationTimestamp": "2022-08-22T10:00:23.199-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.140.0.0/20",
+        "gatewayAddress": "10.140.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "-ynALih0WRo=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1997082799943583944",
+        "creationTimestamp": "2022-08-22T10:00:23.223-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.170.0.0/20",
+        "gatewayAddress": "10.170.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "0yiFtSyQwRI=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7327977477386406088",
+        "creationTimestamp": "2022-08-22T10:00:23.239-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.146.0.0/20",
+        "gatewayAddress": "10.146.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "ote8SqoCBJo=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4409890105648351432",
+        "creationTimestamp": "2022-08-22T10:00:23.095-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.174.0.0/20",
+        "gatewayAddress": "10.174.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "L-nAy7Pfaj8=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "8077614506520217800",
+        "creationTimestamp": "2022-08-22T10:00:23.210-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.178.0.0/20",
+        "gatewayAddress": "10.178.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast3",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast3/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "6jkbAnS2i6s=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "2758520659745048776",
+        "creationTimestamp": "2022-08-22T10:00:23.393-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.160.0.0/20",
+        "gatewayAddress": "10.160.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "PMD9r6J6qVw=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7457597739248781512",
+        "creationTimestamp": "2022-08-22T10:00:23.400-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.190.0.0/20",
+        "gatewayAddress": "10.190.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "q0TFuAZY5IU=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "8462144809726773448",
+        "creationTimestamp": "2022-08-22T10:00:23.182-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.148.0.0/20",
+        "gatewayAddress": "10.148.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "-2uGC9AWi00=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "2601790693159340232",
+        "creationTimestamp": "2022-08-22T10:00:23.312-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.184.0.0/20",
+        "gatewayAddress": "10.184.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "suGPa0SRQUk=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1296002008178624712",
+        "creationTimestamp": "2022-08-22T10:00:23.232-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.152.0.0/20",
+        "gatewayAddress": "10.152.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "OZwwwWNt-kg=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7975214922746169544",
+        "creationTimestamp": "2022-08-22T10:00:23.285-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.192.0.0/20",
+        "gatewayAddress": "10.192.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "WBUjL2Gy4b8=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "2948821100033607880",
+        "creationTimestamp": "2022-08-22T10:00:23.185-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.186.0.0/20",
+        "gatewayAddress": "10.186.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-central2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-central2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "7rCvKU-lxpE=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "922000074268870856",
+        "creationTimestamp": "2022-08-22T10:00:23.224-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.166.0.0/20",
+        "gatewayAddress": "10.166.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "ghrIyDZUINI=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1323258712386575294",
+        "creationTimestamp": "2024-10-19T05:25:53.965-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.226.0.0/20",
+        "gatewayAddress": "10.226.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "ycAil1vqxgk=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "3725864143684503752",
+        "creationTimestamp": "2022-08-22T10:00:23.220-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.204.0.0/20",
+        "gatewayAddress": "10.204.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-southwest1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-southwest1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "JI2CP13W1_Y=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4767240305322625224",
+        "creationTimestamp": "2022-08-22T10:00:23.083-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.132.0.0/20",
+        "gatewayAddress": "10.132.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "-FqXtO2NwjM=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4634773871651590494",
+        "creationTimestamp": "2023-07-03T22:35:45.167-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.214.0.0/20",
+        "gatewayAddress": "10.214.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west10",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west10/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "3FFDWKOzKO8=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1369419642262495449",
+        "creationTimestamp": "2023-01-25T22:31:18.442-08:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.210.0.0/20",
+        "gatewayAddress": "10.210.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west12",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west12/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "N07wuCx4KgE=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "2075734500220733640",
+        "creationTimestamp": "2022-08-22T10:00:23.096-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.154.0.0/20",
+        "gatewayAddress": "10.154.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "jwLgSMcynps=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "630154443755489480",
+        "creationTimestamp": "2022-08-22T10:00:23.057-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.156.0.0/20",
+        "gatewayAddress": "10.156.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west3",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west3/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "BsONkChASKM=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "485220566193539272",
+        "creationTimestamp": "2022-08-22T10:00:23.094-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.164.0.0/20",
+        "gatewayAddress": "10.164.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west4",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west4/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "aMrXZY6PIU4=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "484246613639694536",
+        "creationTimestamp": "2022-08-22T10:00:23.085-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.172.0.0/20",
+        "gatewayAddress": "10.172.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west6",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west6/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "x5bxJ8gZVqA=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "6607738709119731912",
+        "creationTimestamp": "2022-08-22T10:00:23.123-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.198.0.0/20",
+        "gatewayAddress": "10.198.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west8",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west8/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "cFfp8SHONCQ=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "681073166540212424",
+        "creationTimestamp": "2022-08-22T10:00:23.146-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.200.0.0/20",
+        "gatewayAddress": "10.200.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west9",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west9/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "iFRm8wnMKpg=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "5457126883301905265",
+        "creationTimestamp": "2023-02-02T18:12:46.390-08:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.212.0.0/20",
+        "gatewayAddress": "10.212.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "YM3Df3_A0FU=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7305994696566579071",
+        "creationTimestamp": "2023-09-24T13:52:32.664-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.216.0.0/20",
+        "gatewayAddress": "10.216.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "7uEJZR2cb-M=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "5372504169169551908",
+        "creationTimestamp": "2022-08-23T22:53:15.219-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.208.0.0/20",
+        "gatewayAddress": "10.208.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-west1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-west1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "4WhICDCUK8k=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1642630333099542728",
+        "creationTimestamp": "2022-08-22T10:00:23.179-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.162.0.0/20",
+        "gatewayAddress": "10.162.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "nzhB2Nw-nGE=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7601041061295556808",
+        "creationTimestamp": "2022-08-22T10:00:23.086-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.188.0.0/20",
+        "gatewayAddress": "10.188.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "FQ0qifHYZA4=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7251911287203104323",
+        "creationTimestamp": "2024-08-27T22:42:04.982-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.224.0.0/20",
+        "gatewayAddress": "10.224.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-south1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-south1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "MDNo-OtfZF0=",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "8734415723061709000",
+        "creationTimestamp": "2022-08-22T10:00:23.288-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.158.0.0/20",
+        "gatewayAddress": "10.158.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-east1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "BwgxOP6Jwl0=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4792384392493140168",
+        "creationTimestamp": "2022-08-22T10:00:23.154-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.194.0.0/20",
+        "gatewayAddress": "10.194.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-west1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-west1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "AZQLwoEbsNc=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1596503565456509129",
+        "creationTimestamp": "2022-08-22T10:00:22.919-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.128.0.0/20",
+        "gatewayAddress": "10.128.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1/subnetworks/default",
+        "privateIpGoogleAccess": true,
+        "secondaryIpRanges": [
+          {
+            "rangeName": "gke-us-central1-dba-inventory-s-284706cf-gke-services-219f365c",
+            "ipCidrRange": "10.112.0.0/20"
+          },
+          {
+            "rangeName": "gke-us-central1-dba-inventory-s-284706cf-gke-pods-219f365c",
+            "ipCidrRange": "10.108.0.0/14"
+          }
+        ],
+        "fingerprint": "EK0mHtUF_Y0=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "631719967830200967",
+        "creationTimestamp": "2024-07-29T12:24:24.818-07:00",
+        "name": "grafana-subnet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/grafana",
+        "ipCidrRange": "10.0.0.0/24",
+        "gatewayAddress": "10.0.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1/subnetworks/grafana-subnet",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "XL8iXIeNXDk=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4211405789865649865",
+        "creationTimestamp": "2022-10-27T07:39:34.913-07:00",
+        "name": "ad-generator-database",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "ipCidrRange": "192.168.98.0/26",
+        "gatewayAddress": "192.168.98.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/ad-generator-database",
+        "privateIpGoogleAccess": true,
+        "fingerprint": "AmRzRabzXhk=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "7764184865757931209",
+        "creationTimestamp": "2022-10-27T07:39:34.979-07:00",
+        "name": "ad-generator-private",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "ipCidrRange": "192.168.97.0/26",
+        "gatewayAddress": "192.168.97.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/ad-generator-private",
+        "privateIpGoogleAccess": true,
+        "secondaryIpRanges": [
+          {
+            "rangeName": "ad-generator-secondary-range",
+            "ipCidrRange": "10.3.0.0/16"
+          },
+          {
+            "rangeName": "ad-generator-secondary-range-services",
+            "ipCidrRange": "10.4.0.0/16"
+          }
+        ],
+        "fingerprint": "KgJKMkwtJIE=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4498687961792456392",
+        "creationTimestamp": "2022-10-27T07:39:35.027-07:00",
+        "name": "ad-generator-public",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "ipCidrRange": "192.168.96.0/26",
+        "gatewayAddress": "192.168.96.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/ad-generator-public",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "Ua598sb9jwI=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4183306498892330726",
+        "creationTimestamp": "2022-12-21T00:47:05.248-08:00",
+        "name": "auto-inventory-private",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "ipCidrRange": "192.168.100.0/26",
+        "gatewayAddress": "192.168.100.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/auto-inventory-private",
+        "privateIpGoogleAccess": true,
+        "secondaryIpRanges": [
+          {
+            "rangeName": "auto-inventory-secondary-range",
+            "ipCidrRange": "10.6.0.0/16"
+          },
+          {
+            "rangeName": "auto-inventory-secondary-range-services",
+            "ipCidrRange": "10.7.0.0/16"
+          }
+        ],
+        "fingerprint": "Zu-gE5HWRro=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "5586079690060166886",
+        "creationTimestamp": "2022-12-21T00:47:05.316-08:00",
+        "name": "auto-inventory-public",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "ipCidrRange": "192.168.99.0/26",
+        "gatewayAddress": "192.168.99.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/auto-inventory-public",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "KrSVcFpRXAk=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "743970278232847814",
+        "creationTimestamp": "2022-09-20T07:16:09.322-07:00",
+        "name": "dba-inventory-services-prod-database",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "ipCidrRange": "192.168.94.0/26",
+        "gatewayAddress": "192.168.94.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/dba-inventory-services-prod-database",
+        "privateIpGoogleAccess": true,
+        "fingerprint": "dnNeCDEytfw=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "6512179049740400070",
+        "creationTimestamp": "2022-09-20T07:16:09.431-07:00",
+        "name": "dba-inventory-services-prod-private",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "ipCidrRange": "192.168.93.0/26",
+        "gatewayAddress": "192.168.93.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/dba-inventory-services-prod-private",
+        "privateIpGoogleAccess": true,
+        "secondaryIpRanges": [
+          {
+            "rangeName": "dba-inventory-services-prod-secondary-range",
+            "ipCidrRange": "10.0.0.0/16"
+          },
+          {
+            "rangeName": "dba-inventory-services-prod-secondary-range-services",
+            "ipCidrRange": "10.1.0.0/16"
+          }
+        ],
+        "fingerprint": "WYMc6HHgYXM=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "5973284284726015430",
+        "creationTimestamp": "2022-09-20T07:16:09.548-07:00",
+        "name": "dba-inventory-services-prod-public",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "ipCidrRange": "192.168.92.0/26",
+        "gatewayAddress": "192.168.92.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/dba-inventory-services-prod-public",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "BAUVR5dj6_g=",
+        "enableFlowLogs": false,
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "logConfig": {
+          "enable": false,
+          "aggregationInterval": "INTERVAL_5_SEC",
+          "flowSampling": 0.5,
+          "metadata": "INCLUDE_ALL_METADATA"
+        },
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "3065582070897969353",
+        "creationTimestamp": "2022-08-22T10:00:22.912-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.142.0.0/20",
+        "gatewayAddress": "10.142.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/subnetworks/default",
+        "privateIpGoogleAccess": true,
+        "fingerprint": "Ucadi17-FJ0=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "4945719509553907913",
+        "creationTimestamp": "2022-08-22T10:00:22.996-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.150.0.0/20",
+        "gatewayAddress": "10.150.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east4",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east4/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "W23DKpZd6bk=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "2320730223742421192",
+        "creationTimestamp": "2022-08-22T10:00:23.087-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.202.0.0/20",
+        "gatewayAddress": "10.202.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east5",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east5/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "7Nxmu_XOvMU=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "5342823153425844425",
+        "creationTimestamp": "2022-08-22T10:00:22.974-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.206.0.0/20",
+        "gatewayAddress": "10.206.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-south1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-south1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "btpGlLDeJdc=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "9035645079727769798",
+        "creationTimestamp": "2022-08-22T10:00:25.227-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.138.0.0/20",
+        "gatewayAddress": "10.138.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west1",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west1/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "N0caLP0mg1o=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "1458221982350706888",
+        "creationTimestamp": "2022-08-22T10:00:23.162-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.168.0.0/20",
+        "gatewayAddress": "10.168.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west2",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west2/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "h6VrzL1snIo=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "3568213344700467400",
+        "creationTimestamp": "2022-08-22T10:00:23.117-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.180.0.0/20",
+        "gatewayAddress": "10.180.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west3",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west3/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "3x1dBAPpWdg=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      },
+      {
+        "kind": "compute#subnetwork",
+        "id": "5652174619666155720",
+        "creationTimestamp": "2022-08-22T10:00:23.210-07:00",
+        "name": "default",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "ipCidrRange": "10.182.0.0/20",
+        "gatewayAddress": "10.182.0.1",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west4",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west4/subnetworks/default",
+        "privateIpGoogleAccess": false,
+        "fingerprint": "EXIFBFhjkuc=",
+        "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+        "purpose": "PRIVATE",
+        "stackType": "IPV4_ONLY"
+      }
+    ],
+    "firewallRules": [
+      {
+        "kind": "compute#firewall",
+        "id": "1026721607480061134",
+        "creationTimestamp": "2025-02-24T07:37:05.674-08:00",
+        "name": "allow-http",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "http-server"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "80"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/allow-http"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "6034035746634039523",
+        "creationTimestamp": "2024-07-08T12:29:16.318-07:00",
+        "name": "allow-ssh",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/32"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "22"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/allow-ssh"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "6944166765878336022",
+        "creationTimestamp": "2023-02-16T00:10:33.315-08:00",
+        "name": "default-allow-http",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "http-server"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "80",
+              "8080",
+              "9090",
+              "3000",
+              "443"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/default-allow-http"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "4615346665178552854",
+        "creationTimestamp": "2023-02-16T00:10:33.442-08:00",
+        "name": "default-allow-https",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "https-server"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "443"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/default-allow-https"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "8289459997414131924",
+        "creationTimestamp": "2022-08-22T10:00:43.235-07:00",
+        "name": "default-allow-icmp",
+        "description": "Allow ICMP from anywhere",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 65534,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "icmp"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/default-allow-icmp"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "8225034019095316692",
+        "creationTimestamp": "2022-08-22T10:00:43.036-07:00",
+        "name": "default-allow-internal",
+        "description": "Allow internal traffic on the default network",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 65534,
+        "sourceRanges": [
+          "10.128.0.0/9"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "0-65535"
+            ]
+          },
+          {
+            "IPProtocol": "udp",
+            "ports": [
+              "0-65535"
+            ]
+          },
+          {
+            "IPProtocol": "icmp"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/default-allow-internal"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "7906628181974452436",
+        "creationTimestamp": "2022-08-22T10:00:43.169-07:00",
+        "name": "default-allow-rdp",
+        "description": "Allow RDP from anywhere",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 65534,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "3389"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/default-allow-rdp"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "7075733511221444332",
+        "creationTimestamp": "2022-08-22T10:42:27.820-07:00",
+        "name": "filemage-gateway-linux-dba-ftp-passive",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "filemage-gateway-linux-dba-deployment"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "32768-60999"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/filemage-gateway-linux-dba-ftp-passive"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "9001744151241195244",
+        "creationTimestamp": "2022-08-22T10:42:27.816-07:00",
+        "name": "filemage-gateway-linux-dba-tcp-21",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "filemage-gateway-linux-dba-deployment"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "21"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/filemage-gateway-linux-dba-tcp-21"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "4256468556665749228",
+        "creationTimestamp": "2022-08-22T10:42:27.817-07:00",
+        "name": "filemage-gateway-linux-dba-tcp-2222",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "filemage-gateway-linux-dba-deployment"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "2222"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/filemage-gateway-linux-dba-tcp-2222"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "481224223678693100",
+        "creationTimestamp": "2022-08-22T10:42:27.818-07:00",
+        "name": "filemage-gateway-linux-dba-tcp-443",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "filemage-gateway-linux-dba-deployment"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "443"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/filemage-gateway-linux-dba-tcp-443"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "7962027384577621740",
+        "creationTimestamp": "2022-08-22T10:42:27.842-07:00",
+        "name": "filemage-gateway-linux-dba-tcp-80",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "filemage-gateway-linux-dba-deployment"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "80"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/filemage-gateway-linux-dba-tcp-80"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "6953616406906087038",
+        "creationTimestamp": "2022-10-27T07:41:21.299-07:00",
+        "name": "gke-ad-generator-cluster-4b4a6aae-all",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "10.3.0.0/16"
+        ],
+        "targetTags": [
+          "gke-ad-generator-cluster-4b4a6aae-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "sctp"
+          },
+          {
+            "IPProtocol": "tcp"
+          },
+          {
+            "IPProtocol": "udp"
+          },
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "esp"
+          },
+          {
+            "IPProtocol": "ah"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-ad-generator-cluster-4b4a6aae-all"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "6911739225934603902",
+        "creationTimestamp": "2022-10-27T07:41:21.329-07:00",
+        "name": "gke-ad-generator-cluster-4b4a6aae-exkubelet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "gke-ad-generator-cluster-4b4a6aae-node"
+        ],
+        "denied": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "10255"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-ad-generator-cluster-4b4a6aae-exkubelet"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "4724536407575963262",
+        "creationTimestamp": "2022-10-27T07:41:21.294-07:00",
+        "name": "gke-ad-generator-cluster-4b4a6aae-inkubelet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "priority": 999,
+        "sourceRanges": [
+          "10.3.0.0/16"
+        ],
+        "sourceTags": [
+          "gke-ad-generator-cluster-4b4a6aae-node"
+        ],
+        "targetTags": [
+          "gke-ad-generator-cluster-4b4a6aae-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "10255"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-ad-generator-cluster-4b4a6aae-inkubelet"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "4732930946925799038",
+        "creationTimestamp": "2022-10-27T07:41:21.711-07:00",
+        "name": "gke-ad-generator-cluster-4b4a6aae-vms",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "192.168.97.0/26"
+        ],
+        "targetTags": [
+          "gke-ad-generator-cluster-4b4a6aae-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "udp",
+            "ports": [
+              "1-65535"
+            ]
+          },
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "1-65535"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-ad-generator-cluster-4b4a6aae-vms"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "3362518564791613077",
+        "creationTimestamp": "2022-12-21T00:48:58.411-08:00",
+        "name": "gke-auto-inventory-cluster-495f6790-all",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "10.6.0.0/16"
+        ],
+        "targetTags": [
+          "gke-auto-inventory-cluster-495f6790-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "esp"
+          },
+          {
+            "IPProtocol": "ah"
+          },
+          {
+            "IPProtocol": "sctp"
+          },
+          {
+            "IPProtocol": "tcp"
+          },
+          {
+            "IPProtocol": "udp"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-auto-inventory-cluster-495f6790-all"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "1562611905498936981",
+        "creationTimestamp": "2022-12-21T00:48:58.536-08:00",
+        "name": "gke-auto-inventory-cluster-495f6790-exkubelet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "gke-auto-inventory-cluster-495f6790-node"
+        ],
+        "denied": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "10255"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-auto-inventory-cluster-495f6790-exkubelet"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "1014814639647585941",
+        "creationTimestamp": "2022-12-21T00:48:58.643-08:00",
+        "name": "gke-auto-inventory-cluster-495f6790-inkubelet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "priority": 999,
+        "sourceRanges": [
+          "10.6.0.0/16"
+        ],
+        "sourceTags": [
+          "gke-auto-inventory-cluster-495f6790-node"
+        ],
+        "targetTags": [
+          "gke-auto-inventory-cluster-495f6790-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "10255"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-auto-inventory-cluster-495f6790-inkubelet"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "1240435774286952085",
+        "creationTimestamp": "2022-12-21T00:48:58.615-08:00",
+        "name": "gke-auto-inventory-cluster-495f6790-vms",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "192.168.100.0/26"
+        ],
+        "targetTags": [
+          "gke-auto-inventory-cluster-495f6790-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "1-65535"
+            ]
+          },
+          {
+            "IPProtocol": "udp",
+            "ports": [
+              "1-65535"
+            ]
+          },
+          {
+            "IPProtocol": "icmp"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-auto-inventory-cluster-495f6790-vms"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "4468739382463198542",
+        "creationTimestamp": "2022-09-20T07:18:10.017-07:00",
+        "name": "gke-dba-inventory-services-prod-cluster-28bcd5c4-all",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "10.0.0.0/16",
+          "52.165.163.223"
+        ],
+        "targetTags": [
+          "gke-dba-inventory-services-prod-cluster-28bcd5c4-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp"
+          },
+          {
+            "IPProtocol": "udp"
+          },
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "esp"
+          },
+          {
+            "IPProtocol": "ah"
+          },
+          {
+            "IPProtocol": "sctp"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-dba-inventory-services-prod-cluster-28bcd5c4-all"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "6564984921025443150",
+        "creationTimestamp": "2022-09-20T07:18:09.994-07:00",
+        "name": "gke-dba-inventory-services-prod-cluster-28bcd5c4-exkubelet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0",
+          "52.165.163.223"
+        ],
+        "targetTags": [
+          "gke-dba-inventory-services-prod-cluster-28bcd5c4-node"
+        ],
+        "denied": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "10255"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-dba-inventory-services-prod-cluster-28bcd5c4-exkubelet"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "3491878001887704397",
+        "creationTimestamp": "2022-09-20T07:18:10.158-07:00",
+        "name": "gke-dba-inventory-services-prod-cluster-28bcd5c4-inkubelet",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "priority": 999,
+        "sourceRanges": [
+          "10.0.0.0/16"
+        ],
+        "sourceTags": [
+          "gke-dba-inventory-services-prod-cluster-28bcd5c4-node"
+        ],
+        "targetTags": [
+          "gke-dba-inventory-services-prod-cluster-28bcd5c4-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "10255"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-dba-inventory-services-prod-cluster-28bcd5c4-inkubelet"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "7842556018763789645",
+        "creationTimestamp": "2022-09-20T07:18:10.333-07:00",
+        "name": "gke-dba-inventory-services-prod-cluster-28bcd5c4-vms",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "192.168.93.0/26"
+        ],
+        "targetTags": [
+          "gke-dba-inventory-services-prod-cluster-28bcd5c4-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "1-65535"
+            ]
+          },
+          {
+            "IPProtocol": "udp",
+            "ports": [
+              "1-65535"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-dba-inventory-services-prod-cluster-28bcd5c4-vms"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "3416408726352732514",
+        "creationTimestamp": "2022-11-01T06:30:53.774-07:00",
+        "name": "gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-all",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "10.108.0.0/14"
+        ],
+        "targetTags": [
+          "gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp"
+          },
+          {
+            "IPProtocol": "udp"
+          },
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "esp"
+          },
+          {
+            "IPProtocol": "ah"
+          },
+          {
+            "IPProtocol": "sctp"
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-all"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "5733701263679070562",
+        "creationTimestamp": "2022-11-01T06:30:53.374-07:00",
+        "name": "gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-ssh",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "34.132.238.69/32"
+        ],
+        "targetTags": [
+          "gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "22"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-ssh"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "7001732908340519266",
+        "creationTimestamp": "2022-11-01T06:30:53.929-07:00",
+        "name": "gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-vms",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "10.128.0.0/9"
+        ],
+        "targetTags": [
+          "gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "icmp"
+          },
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "1-65535"
+            ]
+          },
+          {
+            "IPProtocol": "udp",
+            "ports": [
+              "1-65535"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/gke-us-central1-dba-inventory-s-284706cf-gke-219f365c-vms"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "1660182571558523425",
+        "creationTimestamp": "2024-07-29T12:26:06.129-07:00",
+        "name": "grafana-allow-http",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/grafana",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetServiceAccounts": [
+          "grafanacloud@dba-inventory-services-prod.iam.gserviceaccount.com"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "3000"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/grafana-allow-http"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "3045888640828253205",
+        "creationTimestamp": "2022-10-27T07:51:38.974-07:00",
+        "name": "k8s-fw-l7--4df5245e57831768",
+        "description": "GCE L7 firewall rule",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "130.211.0.0/22",
+          "35.191.0.0/16"
+        ],
+        "targetTags": [
+          "gke-ad-generator-cluster-4b4a6aae-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "8080",
+              "9090"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/k8s-fw-l7--4df5245e57831768"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "8412502753083157302",
+        "creationTimestamp": "2022-09-20T08:01:45.457-07:00",
+        "name": "k8s-fw-l7--5b90b95a5d2910d5",
+        "description": "GCE L7 firewall rule",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "130.211.0.0/22",
+          "35.191.0.0/16"
+        ],
+        "targetTags": [
+          "gke-dba-inventory-services-prod-cluster-28bcd5c4-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "30000-32767",
+              "9090"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/k8s-fw-l7--5b90b95a5d2910d5"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "1373175569680652892",
+        "creationTimestamp": "2022-12-21T02:49:23.711-08:00",
+        "name": "k8s-fw-l7--dbf818446612253f",
+        "description": "GCE L7 firewall rule",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "priority": 1000,
+        "sourceRanges": [
+          "130.211.0.0/22",
+          "35.191.0.0/16"
+        ],
+        "targetTags": [
+          "gke-auto-inventory-cluster-495f6790-node"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "8080",
+              "9090"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/k8s-fw-l7--dbf818446612253f"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "8437354760926389606",
+        "creationTimestamp": "2024-05-31T16:21:45.593-07:00",
+        "name": "port-3005",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "targetTags": [
+          "test"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "3005"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/port-3005"
+      },
+      {
+        "kind": "compute#firewall",
+        "id": "4649688046770423237",
+        "creationTimestamp": "2024-07-08T12:16:58.134-07:00",
+        "name": "ssh",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "priority": 1000,
+        "sourceRanges": [
+          "0.0.0.0/0"
+        ],
+        "allowed": [
+          {
+            "IPProtocol": "tcp",
+            "ports": [
+              "22"
+            ]
+          }
+        ],
+        "direction": "INGRESS",
+        "logConfig": {
+          "enable": false
+        },
+        "disabled": false,
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/firewalls/ssh"
+      }
+    ],
+    "loadBalancers": [
+      {
+        "kind": "compute#forwardingRule",
+        "id": "7532915840534390383",
+        "creationTimestamp": "2022-10-27T07:41:04.409-07:00",
+        "name": "gke-ad-generator-cluster-4b4a6aae-84697f9f-pe",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "IPAddress": "192.168.97.2",
+        "target": "https://www.googleapis.com/compute/v1/projects/gke-prod-us-east1-b-77ff/regions/us-east1/serviceAttachments/gke-4b4a6aae87b84d3c8af1-10b6-0813-sa",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/forwardingRules/gke-ad-generator-cluster-4b4a6aae-84697f9f-pe",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "serviceDirectoryRegistrations": [
+          {
+            "namespace": "goog-psc-default"
+          }
+        ],
+        "networkTier": "PREMIUM",
+        "labelFingerprint": "42WmSpB8rSM=",
+        "pscConnectionId": "65944222425440514",
+        "pscConnectionStatus": "ACCEPTED",
+        "allowPscGlobalAccess": false
+      },
+      {
+        "kind": "compute#forwardingRule",
+        "id": "7218154867264550534",
+        "creationTimestamp": "2022-12-21T00:48:41.153-08:00",
+        "name": "gke-auto-inventory-cluster-495f6790-8419e1df-pe",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "IPAddress": "192.168.100.2",
+        "target": "https://www.googleapis.com/compute/v1/projects/gke-prod-us-east1-b-2/regions/us-east1/serviceAttachments/gke-495f679048534e9c8e13-0cf4-eab5-sa",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/forwardingRules/gke-auto-inventory-cluster-495f6790-8419e1df-pe",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "serviceDirectoryRegistrations": [
+          {
+            "namespace": "goog-psc-default"
+          }
+        ],
+        "networkTier": "PREMIUM",
+        "labelFingerprint": "42WmSpB8rSM=",
+        "pscConnectionId": "77636845687038978",
+        "pscConnectionStatus": "ACCEPTED",
+        "allowPscGlobalAccess": false
+      },
+      {
+        "kind": "compute#forwardingRule",
+        "id": "6344489194198693216",
+        "creationTimestamp": "2022-09-20T07:17:51.101-07:00",
+        "name": "gke-dba-inventory-services-prod-cluster-28bcd5c4-c3bd8ca3-pe",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "IPAddress": "192.168.93.2",
+        "target": "https://www.googleapis.com/compute/v1/projects/gke-prod-us-east1-b-988f/regions/us-east1/serviceAttachments/gke-28bcd5c44d874b71b7d8-5e41-7923-sa",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/forwardingRules/gke-dba-inventory-services-prod-cluster-28bcd5c4-c3bd8ca3-pe",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "serviceDirectoryRegistrations": [
+          {
+            "namespace": "goog-psc-default"
+          }
+        ],
+        "networkTier": "PREMIUM",
+        "labelFingerprint": "42WmSpB8rSM=",
+        "pscConnectionId": "60580169049988354",
+        "pscConnectionStatus": "ACCEPTED",
+        "allowPscGlobalAccess": false
+      }
+    ],
+    "cloudNat": [],
+    "cloudDns": [],
+    "vpnTunnels": [],
+    "interconnectAttachments": [],
+    "cloudRouters": [
+      {
+        "kind": "compute#router",
+        "id": "3660449798903153224",
+        "creationTimestamp": "2022-11-06T19:33:59.741-08:00",
+        "name": "dba-inventory-services",
+        "description": "",
+        "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1/routers/dba-inventory-services",
+        "encryptedInterconnectRouter": false
+      }
+    ],
+    "routes": [
+      {
+        "kind": "compute#route",
+        "id": "5001921725017302729",
+        "creationTimestamp": "2022-10-27T07:39:34.792-07:00",
+        "name": "ad-network-route",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "destRange": "0.0.0.0/0",
+        "priority": 100,
+        "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/gateways/default-internet-gateway",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/ad-network-route"
+      },
+      {
+        "kind": "compute#route",
+        "id": "1110115806417483495",
+        "creationTimestamp": "2022-12-21T00:47:04.896-08:00",
+        "name": "auto-network-route",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "destRange": "0.0.0.0/0",
+        "priority": 100,
+        "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/gateways/default-internet-gateway",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/auto-network-route"
+      },
+      {
+        "kind": "compute#route",
+        "id": "1179387044727490755",
+        "creationTimestamp": "2022-08-22T10:00:28.420-07:00",
+        "name": "default-route-0130e7699e9bc968",
+        "description": "Default local route to the subnetwork 10.192.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.192.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-0130e7699e9bc968"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5942853243137979870",
+        "creationTimestamp": "2022-09-20T07:16:17.738-07:00",
+        "name": "default-route-021ee2b82ccf715b",
+        "description": "Default local route to the subnetwork 192.168.93.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "destRange": "192.168.93.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-021ee2b82ccf715b"
+      },
+      {
+        "kind": "compute#route",
+        "id": "6640327486432311013",
+        "creationTimestamp": "2022-12-21T00:47:06.933-08:00",
+        "name": "default-route-02bd4e29aa42f976",
+        "description": "Default local route to the subnetwork 192.168.99.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "destRange": "192.168.99.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-02bd4e29aa42f976"
+      },
+      {
+        "kind": "compute#route",
+        "id": "9038115463312050372",
+        "creationTimestamp": "2022-08-22T10:00:27.193-07:00",
+        "name": "default-route-045da56548cdbeb5",
+        "description": "Default local route to the subnetwork 10.194.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.194.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-045da56548cdbeb5"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2852861501881939710",
+        "creationTimestamp": "2022-12-21T00:47:13.783-08:00",
+        "name": "default-route-06196cc8047e6a9e",
+        "description": "Default local route to the subnetwork 192.168.100.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "destRange": "192.168.100.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-06196cc8047e6a9e"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2509840666037003975",
+        "creationTimestamp": "2022-10-27T07:39:36.835-07:00",
+        "name": "default-route-1894c9c55d740766",
+        "description": "Default local route to the subnetwork 192.168.96.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "destRange": "192.168.96.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-1894c9c55d740766"
+      },
+      {
+        "kind": "compute#route",
+        "id": "539629791719852230",
+        "creationTimestamp": "2022-08-22T10:00:25.167-07:00",
+        "name": "default-route-191e56148189faab",
+        "description": "Default local route to the subnetwork 10.150.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.150.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-191e56148189faab"
+      },
+      {
+        "kind": "compute#route",
+        "id": "138139096453089477",
+        "creationTimestamp": "2022-08-22T10:00:26.673-07:00",
+        "name": "default-route-1922ab656ae9dacf",
+        "description": "Default local route to the subnetwork 10.156.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.156.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-1922ab656ae9dacf"
+      },
+      {
+        "kind": "compute#route",
+        "id": "6477348634499090628",
+        "creationTimestamp": "2022-08-22T10:00:28.019-07:00",
+        "name": "default-route-1ac732f1b2986981",
+        "description": "Default local route to the subnetwork 10.204.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.204.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-1ac732f1b2986981"
+      },
+      {
+        "kind": "compute#route",
+        "id": "859758988760479171",
+        "creationTimestamp": "2022-09-20T07:16:12.313-07:00",
+        "name": "default-route-1b593f4dc63ab950",
+        "description": "Default local route to the subnetwork 10.0.0.0/16.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "destRange": "10.0.0.0/16",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-1b593f4dc63ab950"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8000819481950423236",
+        "creationTimestamp": "2022-08-22T10:00:27.633-07:00",
+        "name": "default-route-1f46d16cf44ee890",
+        "description": "Default local route to the subnetwork 10.182.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.182.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-1f46d16cf44ee890"
+      },
+      {
+        "kind": "compute#route",
+        "id": "7422770141500569027",
+        "creationTimestamp": "2022-09-20T07:16:12.606-07:00",
+        "name": "default-route-27eea8e0f6e88c12",
+        "description": "Default local route to the subnetwork 10.1.0.0/16.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "destRange": "10.1.0.0/16",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-27eea8e0f6e88c12"
+      },
+      {
+        "kind": "compute#route",
+        "id": "6513104825648810179",
+        "creationTimestamp": "2022-08-22T10:00:28.546-07:00",
+        "name": "default-route-2a298b6c4f8ad47a",
+        "description": "Default local route to the subnetwork 10.146.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.146.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-2a298b6c4f8ad47a"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5599928812113786308",
+        "creationTimestamp": "2022-09-20T07:16:11.246-07:00",
+        "name": "default-route-2d5b1f7f75d4a9b8",
+        "description": "Default local route to the subnetwork 192.168.92.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "destRange": "192.168.92.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-2d5b1f7f75d4a9b8"
+      },
+      {
+        "kind": "compute#route",
+        "id": "3966652233775188165",
+        "creationTimestamp": "2022-08-22T10:00:26.433-07:00",
+        "name": "default-route-2eebab1704f3ee94",
+        "description": "Default local route to the subnetwork 10.132.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.132.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-2eebab1704f3ee94"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8582248613767153860",
+        "creationTimestamp": "2022-08-22T10:00:27.045-07:00",
+        "name": "default-route-2f0902c89297a1ca",
+        "description": "Default local route to the subnetwork 10.198.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.198.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-2f0902c89297a1ca"
+      },
+      {
+        "kind": "compute#route",
+        "id": "385742045512075460",
+        "creationTimestamp": "2022-08-22T10:00:27.235-07:00",
+        "name": "default-route-327c419efdd4c8d4",
+        "description": "Default local route to the subnetwork 10.162.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.162.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-327c419efdd4c8d4"
+      },
+      {
+        "kind": "compute#route",
+        "id": "7291698352498353856",
+        "creationTimestamp": "2022-10-27T07:39:43.791-07:00",
+        "name": "default-route-388a0712b612f111",
+        "description": "Default local route to the subnetwork 192.168.97.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "destRange": "192.168.97.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-388a0712b612f111"
+      },
+      {
+        "kind": "compute#route",
+        "id": "7224845425594730693",
+        "creationTimestamp": "2022-08-22T10:00:26.822-07:00",
+        "name": "default-route-3ba1876f967bde64",
+        "description": "Default local route to the subnetwork 10.172.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.172.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-3ba1876f967bde64"
+      },
+      {
+        "kind": "compute#route",
+        "id": "4309214873936241041",
+        "creationTimestamp": "2022-11-01T06:30:38.584-07:00",
+        "name": "default-route-3fb05a77dea70f04",
+        "description": "Default local route to the subnetwork 10.108.0.0/14.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.108.0.0/14",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-3fb05a77dea70f04"
+      },
+      {
+        "kind": "compute#route",
+        "id": "3897245695420606151",
+        "creationTimestamp": "2022-10-27T07:39:36.608-07:00",
+        "name": "default-route-47aad9259d1ff2be",
+        "description": "Default local route to the subnetwork 192.168.98.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "destRange": "192.168.98.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-47aad9259d1ff2be"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5846072593278596549",
+        "creationTimestamp": "2022-09-20T07:16:10.954-07:00",
+        "name": "default-route-4c9e0cf3c32ed957",
+        "description": "Default local route to the subnetwork 192.168.94.0/26.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "destRange": "192.168.94.0/26",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-4c9e0cf3c32ed957"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8278357463909683890",
+        "creationTimestamp": "2024-07-29T12:24:13.974-07:00",
+        "name": "default-route-4f2bf0d91da75666",
+        "description": "Default route to the Internet.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/grafana",
+        "destRange": "0.0.0.0/0",
+        "priority": 1000,
+        "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/gateways/default-internet-gateway",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-4f2bf0d91da75666"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5276451584957076868",
+        "creationTimestamp": "2023-11-02T20:39:23.517-07:00",
+        "name": "default-route-4f642558d0ebe5b1",
+        "description": "Default local route to the subnetwork 10.220.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.220.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-4f642558d0ebe5b1"
+      },
+      {
+        "kind": "compute#route",
+        "id": "4665349443244918978",
+        "creationTimestamp": "2022-08-22T10:00:29.705-07:00",
+        "name": "default-route-519815d88c1bafa8",
+        "description": "Default local route to the subnetwork 10.160.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.160.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-519815d88c1bafa8"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8127976038902663363",
+        "creationTimestamp": "2022-08-22T10:00:28.221-07:00",
+        "name": "default-route-5cd89fdb4b6b1cf6",
+        "description": "Default local route to the subnetwork 10.138.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.138.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-5cd89fdb4b6b1cf6"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5586964028131772611",
+        "creationTimestamp": "2022-08-22T10:00:28.976-07:00",
+        "name": "default-route-5e86574d1c2a7dbc",
+        "description": "Default local route to the subnetwork 10.152.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.152.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-5e86574d1c2a7dbc"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5485530386736746843",
+        "creationTimestamp": "2023-07-03T22:35:48.061-07:00",
+        "name": "default-route-6532cdf40f31f3be",
+        "description": "Default local route to the subnetwork 10.214.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.214.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-6532cdf40f31f3be"
+      },
+      {
+        "kind": "compute#route",
+        "id": "1950509553269867071",
+        "creationTimestamp": "2022-08-23T22:53:20.784-07:00",
+        "name": "default-route-68b3ba6cbf9d8f7c",
+        "description": "Default local route to the subnetwork 10.208.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.208.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-68b3ba6cbf9d8f7c"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5467815712580831431",
+        "creationTimestamp": "2022-08-22T10:00:24.364-07:00",
+        "name": "default-route-6993df423bdea9fc",
+        "description": "Default local route to the subnetwork 10.142.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.142.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-6993df423bdea9fc"
+      },
+      {
+        "kind": "compute#route",
+        "id": "1066826843841778309",
+        "creationTimestamp": "2024-07-29T12:24:26.712-07:00",
+        "name": "default-route-6b0f9ba8e7e1d53d",
+        "description": "Default local route to the subnetwork 10.0.0.0/24.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/grafana",
+        "destRange": "10.0.0.0/24",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/grafana",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-6b0f9ba8e7e1d53d"
+      },
+      {
+        "kind": "compute#route",
+        "id": "1921113448472761167",
+        "creationTimestamp": "2023-02-02T18:12:48.739-08:00",
+        "name": "default-route-6ff504b9c5354244",
+        "description": "Default local route to the subnetwork 10.212.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.212.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-6ff504b9c5354244"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5619433706011625671",
+        "creationTimestamp": "2022-08-22T10:00:24.870-07:00",
+        "name": "default-route-75cf9205e27c61e6",
+        "description": "Default local route to the subnetwork 10.128.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.128.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-75cf9205e27c61e6"
+      },
+      {
+        "kind": "compute#route",
+        "id": "62887914968909377",
+        "creationTimestamp": "2024-08-27T22:42:06.955-07:00",
+        "name": "default-route-79e27f62e085d733",
+        "description": "Default local route to the subnetwork 10.224.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.224.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-79e27f62e085d733"
+      },
+      {
+        "kind": "compute#route",
+        "id": "445053293308977553",
+        "creationTimestamp": "2022-11-01T06:30:38.285-07:00",
+        "name": "default-route-7c0cbe04a188226c",
+        "description": "Default local route to the subnetwork 10.112.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.112.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-7c0cbe04a188226c"
+      },
+      {
+        "kind": "compute#route",
+        "id": "6577696555345512644",
+        "creationTimestamp": "2022-08-22T10:00:27.641-07:00",
+        "name": "default-route-7cabb0ea1780083a",
+        "description": "Default local route to the subnetwork 10.170.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.170.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-7cabb0ea1780083a"
+      },
+      {
+        "kind": "compute#route",
+        "id": "4300345826594496725",
+        "creationTimestamp": "2023-01-25T22:31:22.576-08:00",
+        "name": "default-route-8237a9f6ad1e50c1",
+        "description": "Default local route to the subnetwork 10.210.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.210.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-8237a9f6ad1e50c1"
+      },
+      {
+        "kind": "compute#route",
+        "id": "122571704020895940",
+        "creationTimestamp": "2022-08-22T10:00:27.056-07:00",
+        "name": "default-route-8505b2d4d2889660",
+        "description": "Default local route to the subnetwork 10.154.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.154.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-8505b2d4d2889660"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2707080369021593285",
+        "creationTimestamp": "2022-10-27T07:39:38.251-07:00",
+        "name": "default-route-86efa6eb3e27f0a9",
+        "description": "Default local route to the subnetwork 10.4.0.0/16.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "destRange": "10.4.0.0/16",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-86efa6eb3e27f0a9"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5821293866093775044",
+        "creationTimestamp": "2022-08-22T10:00:27.119-07:00",
+        "name": "default-route-8c252572172f39a1",
+        "description": "Default local route to the subnetwork 10.186.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.186.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-8c252572172f39a1"
+      },
+      {
+        "kind": "compute#route",
+        "id": "4479292675457595959",
+        "creationTimestamp": "2022-08-23T09:48:24.637-07:00",
+        "name": "default-route-8e90ae9f1abd1191",
+        "description": "Default local route to the subnetwork 10.196.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.196.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-8e90ae9f1abd1191"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2869317084971403458",
+        "creationTimestamp": "2022-08-22T10:00:29.177-07:00",
+        "name": "default-route-9100979f936109ac",
+        "description": "Default local route to the subnetwork 10.184.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.184.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-9100979f936109ac"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8579507522689173699",
+        "creationTimestamp": "2022-08-22T10:00:28.052-07:00",
+        "name": "default-route-9618a2f446ccc850",
+        "description": "Default local route to the subnetwork 10.166.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.166.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-9618a2f446ccc850"
+      },
+      {
+        "kind": "compute#route",
+        "id": "7731213651657230534",
+        "creationTimestamp": "2022-08-22T10:00:25.419-07:00",
+        "name": "default-route-9a50b967ff03bb75",
+        "description": "Default local route to the subnetwork 10.206.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.206.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-9a50b967ff03bb75"
+      },
+      {
+        "kind": "compute#route",
+        "id": "3183089318099814596",
+        "creationTimestamp": "2022-08-22T10:00:27.308-07:00",
+        "name": "default-route-a262f67f6836c77f",
+        "description": "Default local route to the subnetwork 10.174.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.174.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-a262f67f6836c77f"
+      },
+      {
+        "kind": "compute#route",
+        "id": "6899424004208986309",
+        "creationTimestamp": "2022-08-22T10:00:26.170-07:00",
+        "name": "default-route-a9b562226cae4a35",
+        "description": "Default local route to the subnetwork 10.164.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.164.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-a9b562226cae4a35"
+      },
+      {
+        "kind": "compute#route",
+        "id": "5293913831090555074",
+        "creationTimestamp": "2022-08-22T10:00:29.527-07:00",
+        "name": "default-route-ac1f72d55a370bee",
+        "description": "Default local route to the subnetwork 10.190.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.190.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-ac1f72d55a370bee"
+      },
+      {
+        "kind": "compute#route",
+        "id": "9004524167607748803",
+        "creationTimestamp": "2022-08-22T10:00:28.097-07:00",
+        "name": "default-route-b3cb98ac083e150f",
+        "description": "Default local route to the subnetwork 10.158.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.158.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-b3cb98ac083e150f"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2214977348546988228",
+        "creationTimestamp": "2022-08-22T10:00:27.712-07:00",
+        "name": "default-route-bdf36e661145797f",
+        "description": "Default local route to the subnetwork 10.178.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.178.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-bdf36e661145797f"
+      },
+      {
+        "kind": "compute#route",
+        "id": "7940022957159950022",
+        "creationTimestamp": "2022-10-27T07:39:37.862-07:00",
+        "name": "default-route-c3f02ccacfcc0b54",
+        "description": "Default local route to the subnetwork 10.3.0.0/16.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "destRange": "10.3.0.0/16",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/ad-generator-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-c3f02ccacfcc0b54"
+      },
+      {
+        "kind": "compute#route",
+        "id": "3965808427309954788",
+        "creationTimestamp": "2022-12-21T00:47:07.879-08:00",
+        "name": "default-route-c4b500f5a26a89b4",
+        "description": "Default local route to the subnetwork 10.7.0.0/16.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "destRange": "10.7.0.0/16",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-c4b500f5a26a89b4"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2745576753585944292",
+        "creationTimestamp": "2022-12-21T00:47:07.818-08:00",
+        "name": "default-route-d0f9e8f755c0ffb7",
+        "description": "Default local route to the subnetwork 10.6.0.0/16.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "destRange": "10.6.0.0/16",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/auto-inventory-prod",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-d0f9e8f755c0ffb7"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2290418152748484804",
+        "creationTimestamp": "2022-08-22T10:00:27.909-07:00",
+        "name": "default-route-d192bd1b694cb13f",
+        "description": "Default local route to the subnetwork 10.148.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.148.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-d192bd1b694cb13f"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8333002929879195512",
+        "creationTimestamp": "2023-09-24T13:52:39.663-07:00",
+        "name": "default-route-d37b8c334c82a12e",
+        "description": "Default local route to the subnetwork 10.216.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.216.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-d37b8c334c82a12e"
+      },
+      {
+        "kind": "compute#route",
+        "id": "432807461077780676",
+        "creationTimestamp": "2022-08-22T10:00:27.338-07:00",
+        "name": "default-route-d7209dc53fd2c863",
+        "description": "Default local route to the subnetwork 10.180.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.180.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-d7209dc53fd2c863"
+      },
+      {
+        "kind": "compute#route",
+        "id": "805318027723540676",
+        "creationTimestamp": "2022-08-22T10:00:27.603-07:00",
+        "name": "default-route-d745e1a824ba3a8b",
+        "description": "Default local route to the subnetwork 10.140.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.140.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-d745e1a824ba3a8b"
+      },
+      {
+        "kind": "compute#route",
+        "id": "553934961983228108",
+        "creationTimestamp": "2022-08-22T10:00:19.194-07:00",
+        "name": "default-route-df381f449b193cab",
+        "description": "Default route to the Internet.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "0.0.0.0/0",
+        "priority": 1000,
+        "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/gateways/default-internet-gateway",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-df381f449b193cab"
+      },
+      {
+        "kind": "compute#route",
+        "id": "8597492951644244164",
+        "creationTimestamp": "2022-08-22T10:00:27.728-07:00",
+        "name": "default-route-eee2822b00c95d0b",
+        "description": "Default local route to the subnetwork 10.168.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.168.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-eee2822b00c95d0b"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2994764326544214213",
+        "creationTimestamp": "2022-08-22T10:00:26.233-07:00",
+        "name": "default-route-ef31696efe3419bc",
+        "description": "Default local route to the subnetwork 10.188.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.188.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-ef31696efe3419bc"
+      },
+      {
+        "kind": "compute#route",
+        "id": "2794289563997964485",
+        "creationTimestamp": "2022-08-22T10:00:26.167-07:00",
+        "name": "default-route-f282308667e90e18",
+        "description": "Default local route to the subnetwork 10.202.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.202.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-f282308667e90e18"
+      },
+      {
+        "kind": "compute#route",
+        "id": "4436784190128523461",
+        "creationTimestamp": "2022-08-22T10:00:27.003-07:00",
+        "name": "default-route-f7e65935e4e56e07",
+        "description": "Default local route to the subnetwork 10.200.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.200.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-f7e65935e4e56e07"
+      },
+      {
+        "kind": "compute#route",
+        "id": "647209312155557663",
+        "creationTimestamp": "2023-09-05T01:08:16.968-07:00",
+        "name": "default-route-f857746ce2d2fe23",
+        "description": "Default local route to the subnetwork 10.218.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.218.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-f857746ce2d2fe23"
+      },
+      {
+        "kind": "compute#route",
+        "id": "9177159441701542840",
+        "creationTimestamp": "2024-10-19T05:25:59.011-07:00",
+        "name": "default-route-r-6fb2374bd9eeade0",
+        "description": "Default local route to the subnetwork 10.226.0.0/20.",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "destRange": "10.226.0.0/20",
+        "priority": 0,
+        "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/default",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/default-route-r-6fb2374bd9eeade0"
+      },
+      {
+        "kind": "compute#route",
+        "id": "4593548082658178502",
+        "creationTimestamp": "2022-09-20T07:16:09.123-07:00",
+        "name": "network-route",
+        "description": "",
+        "network": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/networks/dba-inventory-services-prod",
+        "destRange": "0.0.0.0/0",
+        "priority": 100,
+        "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/gateways/default-internet-gateway",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/global/routes/network-route"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "category": "Networking",
+      "issue": "Custom subnet mode not enabled",
+      "recommendation": "Consider using custom subnet mode for better network control",
+      "resource": "ad-generator-prod"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "VPC flow logs not enabled",
+      "recommendation": "Enable VPC flow logs for better network monitoring",
+      "resource": "ad-generator-prod"
+    },
+    {
+      "category": "Networking",
+      "issue": "Custom subnet mode not enabled",
+      "recommendation": "Consider using custom subnet mode for better network control",
+      "resource": "auto-inventory-prod"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "VPC flow logs not enabled",
+      "recommendation": "Enable VPC flow logs for better network monitoring",
+      "resource": "auto-inventory-prod"
+    },
+    {
+      "category": "Networking",
+      "issue": "Custom subnet mode not enabled",
+      "recommendation": "Consider using custom subnet mode for better network control",
+      "resource": "dba-inventory-services-prod"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "VPC flow logs not enabled",
+      "recommendation": "Enable VPC flow logs for better network monitoring",
+      "resource": "dba-inventory-services-prod"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "VPC flow logs not enabled",
+      "recommendation": "Enable VPC flow logs for better network monitoring",
+      "resource": "default"
+    },
+    {
+      "category": "Networking",
+      "issue": "Custom subnet mode not enabled",
+      "recommendation": "Consider using custom subnet mode for better network control",
+      "resource": "grafana"
+    },
+    {
+      "category": "Monitoring",
+      "issue": "VPC flow logs not enabled",
+      "recommendation": "Enable VPC flow logs for better network monitoring",
+      "resource": "grafana"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/africa-south1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-east2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-northeast3"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-south2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/asia-southeast2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/australia-southeast2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-central2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-north2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-southwest1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west10"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west12"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west3"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west4"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west6"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west8"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/europe-west9"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-central2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/me-west1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-northeast2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/northamerica-south1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-east1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/southamerica-west1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "grafana-subnet",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-central1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "ad-generator-database",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "ad-generator-private",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "ad-generator-public",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "ad-generator-public",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "auto-inventory-private",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "auto-inventory-public",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "auto-inventory-public",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "dba-inventory-services-prod-database",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "dba-inventory-services-prod-private",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "dba-inventory-services-prod-public",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Subnet IP range may be too small",
+      "recommendation": "Consider using a larger IP range to accommodate future growth",
+      "resource": "dba-inventory-services-prod-public",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1",
+      "currentSize": "/26"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east4"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east5"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-south1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west1"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west2"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west3"
+    },
+    {
+      "category": "Networking",
+      "issue": "Private Google Access not enabled",
+      "recommendation": "Enable Private Google Access for better security and performance",
+      "resource": "default",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-west4"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "allow-http",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "default-allow-http",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "default-allow-https",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "default-allow-icmp",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Overly permissive firewall rule",
+      "recommendation": "Restrict port ranges and protocols to only necessary ones",
+      "resource": "default-allow-internal",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "default-allow-rdp",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "filemage-gateway-linux-dba-ftp-passive",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "filemage-gateway-linux-dba-tcp-21",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "filemage-gateway-linux-dba-tcp-2222",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "filemage-gateway-linux-dba-tcp-443",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "filemage-gateway-linux-dba-tcp-80",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "gke-ad-generator-cluster-4b4a6aae-exkubelet",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "gke-auto-inventory-cluster-495f6790-exkubelet",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "gke-dba-inventory-services-prod-cluster-28bcd5c4-exkubelet",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "grafana-allow-http",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "port-3005",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Security",
+      "issue": "Public access allowed",
+      "recommendation": "Restrict source ranges to specific IP addresses or ranges",
+      "resource": "ssh",
+      "direction": "INGRESS"
+    },
+    {
+      "category": "Reliability",
+      "issue": "Load balancer without health checks",
+      "recommendation": "Configure health checks for better reliability",
+      "resource": "gke-ad-generator-cluster-4b4a6aae-84697f9f-pe",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Reliability",
+      "issue": "Load balancer without health checks",
+      "recommendation": "Configure health checks for better reliability",
+      "resource": "gke-auto-inventory-cluster-495f6790-8419e1df-pe",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Reliability",
+      "issue": "Load balancer without health checks",
+      "recommendation": "Configure health checks for better reliability",
+      "resource": "gke-dba-inventory-services-prod-cluster-28bcd5c4-c3bd8ca3-pe",
+      "region": "https://www.googleapis.com/compute/v1/projects/dba-inventory-services-prod/regions/us-east1"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "ad-network-route"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "auto-network-route"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "default-route-4f2bf0d91da75666"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "default-route-df381f449b193cab"
+    },
+    {
+      "category": "Security",
+      "issue": "Default route to internet gateway",
+      "recommendation": "Restrict default routes to internet gateway; use NAT where possible",
+      "resource": "network-route"
+    }
+  ]
+}

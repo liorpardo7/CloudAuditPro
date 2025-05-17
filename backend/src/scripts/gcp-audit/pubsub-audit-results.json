@@ -1,0 +1,93 @@
+{
+  "timestamp": "2025-05-15T13:51:11.519Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [],
+  "summary": {
+    "totalChecks": 16,
+    "passed": 0,
+    "failed": 16,
+    "notApplicable": 0
+  },
+  "errors": [
+    {
+      "check": "Topic IAM Policy",
+      "resource": "t-locationGroupProviders",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Subscription Audit",
+      "resource": "t-locationGroupProviders",
+      "error": "Missing required parameters: subscription"
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "us-central1-dba-inventory-s-284706cf-composer-agent-to-backend-topic-284706cf-5f65-4b21-974d-0b32566f0635",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "us-central1-dba-inventory-s-284706cf-composer-backend-to-agent-pubsub-rollback-topic-284706cf-5f65-4b21-974d-0b32566f0635",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "us-central1-dba-inventory-s-284706cf-composer-backend-to-agent-topic-284706cf-5f65-4b21-974d-0b32566f0635",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "t-locationGroupProviders-test",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "t-autoInventoryCFSService",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Subscription Audit",
+      "resource": "t-autoInventoryCFSService",
+      "error": "Missing required parameters: subscription"
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "t-autoInventoryFTP",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Subscription Audit",
+      "resource": "t-autoInventoryFTP",
+      "error": "Missing required parameters: subscription"
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "t-autoInventoryFTP-test",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "DoNotDelete-Integromat-google-cloud-storage-5c3e99d1-18e4-420b-93ff-424388fa2867",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "DoNotDelete-Integromat-google-cloud-storage-09305c72-3c24-4db5-8987-017d7fd0e5a3",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "DoNotDelete-Integromat-google-cloud-storage-5b602064-4e4d-4a8f-add2-44ba67ef134a",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Topic IAM Policy",
+      "resource": "t-unite-digital-outbound-bucket-change",
+      "error": "User not authorized to perform this action."
+    },
+    {
+      "check": "Subscription Audit",
+      "resource": "t-unite-digital-outbound-bucket-change",
+      "error": "Missing required parameters: subscription"
+    }
+  ]
+}

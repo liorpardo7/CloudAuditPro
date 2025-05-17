@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-05-17T17:09:47.546Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Bucket Listing",
+      "error": "authClient.request is not a function"
+    }
+  ]
+}

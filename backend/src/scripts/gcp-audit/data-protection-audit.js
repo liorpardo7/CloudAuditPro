@@ -1,10 +1,7 @@
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const fs = require('fs');
-const path = require('path');
-const auth = require('./auth');
 
-async function runDataProtectionAudit() {
+async function run(projectId, tokens) {
   const findings = [];
   const summary = {
     totalChecks: 0,
@@ -13,19 +10,15 @@ async function runDataProtectionAudit() {
     costSavingsPotential: 0
   };
   const errors = [];
-
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const dlp = google.dlp({ version: 'v2', auth: authClient });
     const storage = google.storage({ version: 'v1', auth: authClient });
     const compute = google.compute({ version: 'v1', auth: authClient });
-
     // 1. Check for sensitive data detection
     try {
-      const inspectTemplatesResp = await dlp.projects.inspectTemplates.list({
-        parent: `projects/${projectId}`
-      });
+      const inspectTemplatesResp = await dlp.projects.inspectTemplates.list({ parent: `projects/${projectId}` });
       const inspectTemplates = inspectTemplatesResp.data.inspectTemplates || [];
       findings.push({
         check: 'Sensitive Data Detection',
@@ -46,12 +39,9 @@ async function runDataProtectionAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 2. Review data retention
     try {
-      const bucketsResp = await storage.buckets.list({
-        project: projectId
-      });
+      const bucketsResp = await storage.buckets.list({ project: projectId });
       const buckets = bucketsResp.data.items || [];
       const retentionPolicies = buckets.map(bucket => ({
         name: bucket.name,
@@ -72,31 +62,22 @@ async function runDataProtectionAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 3. Verify data encryption
     try {
-      // Check storage encryption
-      const bucketsResp = await storage.buckets.list({
-        project: projectId
-      });
+      const bucketsResp = await storage.buckets.list({ project: projectId });
       const buckets = bucketsResp.data.items || [];
       const storageEncryption = buckets.map(bucket => ({
         name: bucket.name,
         encryption: bucket.encryption,
         defaultKmsKeyName: bucket.encryption?.defaultKmsKeyName
       }));
-
-      // Check compute disk encryption
-      const disksResp = await compute.disks.list({
-        project: projectId
-      });
+      const disksResp = await compute.disks.list({ project: projectId });
       const disks = disksResp.data.items || [];
       const diskEncryption = disks.map(disk => ({
         name: disk.name,
         diskEncryptionKey: disk.diskEncryptionKey,
         sourceImageEncryptionKey: disk.sourceImageEncryptionKey
       }));
-
       findings.push({
         check: 'Data Encryption',
         result: `${buckets.length} buckets and ${disks.length} disks checked`,
@@ -114,12 +95,9 @@ async function runDataProtectionAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 4. Check for data residency
     try {
-      const bucketsResp = await storage.buckets.list({
-        project: projectId
-      });
+      const bucketsResp = await storage.buckets.list({ project: projectId });
       const buckets = bucketsResp.data.items || [];
       const dataResidency = buckets.map(bucket => ({
         name: bucket.name,
@@ -141,12 +119,9 @@ async function runDataProtectionAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 5. Review data security
     try {
-      const deidentifyTemplatesResp = await dlp.projects.deidentifyTemplates.list({
-        parent: `projects/${projectId}`
-      });
+      const deidentifyTemplatesResp = await dlp.projects.deidentifyTemplates.list({ parent: `projects/${projectId}` });
       const deidentifyTemplates = deidentifyTemplatesResp.data.deidentifyTemplates || [];
       findings.push({
         check: 'Data Security',
@@ -167,12 +142,13 @@ async function runDataProtectionAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
+    await writeAuditResults('data-protection-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (err) {
     errors.push({ check: 'Data Protection Audit', error: err.message });
+    await writeAuditResults('data-protection-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   }
-
-  writeAuditResults('data-protection-audit', findings, summary, errors, projectId);
 }
 
-runDataProtectionAudit();
+module.exports = { run };

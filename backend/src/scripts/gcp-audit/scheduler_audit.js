@@ -3,9 +3,8 @@
 // @test-results: Script runs successfully, generates valid results file with proper structure
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const { getAuthClient, getProjectId } = require('./auth');
 
-async function runSchedulerAudit() {
+async function run(projectId, tokens) {
   const findings = [];
   const errors = [];
   const summary = {
@@ -13,22 +12,17 @@ async function runSchedulerAudit() {
     passed: 0,
     failed: 0
   };
-
   try {
-    // Get auth client and project ID
-    const authClient = await getAuthClient();
-    const projectId = await getProjectId();
-    
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     // Initialize Cloud Scheduler API
     const scheduler = google.cloudscheduler({ version: 'v1', auth: authClient });
-    
     // List all valid locations
     const locationsResponse = await scheduler.projects.locations.list({
       name: `projects/${projectId}`
     });
     const locations = (locationsResponse.data.locations || []).map(loc => loc.locationId);
     console.log(`Found locations: ${locations.join(', ')}`);
-
     // List all jobs in all locations
     let jobs = [];
     for (const location of locations) {
@@ -46,13 +40,11 @@ async function runSchedulerAudit() {
       }
     }
     console.log(`Found ${jobs.length} Cloud Scheduler jobs`);
-
     // Audit each job
     for (const job of jobs) {
       try {
         // Check job configuration
         const jobConfig = job.httpTarget || job.pubsubTarget || job.appEngineHttpTarget;
-        
         // Check schedule frequency
         const schedule = job.schedule;
         if (schedule) {
@@ -67,7 +59,6 @@ async function runSchedulerAudit() {
           summary.totalChecks++;
           frequency.isOptimal ? summary.passed++ : summary.failed++;
         }
-
         // Check retry configuration
         if (jobConfig && jobConfig.retryConfig) {
           const retryAnalysis = analyzeRetryConfig(jobConfig.retryConfig);
@@ -81,7 +72,6 @@ async function runSchedulerAudit() {
           summary.totalChecks++;
           retryAnalysis.isOptimal ? summary.passed++ : summary.failed++;
         }
-
         // Check target configuration
         if (jobConfig) {
           const targetAnalysis = analyzeTargetConfig(jobConfig);
@@ -95,7 +85,6 @@ async function runSchedulerAudit() {
           summary.totalChecks++;
           targetAnalysis.isOptimal ? summary.passed++ : summary.failed++;
         }
-
         // Check timezone configuration
         if (job.timeZone) {
           const timezoneAnalysis = analyzeTimezone(job.timeZone);
@@ -117,10 +106,8 @@ async function runSchedulerAudit() {
         });
       }
     }
-
     // Write results
     await writeAuditResults('scheduler-audit', findings, summary, errors, projectId);
-    
     return {
       findings,
       summary,
@@ -132,7 +119,7 @@ async function runSchedulerAudit() {
       type: 'Fatal Error',
       error: error.message
     });
-    await writeAuditResults('scheduler-audit', findings, summary, errors, await getProjectId());
+    await writeAuditResults('scheduler-audit', findings, summary, errors, projectId);
     throw error;
   }
 }
@@ -246,5 +233,4 @@ function analyzeTimezone(timezone) {
   };
 }
 
-// Run the audit
-runSchedulerAudit().catch(console.error); 
+module.exports = { run }; 

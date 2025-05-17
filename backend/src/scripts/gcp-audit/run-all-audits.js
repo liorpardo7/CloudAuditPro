@@ -1,8 +1,6 @@
-const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { AuditValidator } = require('./audit-validator');
-const { getAuthClient, getProjectId } = require('./auth');
 
 const auditScripts = [
   // Compute & VM
@@ -86,175 +84,63 @@ const auditResults = {
 
 const scriptDir = path.join(__dirname);
 
-async function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function checkApiEnabled(projectId, apiName) {
-  try {
-    const auth = await getAuthClient();
-    const serviceusage = google.serviceusage({ version: 'v1', auth });
-    
-    const response = await serviceusage.services.get({
-      name: `projects/${projectId}/services/${apiName}`
-    });
-    
-    return response.data.state === 'ENABLED';
-  } catch (error) {
-    console.error(`Error checking API ${apiName}:`, error.message);
-    return false;
-  }
-}
-
-async function runAudit(scriptName) {
-  return new Promise((resolve, reject) => {
-    console.log(`\n=== Running ${scriptName} ===`);
-    console.log(`Started at: ${new Date().toISOString()}`);
-    
-    const scriptPath = path.join(scriptDir, scriptName);
-    const process = exec(`node ${scriptPath}`, async (error, stdout, stderr) => {
-      if (error) {
-        console.error(`\nError in ${scriptName}:`);
-        console.error(error.message);
-        if (stderr) {
-          console.error('Stderr:', stderr);
-        }
-        auditResults.audits[scriptName] = {
-          status: 'error',
-          error: error.message,
-          stderr: stderr,
-          timestamp: new Date().toISOString()
-        };
-        auditResults.summary.failed++;
-        resolve(false);
-        return;
-      }
-
-      console.log(`\n${scriptName} completed successfully`);
-      console.log('Output:', stdout);
-      
-      // Wait for 1 second to ensure the file is written
-      await sleep(1000);
-      
-      // Standardize to dash-based results file naming
-      const dashName = scriptName.replace('.js', '').replace(/_/g, '-');
-      const resultsFile = path.join(scriptDir, `${dashName}-results.json`);
-      try {
-        if (fs.existsSync(resultsFile)) {
-          const results = JSON.parse(fs.readFileSync(resultsFile, 'utf8'));
-          auditResults.audits[scriptName] = {
-            status: 'success',
-            results: results,
-            timestamp: new Date().toISOString()
-          };
-          auditResults.summary.passed++;
-        } else {
-          console.warn(`Results file not found for ${scriptName}: ${resultsFile}`);
-          auditResults.audits[scriptName] = {
-            status: 'warning',
-            error: 'Results file not found',
-            timestamp: new Date().toISOString()
-          };
-          auditResults.summary.notImplemented++;
-        }
-      } catch (readError) {
-        console.error(`Error reading results file for ${scriptName}:`, readError.message);
-        auditResults.audits[scriptName] = {
-          status: 'error',
-          error: 'Could not read results file',
-          timestamp: new Date().toISOString()
-        };
-        auditResults.summary.failed++;
-      }
-      
-      resolve(true);
-    });
-
-    process.stdout.on('data', (data) => {
-      console.log(data.toString());
-    });
-
-    process.stderr.on('data', (data) => {
-      console.error(data.toString());
-    });
-  });
-}
-
-async function runAllAudits() {
+async function runAllAudits(projectId, tokens) {
   console.log('Starting comprehensive GCP audit...');
   const validator = new AuditValidator();
-  
-  try {
-    // Get project ID and verify authentication
-    auditResults.projectId = await getProjectId();
-    console.log(`Using project ID: ${auditResults.projectId}`);
-    
-    // Initialize the validator
-    await validator.initialize();
-    
-    // Check required APIs
-    const requiredApis = [
-      'compute.googleapis.com',
-      'cloudresourcemanager.googleapis.com',
-      'orgpolicy.googleapis.com',
-      'serviceusage.googleapis.com'
-    ];
-    
-    for (const api of requiredApis) {
-      const isEnabled = await checkApiEnabled(auditResults.projectId, api);
-      if (!isEnabled) {
-        console.warn(`API ${api} is not enabled. Please enable it in the Google Cloud Console.`);
-        auditResults.summary.errors.push(`API ${api} is not enabled`);
-      }
-    }
-    
-    // Run all audit scripts
-    for (const script of auditScripts) {
-      console.log(`\nRunning ${script}...`);
-      try {
-        await runAudit(script);
-        auditResults.summary.total++;
-      } catch (error) {
-        console.error(`✗ Error in ${script}:`, error);
+  auditResults.projectId = projectId;
+  await validator.initialize();
+  for (const script of auditScripts) {
+    console.log(`\nRunning ${script}...`);
+    try {
+      const scriptPath = path.join(scriptDir, script);
+      const auditModule = require(scriptPath);
+      if (typeof auditModule.run === 'function') {
+        const result = await auditModule.run(projectId, tokens);
         auditResults.audits[script] = {
-          error: error.message,
-          status: 'failed'
+          status: 'success',
+          results: result,
+          timestamp: new Date().toISOString()
         };
-        auditResults.summary.failed++;
+        auditResults.summary.passed++;
+      } else {
+        auditResults.audits[script] = {
+          status: 'not-implemented',
+          error: 'No run(projectId, tokens) export',
+          timestamp: new Date().toISOString()
+        };
+        auditResults.summary.notImplemented++;
       }
+      auditResults.summary.total++;
+    } catch (error) {
+      console.error(`✗ Error in ${script}:`, error);
+      auditResults.audits[script] = {
+        error: error.message,
+        status: 'failed',
+        timestamp: new Date().toISOString()
+      };
+      auditResults.summary.failed++;
     }
-    
-    // Add validator results
-    const validatorResults = await validator.validateAll();
-    auditResults.validator = validatorResults;
-    
-    // Calculate overall pass rate
-    auditResults.summary.passRate = 
-      `${((auditResults.summary.passed / auditResults.summary.total) * 100).toFixed(2)}%`;
-    
-    // Save results
-    const resultsPath = path.join(__dirname, 'audit-suite-results.json');
-    fs.writeFileSync(resultsPath, JSON.stringify(auditResults, null, 2));
-    
-    console.log('\nAudit completed successfully!');
-    console.log('Results saved to:', resultsPath);
-    console.log('\nSummary:');
-    console.log(`Total Checks: ${auditResults.summary.total}`);
-    console.log(`Passed: ${auditResults.summary.passed}`);
-    console.log(`Failed: ${auditResults.summary.failed}`);
-    console.log(`Pass Rate: ${auditResults.summary.passRate}`);
-    
-    if (auditResults.summary.errors.length > 0) {
-      console.log('\nErrors:');
-      auditResults.summary.errors.forEach(error => console.log(`- ${error}`));
-    }
-    
-    return auditResults;
-  } catch (error) {
-    console.error('Error running audits:', error);
-    throw error;
   }
+  // Add validator results
+  const validatorResults = await validator.validateAll();
+  auditResults.validator = validatorResults;
+  // Write final results
+  const outputFile = path.join(scriptDir, `all-audits-results.json`);
+  fs.writeFileSync(outputFile, JSON.stringify(auditResults, null, 2));
+  console.log(`All audits complete. Results written to ${outputFile}`);
 }
 
-// Run the audits
-runAllAudits().catch(console.error); 
+// Example usage: load tokens and projectId from a config file or env
+if (require.main === module) {
+  // Replace with your actual token/projectId loading logic
+  const configPath = path.join(__dirname, 'oauth-config.json');
+  if (!fs.existsSync(configPath)) {
+    console.error('Missing oauth-config.json with { "projectId": "...", "tokens": { ... } }');
+    process.exit(1);
+  }
+  const { projectId, tokens } = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  runAllAudits(projectId, tokens).catch(err => {
+    console.error('Fatal error running all audits:', err);
+    process.exit(1);
+  });
+} 

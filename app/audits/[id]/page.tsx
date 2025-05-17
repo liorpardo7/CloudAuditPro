@@ -22,6 +22,7 @@ interface Finding {
 interface AuditDetailsData {
   id: string
   name: string
+  projectId: string
   status: string
   startedAt: string
   completedAt: string
@@ -120,6 +121,7 @@ export default function AuditDetailsPage() {
           <h2 className="text-3xl font-bold tracking-tight mt-2">{auditData.name}</h2>
           <div className="flex items-center gap-4 mt-1">
             <p className="text-muted-foreground">ID: {auditData.id}</p>
+            <p className="text-muted-foreground">Project: {auditData.projectId}</p>
             <div className="flex items-center">
               <div className="rounded-full p-1 bg-emerald-100 dark:bg-emerald-900/30">
                 <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />

@@ -81,6 +81,34 @@ class OAuthAuthenticator {
       const tokenPath = path.join(__dirname, 'oauth-tokens.json');
       fs.writeFileSync(tokenPath, JSON.stringify(tokens));
       
+      // Get project info
+      const cloudResourceManager = google.cloudresourcemanager('v1');
+      const result = await cloudResourceManager.projects.list({
+        auth: oauth2Client,
+        pageSize: 1
+      });
+      
+      if (result.data.projects && result.data.projects.length > 0) {
+        const project = result.data.projects[0];
+        this.selectedProjects = [project.projectId];
+        
+        // Save selected project
+        const projectsPath = path.join(__dirname, 'selected-projects.json');
+        fs.writeFileSync(projectsPath, JSON.stringify([project.projectId]));
+        
+        // Update frontend store
+        await fetch('http://localhost:3000/api/projects/set', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            projectId: project.projectId,
+            projectName: project.name
+          })
+        });
+      }
+      
       res.redirect('/projects');
     } catch (error) {
       console.error('Error getting tokens:', error);

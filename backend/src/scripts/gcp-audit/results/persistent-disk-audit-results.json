@@ -1,0 +1,228 @@
+{
+  "timestamp": "2025-05-17T17:37:33.997Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "type": "unencrypted_disk",
+      "disk": "auto-inventory-service-1",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "auto-inventory-service-1",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "auto-inventory-service-2",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "auto-inventory-service-2",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "cfs-service",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "cfs-service",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-us-central1-dba-inve-default-pool-de3e9d12-12qa",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-us-central1-dba-inve-default-pool-de3e9d12-819h",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-us-central1-dba-inve-default-pool-de3e9d12-8cwh",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "pvc-d1985ba8-a040-47b7-b8f5-381ece5117b6",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "pvc-d1985ba8-a040-47b7-b8f5-381ece5117b6",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "unite-google-cfs",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "unite-google-cfs",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "utility-service",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "utility-service",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "dbaops",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "dbaops",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "filemage-gateway-linux-dba-vm",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "filemage-gateway-linux-dba-vm",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "googleproductswin",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "googleproductswin",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-82va",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-ad-generator-clus-ad-prod-pool-01-31fdb5c8-f5ng",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-7ts1",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-auto-inventory-c-auto-prod-pool-0-d37a8e1a-izw6",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-dba-inventory-servic-prod-pool-01-a399e38e-5kvj",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    },
+    {
+      "type": "unencrypted_disk",
+      "disk": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "status": "warning",
+      "message": "Disk is not encrypted with CMEK (using Google-managed keys)"
+    },
+    {
+      "type": "no_snapshot",
+      "disk": "gke-dba-inventory-servic-prod-pool-01-a399e38e-yte6",
+      "status": "warning",
+      "message": "Disk has no snapshots. Consider setting up regular snapshots."
+    }
+  ],
+  "summary": {
+    "totalDisks": 18,
+    "findings": 36,
+    "errors": 0
+  },
+  "errors": []
+}

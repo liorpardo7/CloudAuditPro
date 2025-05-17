@@ -1,10 +1,7 @@
 const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
-const fs = require('fs');
-const path = require('path');
-const auth = require('./auth');
 
-async function runBigQueryAudit() {
+async function run(projectId, tokens) {
   const findings = [];
   const summary = {
     totalChecks: 0,
@@ -15,38 +12,25 @@ async function runBigQueryAudit() {
   const errors = [];
 
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     const bigquery = google.bigquery({ version: 'v2', auth: authClient });
 
     // 1. Check for stale partitioning
     try {
-      const datasetsResp = await bigquery.datasets.list({
-        projectId: projectId
-      });
+      const datasetsResp = await bigquery.datasets.list({ projectId });
       const datasets = datasetsResp.data.datasets || [];
       const stalePartitioning = [];
-      
       for (const dataset of datasets) {
-        const tablesResp = await bigquery.tables.list({
-          projectId: projectId,
-          datasetId: dataset.datasetReference.datasetId
-        });
+        const tablesResp = await bigquery.tables.list({ projectId, datasetId: dataset.datasetReference.datasetId });
         const tables = tablesResp.data.tables || [];
-        
         for (const table of tables) {
-          const tableInfo = await bigquery.tables.get({
-            projectId: projectId,
-            datasetId: dataset.datasetReference.datasetId,
-            tableId: table.tableReference.tableId
-          });
-          
+          const tableInfo = await bigquery.tables.get({ projectId, datasetId: dataset.datasetReference.datasetId, tableId: table.tableReference.tableId });
           if (tableInfo.data.timePartitioning) {
             const lastModified = new Date(tableInfo.data.lastModifiedTime);
             const now = new Date();
             const daysSinceModified = (now - lastModified) / (1000 * 60 * 60 * 24);
-            
-            if (daysSinceModified > 90) { // Consider partitions stale after 90 days
+            if (daysSinceModified > 90) {
               stalePartitioning.push({
                 dataset: dataset.datasetReference.datasetId,
                 table: table.tableReference.tableId,
@@ -57,7 +41,6 @@ async function runBigQueryAudit() {
           }
         }
       }
-      
       findings.push({
         check: 'Stale Partitioning',
         result: `${stalePartitioning.length} tables with stale partitioning`,
@@ -75,27 +58,15 @@ async function runBigQueryAudit() {
 
     // 2. Identify deprecated UDFs
     try {
-      const datasetsResp = await bigquery.datasets.list({
-        projectId: projectId
-      });
+      const datasetsResp = await bigquery.datasets.list({ projectId });
       const datasets = datasetsResp.data.datasets || [];
       const deprecatedUDFs = [];
-      
       for (const dataset of datasets) {
-        const routinesResp = await bigquery.routines.list({
-          projectId: projectId,
-          datasetId: dataset.datasetReference.datasetId
-        });
+        const routinesResp = await bigquery.routines.list({ projectId, datasetId: dataset.datasetReference.datasetId });
         const routines = routinesResp.data.routines || [];
-        
         for (const routine of routines) {
           if (routine.routineType === 'SCALAR_FUNCTION' && routine.language === 'SQL') {
-            const routineInfo = await bigquery.routines.get({
-              projectId: projectId,
-              datasetId: dataset.datasetReference.datasetId,
-              routineId: routine.routineReference.routineId
-            });
-            
+            const routineInfo = await bigquery.routines.get({ projectId, datasetId: dataset.datasetReference.datasetId, routineId: routine.routineReference.routineId });
             if (routineInfo.data.deprecationStatus) {
               deprecatedUDFs.push({
                 dataset: dataset.datasetReference.datasetId,
@@ -106,7 +77,6 @@ async function runBigQueryAudit() {
           }
         }
       }
-      
       findings.push({
         check: 'Deprecated UDFs',
         result: `${deprecatedUDFs.length} deprecated UDFs found`,
@@ -124,11 +94,7 @@ async function runBigQueryAudit() {
 
     // 3. Query optimization analysis
     try {
-      const jobsResp = await bigquery.jobs.list({
-        projectId: projectId,
-        maxResults: 100,
-        stateFilter: 'DONE'
-      });
+      const jobsResp = await bigquery.jobs.list({ projectId, maxResults: 100, stateFilter: 'DONE' });
       const jobs = jobsResp.data.jobs || [];
       const queryOptimization = jobs.map(job => ({
         jobId: job.id,
@@ -137,7 +103,6 @@ async function runBigQueryAudit() {
         slotMs: job.statistics.totalSlotMs,
         cacheHit: job.statistics.query.cacheHit
       }));
-      
       findings.push({
         check: 'Query Optimization',
         result: `${queryOptimization.length} recent queries analyzed`,
@@ -155,27 +120,15 @@ async function runBigQueryAudit() {
 
     // 4. BigQuery cost optimization
     try {
-      const datasetsResp = await bigquery.datasets.list({
-        projectId: projectId
-      });
+      const datasetsResp = await bigquery.datasets.list({ projectId });
       const datasets = datasetsResp.data.datasets || [];
       const costOptimization = [];
-      
       for (const dataset of datasets) {
-        const tablesResp = await bigquery.tables.list({
-          projectId: projectId,
-          datasetId: dataset.datasetReference.datasetId
-        });
+        const tablesResp = await bigquery.tables.list({ projectId, datasetId: dataset.datasetReference.datasetId });
         const tables = tablesResp.data.tables || [];
-        
         for (const table of tables) {
-          const tableInfo = await bigquery.tables.get({
-            projectId: projectId,
-            datasetId: dataset.datasetReference.datasetId,
-            tableId: table.tableReference.tableId
-          });
-          
-          if (tableInfo.data.numBytes > 1024 * 1024 * 1024) { // Tables larger than 1GB
+          const tableInfo = await bigquery.tables.get({ projectId, datasetId: dataset.datasetReference.datasetId, tableId: table.tableReference.tableId });
+          if (tableInfo.data.numBytes > 1024 * 1024 * 1024) {
             costOptimization.push({
               dataset: dataset.datasetReference.datasetId,
               table: table.tableReference.tableId,
@@ -186,7 +139,6 @@ async function runBigQueryAudit() {
           }
         }
       }
-      
       findings.push({
         check: 'Cost Optimization',
         result: `${costOptimization.length} large tables identified`,
@@ -196,7 +148,7 @@ async function runBigQueryAudit() {
       summary.totalChecks++;
       summary.passed += costOptimization.length === 0 ? 1 : 0;
       summary.failed += costOptimization.length === 0 ? 0 : 1;
-  } catch (err) {
+    } catch (err) {
       errors.push({ check: 'Cost Optimization', error: err.message });
       summary.failed++;
       summary.totalChecks++;
@@ -204,18 +156,11 @@ async function runBigQueryAudit() {
 
     // 5. Dataset access controls review
     try {
-      const datasetsResp = await bigquery.datasets.list({
-        projectId: projectId
-      });
+      const datasetsResp = await bigquery.datasets.list({ projectId });
       const datasets = datasetsResp.data.datasets || [];
       const accessControls = [];
-      
       for (const dataset of datasets) {
-        const datasetInfo = await bigquery.datasets.get({
-          projectId: projectId,
-          datasetId: dataset.datasetReference.datasetId
-        });
-        
+        const datasetInfo = await bigquery.datasets.get({ projectId, datasetId: dataset.datasetReference.datasetId });
         accessControls.push({
           dataset: dataset.datasetReference.datasetId,
           access: datasetInfo.data.access,
@@ -223,7 +168,6 @@ async function runBigQueryAudit() {
           labels: datasetInfo.data.labels
         });
       }
-      
       findings.push({
         check: 'Dataset Access Controls',
         result: `${accessControls.length} datasets reviewed`,
@@ -241,11 +185,7 @@ async function runBigQueryAudit() {
 
     // 6. BigQuery job monitoring
     try {
-      const jobsResp = await bigquery.jobs.list({
-        projectId: projectId,
-        maxResults: 100,
-        stateFilter: 'RUNNING'
-      });
+      const jobsResp = await bigquery.jobs.list({ projectId, maxResults: 100, stateFilter: 'RUNNING' });
       const jobs = jobsResp.data.jobs || [];
       const jobMonitoring = jobs.map(job => ({
         jobId: job.id,
@@ -256,7 +196,6 @@ async function runBigQueryAudit() {
         totalBytesProcessed: job.statistics.totalBytesProcessed,
         totalSlotMs: job.statistics.totalSlotMs
       }));
-      
       findings.push({
         check: 'Job Monitoring',
         result: `${jobMonitoring.length} running jobs`,
@@ -272,11 +211,13 @@ async function runBigQueryAudit() {
       summary.totalChecks++;
     }
 
+    await writeAuditResults('bigquery-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (err) {
     errors.push({ check: 'BigQuery Audit', error: err.message });
+    await writeAuditResults('bigquery-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   }
-
-  writeAuditResults('bigquery-audit', findings, summary, errors, projectId);
 }
 
-runBigQueryAudit(); 
+module.exports = { run }; 

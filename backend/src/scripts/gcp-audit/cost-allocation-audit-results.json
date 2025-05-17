@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-05-17T15:52:03.341Z",
+  "projectId": "cloudauditpro",
+  "findings": [
+    {
+      "category": "Cost Allocation",
+      "issue": "Failed to audit project",
+      "recommendation": "Check API permissions and try again",
+      "severity": "medium",
+      "impact": "Cost allocation and resource management"
+    }
+  ],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "message": "Login Required.",
+      "project": "dba-inventory-services-prod"
+    }
+  ]
+}

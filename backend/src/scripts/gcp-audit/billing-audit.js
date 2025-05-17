@@ -1,10 +1,9 @@
 const { google } = require('googleapis');
-const { getAuthClient, getProjectId } = require('./auth');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
 
-async function runBillingAudit() {
+async function run(projectId, tokens) {
   const findings = [];
   const summary = {
     totalChecks: 0,
@@ -13,16 +12,13 @@ async function runBillingAudit() {
     costSavingsPotential: 0
   };
   const errors = [];
-
   try {
-    // Get project ID and auth client
-    const projectId = await getProjectId();
-    const auth = await getAuthClient();
-    
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     // Initialize clients
-    const billingClient = google.cloudbilling({ version: 'v1', auth });
-    const computeClient = google.compute({ version: 'v1', auth });
-    const monitoring = google.monitoring({ version: 'v3', auth });
+    const billingClient = google.cloudbilling({ version: 'v1', auth: authClient });
+    const computeClient = google.compute({ version: 'v1', auth: authClient });
+    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
 
     // 1. List all billing accounts
     try {
@@ -99,14 +95,12 @@ async function runBillingAudit() {
     try {
       const now = new Date();
       const startTime = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // Last 7 days
+      const endTime = now;
       const idleResourcesResp = await monitoring.projects.timeSeries.list({
         name: `projects/${projectId}`,
         filter: 'metric.type = "compute.googleapis.com/instance/cpu/utilization"',
-        'interval.startTime': startTime.toISOString(),
-        'interval.endTime': now.toISOString(),
-        'aggregation.alignmentPeriod': '3600s',
-        'aggregation.crossSeriesReducer': 'REDUCE_MEAN',
-        'aggregation.perSeriesAligner': 'ALIGN_MEAN'
+        'interval.startTime': startTime,
+        'interval.endTime': endTime
       });
       const idleResources = idleResourcesResp.data.timeSeries || [];
       findings.push({
@@ -153,14 +147,12 @@ async function runBillingAudit() {
     try {
       const now = new Date();
       const startTime = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); // Last 30 days
+      const endTime = now;
       const costResp = await monitoring.projects.timeSeries.list({
         name: `projects/${projectId}`,
         filter: 'metric.type = "billing.googleapis.com/consumption/cost"',
-        'interval.startTime': startTime.toISOString(),
-        'interval.endTime': now.toISOString(),
-        'aggregation.alignmentPeriod': '86400s',
-        'aggregation.crossSeriesReducer': 'REDUCE_SUM',
-        'aggregation.perSeriesAligner': 'ALIGN_SUM'
+        'interval.startTime': startTime,
+        'interval.endTime': endTime
       });
       const costData = costResp.data.timeSeries || [];
       findings.push({
@@ -181,18 +173,17 @@ async function runBillingAudit() {
       summary.totalChecks++;
     }
 
-    // Write results at the end
-    writeAuditResults('billing-audit', findings, summary, errors, projectId);
-    
+    await writeAuditResults('billing-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (error) {
     console.error('Error in billing audit:', error);
     errors.push({
       check: 'Billing Audit',
       error: error.message
     });
-    writeAuditResults('billing-audit', findings, summary, errors, await getProjectId());
+    await writeAuditResults('billing-audit', findings, summary, errors, projectId);
+    throw error;
   }
 }
 
-// Run the audit
-runBillingAudit().catch(console.error);
+module.exports = { run };

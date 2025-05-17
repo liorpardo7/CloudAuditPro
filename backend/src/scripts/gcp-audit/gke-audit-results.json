@@ -1,0 +1,549 @@
+{
+  "timestamp": "2025-05-14T14:34:39.176Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [
+    {
+      "check": "GKE Clusters",
+      "result": "4 clusters found",
+      "passed": true
+    },
+    {
+      "cluster": "us-central1-dba-inventory-s-284706cf-gke",
+      "findings": [
+        {
+          "check": "Maintenance Window",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Private Cluster",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Workload Identity",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Network Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Binary Authorization",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Pod Security Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Image Scanning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster Security Posture",
+          "result": "0/5 controls enabled",
+          "passed": false
+        },
+        {
+          "check": "Logging Service",
+          "result": "logging.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Monitoring Service",
+          "result": "monitoring.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Node Pool Size",
+          "result": 3,
+          "passed": true
+        },
+        {
+          "check": "Cluster Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Vertical Pod Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Resource Usage Export",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Auto-Provisioning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster CPU Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Cluster Memory Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Pod Disruption Budgets",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "Cost-Optimized Node Pool",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "GKE Workload (Pod) Right-Sizing",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "GKE Idle/Underutilized Node Pool Detection",
+          "result": "not implemented",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "cluster": "ad-generator-cluster",
+      "findings": [
+        {
+          "check": "Maintenance Window",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Private Cluster",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Workload Identity",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Network Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Binary Authorization",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Pod Security Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Image Scanning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster Security Posture",
+          "result": "1/5 controls enabled",
+          "passed": false
+        },
+        {
+          "check": "Logging Service",
+          "result": "logging.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Monitoring Service",
+          "result": "monitoring.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Node Pool Size",
+          "result": 2,
+          "passed": true
+        },
+        {
+          "check": "Cluster Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Vertical Pod Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Resource Usage Export",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Auto-Provisioning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster CPU Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Cluster Memory Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Pod Disruption Budgets",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "Cost-Optimized Node Pool",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "GKE Workload (Pod) Right-Sizing",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "GKE Idle/Underutilized Node Pool Detection",
+          "result": "not implemented",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "cluster": "auto-inventory-cluster",
+      "findings": [
+        {
+          "check": "Maintenance Window",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Private Cluster",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Workload Identity",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Network Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Binary Authorization",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Pod Security Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Image Scanning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster Security Posture",
+          "result": "1/5 controls enabled",
+          "passed": false
+        },
+        {
+          "check": "Logging Service",
+          "result": "logging.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Monitoring Service",
+          "result": "monitoring.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Node Pool Size",
+          "result": 2,
+          "passed": true
+        },
+        {
+          "check": "Cluster Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Vertical Pod Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Resource Usage Export",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Auto-Provisioning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster CPU Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Cluster Memory Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Pod Disruption Budgets",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "Cost-Optimized Node Pool",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "GKE Workload (Pod) Right-Sizing",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "GKE Idle/Underutilized Node Pool Detection",
+          "result": "not implemented",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "cluster": "dba-inventory-services-prod-cluster",
+      "findings": [
+        {
+          "check": "Maintenance Window",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Private Cluster",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Workload Identity",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "Network Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Binary Authorization",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Pod Security Policy",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Image Scanning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster Security Posture",
+          "result": "1/5 controls enabled",
+          "passed": false
+        },
+        {
+          "check": "Logging Service",
+          "result": "logging.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Monitoring Service",
+          "result": "monitoring.googleapis.com/kubernetes",
+          "passed": true
+        },
+        {
+          "check": "Node Pool Size",
+          "result": 2,
+          "passed": true
+        },
+        {
+          "check": "Cluster Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Vertical Pod Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Resource Usage Export",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Auto-Provisioning",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Cluster CPU Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Cluster Memory Utilization",
+          "result": "data found",
+          "passed": true
+        },
+        {
+          "check": "Pod Disruption Budgets",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "Cost-Optimized Node Pool",
+          "result": true,
+          "passed": true
+        },
+        {
+          "check": "GKE Workload (Pod) Right-Sizing",
+          "result": "not implemented",
+          "passed": false
+        },
+        {
+          "check": "GKE Idle/Underutilized Node Pool Detection",
+          "result": "not implemented",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "cluster": "us-central1-dba-inventory-s-284706cf-gke",
+      "nodePool": "default-pool",
+      "findings": [
+        {
+          "check": "Node Pool Size",
+          "result": 3,
+          "passed": true
+        },
+        {
+          "check": "Node Pool Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Pool Management (AutoUpgrade/AutoRepair)",
+          "result": true,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "cluster": "ad-generator-cluster",
+      "nodePool": "ad-prod-pool-01",
+      "findings": [
+        {
+          "check": "Node Pool Size",
+          "result": 2,
+          "passed": true
+        },
+        {
+          "check": "Node Pool Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Pool Management (AutoUpgrade/AutoRepair)",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "cluster": "auto-inventory-cluster",
+      "nodePool": "auto-prod-pool-01",
+      "findings": [
+        {
+          "check": "Node Pool Size",
+          "result": 2,
+          "passed": true
+        },
+        {
+          "check": "Node Pool Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Pool Management (AutoUpgrade/AutoRepair)",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "cluster": "dba-inventory-services-prod-cluster",
+      "nodePool": "prod-pool-01",
+      "findings": [
+        {
+          "check": "Node Pool Size",
+          "result": 2,
+          "passed": true
+        },
+        {
+          "check": "Node Pool Autoscaling",
+          "result": false,
+          "passed": false
+        },
+        {
+          "check": "Node Pool Management (AutoUpgrade/AutoRepair)",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "check": "Cluster CPU Utilization",
+      "result": "data found",
+      "passed": true
+    },
+    {
+      "check": "Cluster Memory Utilization",
+      "result": "data found",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "totalChecks": 99,
+    "passed": 38,
+    "failed": 61,
+    "costSavingsPotential": 0
+  },
+  "errors": []
+}

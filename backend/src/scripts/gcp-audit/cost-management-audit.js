@@ -1,28 +1,19 @@
 const { google } = require('googleapis');
-const { getAuthClient, getProjectId } = require('./auth');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
 
-async function runCostManagementAudit() {
+async function run(projectId, tokens) {
   const findings = [];
-  const summary = {
-    totalChecks: 0,
-    passed: 0,
-    failed: 0,
-    costSavingsPotential: 0
-  };
+  const summary = { totalChecks: 0, passed: 0, failed: 0, costSavingsPotential: 0 };
   const errors = [];
-
   try {
-    // Get project ID and auth client
-    const projectId = await getProjectId();
-    const auth = await getAuthClient();
-    
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     // Initialize APIs
-    const compute = google.compute({ version: 'v1', auth });
-    const cloudbilling = google.cloudbilling({ version: 'v1', auth });
-    const monitoring = google.monitoring({ version: 'v3', auth });
+    const compute = google.compute({ version: 'v1', auth: authClient });
+    const cloudbilling = google.cloudbilling({ version: 'v1', auth: authClient });
+    const monitoring = google.monitoring({ version: 'v3', auth: authClient });
 
     // 1. Check for idle VMs
     try {
@@ -250,18 +241,17 @@ async function runCostManagementAudit() {
       summary.totalChecks++;
     }
 
-    // Write results at the end
-    writeAuditResults('cost-management-audit', findings, summary, errors, projectId);
-    
+    await writeAuditResults('cost-management-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (error) {
     console.error('Error in cost management audit:', error);
     errors.push({
       check: 'Cost Management Audit',
       error: error.message
     });
-    writeAuditResults('cost-management-audit', findings, summary, errors, await getProjectId());
+    await writeAuditResults('cost-management-audit', findings, summary, errors, projectId);
+    throw error;
   }
 }
 
-// Run the audit
-runCostManagementAudit().catch(console.error); 
+module.exports = { run }; 

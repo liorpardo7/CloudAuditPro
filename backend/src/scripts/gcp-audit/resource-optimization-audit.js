@@ -2,9 +2,8 @@ const { google } = require('googleapis');
 const { writeAuditResults } = require('./writeAuditResults');
 const fs = require('fs');
 const path = require('path');
-const auth = require('./auth');
 
-async function runResourceOptimizationAudit() {
+async function run(projectId, tokens) {
   const findings = [];
   const errors = [];
   const summary = {
@@ -18,27 +17,23 @@ async function runResourceOptimizationAudit() {
     idleResources: 0,
     optimizedResources: 0
   };
-
   try {
-    const authClient = auth.getAuthClient();
-    const projectId = auth.getProjectId();
+    const authClient = new google.auth.OAuth2();
+    authClient.setCredentials(tokens);
     // Initialize APIs
     const compute = google.compute({ version: 'v1', auth: authClient });
     const monitoring = google.monitoring({ version: 'v3', auth: authClient });
     const recommender = google.recommender({ version: 'v1', auth: authClient });
-
     // 1. Check for VM instance recommendations
     try {
       const zonesResp = await compute.zones.list({ project: projectId });
       const zones = zonesResp.data.items || [];
       const vmRecommendations = [];
-
       for (const zone of zones) {
         const recommendationsResp = await recommender.projects.locations.recommenders.recommendations.list({
           parent: `projects/${projectId}/locations/${zone.name}/recommenders/google.compute.instance.MachineTypeRecommender`
         });
         const recommendations = recommendationsResp.data.recommendations || [];
-
         for (const recommendation of recommendations) {
           vmRecommendations.push({
             resourceName: recommendation.content.operationGroups[0].operations[0].resource,
@@ -50,7 +45,6 @@ async function runResourceOptimizationAudit() {
           });
         }
       }
-
       findings.push({
         check: 'VM Instance Recommendations',
         result: `${vmRecommendations.length} VM optimization recommendations found`,
@@ -70,19 +64,16 @@ async function runResourceOptimizationAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 2. Check for disk recommendations
     try {
       const zonesResp = await compute.zones.list({ project: projectId });
       const zones = zonesResp.data.items || [];
       const diskRecommendations = [];
-
       for (const zone of zones) {
         const recommendationsResp = await recommender.projects.locations.recommenders.recommendations.list({
           parent: `projects/${projectId}/locations/${zone.name}/recommenders/google.compute.disk.IdleResourceRecommender`
         });
         const recommendations = recommendationsResp.data.recommendations || [];
-
         for (const recommendation of recommendations) {
           diskRecommendations.push({
             resourceName: recommendation.content.operationGroups[0].operations[0].resource,
@@ -93,7 +84,6 @@ async function runResourceOptimizationAudit() {
           });
         }
       }
-
       findings.push({
         check: 'Disk Recommendations',
         result: `${diskRecommendations.length} disk optimization recommendations found`,
@@ -113,7 +103,6 @@ async function runResourceOptimizationAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 3. Check for committed use discounts
     try {
       const commitmentsResp = await compute.regionCommitments.list({
@@ -121,14 +110,12 @@ async function runResourceOptimizationAudit() {
       });
       const commitments = commitmentsResp.data.items || [];
       const commitmentRecommendations = [];
-
       for (const commitment of commitments) {
         if (commitment.status === 'ACTIVE') {
           const recommendationsResp = await recommender.projects.locations.recommenders.recommendations.list({
             parent: `projects/${projectId}/locations/${commitment.region}/recommenders/google.compute.commitment.UsageCommitmentRecommender`
           });
           const recommendations = recommendationsResp.data.recommendations || [];
-
           for (const recommendation of recommendations) {
             commitmentRecommendations.push({
               resourceName: recommendation.content.operationGroups[0].operations[0].resource,
@@ -140,7 +127,6 @@ async function runResourceOptimizationAudit() {
           }
         }
       }
-
       findings.push({
         check: 'Committed Use Discount Recommendations',
         result: `${commitmentRecommendations.length} commitment optimization recommendations found`,
@@ -160,7 +146,6 @@ async function runResourceOptimizationAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 4. Check for IAM recommendations
     try {
       const recommendationsResp = await recommender.projects.locations.recommenders.recommendations.list({
@@ -172,7 +157,6 @@ async function runResourceOptimizationAudit() {
         recommendation: recommendation.description,
         impact: recommendation.primaryImpact.category
       }));
-
       findings.push({
         check: 'IAM Recommendations',
         result: `${iamRecommendations.length} IAM optimization recommendations found`,
@@ -187,7 +171,6 @@ async function runResourceOptimizationAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
     // 5. Check for service account recommendations
     try {
       const recommendationsResp = await recommender.projects.locations.recommenders.recommendations.list({
@@ -199,7 +182,6 @@ async function runResourceOptimizationAudit() {
         recommendation: recommendation.description,
         impact: recommendation.primaryImpact.category
       }));
-
       findings.push({
         check: 'Service Account Recommendations',
         result: `${serviceAccountRecommendations.length} service account optimization recommendations found`,
@@ -214,21 +196,14 @@ async function runResourceOptimizationAudit() {
       summary.failed++;
       summary.totalChecks++;
     }
-
-    const results = {
-      findings,
-      summary,
-      metrics,
-      errors,
-      timestamp: new Date().toISOString(),
-      projectId
-    };
-    writeAuditResults('resource-optimization-audit', findings, summary, errors, projectId, metrics);
-    return results;
+    // Write results
+    await writeAuditResults('resource-optimization-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   } catch (error) {
     errors.push({ error: error.message });
-    return { findings, summary, metrics, errors, timestamp: new Date().toISOString() };
+    await writeAuditResults('resource-optimization-audit', findings, summary, errors, projectId);
+    return { findings, summary, errors };
   }
 }
 
-runResourceOptimizationAudit(); 
+module.exports = { run }; 
