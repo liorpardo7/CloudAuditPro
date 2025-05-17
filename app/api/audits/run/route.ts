@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 import { spawn } from 'child_process'
-import { updateJobStatus } from '../store'
+import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import path from 'path'
+
+const prisma = new PrismaClient()
 
 // Map of categories to their script files
 const CATEGORY_TO_SCRIPT: Record<string, string> = {
@@ -30,120 +32,94 @@ const CATEGORY_TO_SCRIPT: Record<string, string> = {
 
 export async function POST(request: Request) {
   try {
-    const { projectId, category } = await request.json()
+    const { projectId, category, userId = 'demo-user' } = await request.json()
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 })
     }
-    
-    // Validate category
     const cat = category || 'all'
     const script = CATEGORY_TO_SCRIPT[cat]
     if (!script) {
       return NextResponse.json(
-        { error: `Invalid category: ${category}. Must be one of: ${Object.keys(CATEGORY_TO_SCRIPT).join(', ')}` }, 
+        { error: `Invalid category: ${category}. Must be one of: ${Object.keys(CATEGORY_TO_SCRIPT).join(', ')}` },
         { status: 400 }
       )
     }
-    
-    const jobId = `job_${projectId}_${cat}_${Date.now()}`
-
-    // Initialize job status
-    updateJobStatus(jobId, { 
-      status: 'running', 
-      started: Date.now(),
-      currentStep: 'Starting audit...',
-      progress: 0,
-      projectId
+    // Create AuditJob in DB
+    const job = await prisma.auditjob.create({
+      data: {
+        projectId,
+        userId,
+        category: cat,
+        status: 'running',
+      },
     })
-
+    const jobId = job.id
     // Always use the test service account key
     const credentialPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json')
     if (!fs.existsSync(credentialPath)) {
-      updateJobStatus(jobId, {
-        status: 'error',
-        error: 'Test service account key not found at backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json'
-      })
-      return NextResponse.json({ 
-        jobId,
-        error: 'Test service account key not found'
-      }, { status: 400 })
+      await prisma.auditjob.update({ where: { id: jobId }, data: { status: 'error', error: 'Test service account key not found at backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json' } })
+      return NextResponse.json({ jobId, error: 'Test service account key not found' }, { status: 400 })
     }
-
-    // Define the script directory for the audit scripts
     const scriptDir = path.join(process.cwd(), 'backend/src/scripts/gcp-audit');
-    
-    // Create a properly typed environment object
     const scriptEnv: NodeJS.ProcessEnv = {
       ...process.env,
       GOOGLE_APPLICATION_CREDENTIALS: credentialPath,
       GCP_PROJECT_ID: projectId,
-      NODE_ENV: 'production'
+      NODE_ENV: 'production',
     }
-
     console.log(`Running audit: ${script} for project ${projectId} with credentials ${credentialPath}`)
-
-    // Spawn the audit script with proper TypeScript types
     const proc = spawn('node', [script], {
       cwd: scriptDir,
       env: scriptEnv,
       stdio: 'pipe',
-      detached: true
+      detached: true,
     })
-
-    // Capture output for debugging
     let stdoutData = ''
     let stderrData = ''
-
     proc.stdout?.on('data', (data: Buffer) => {
       const dataStr = data.toString()
       stdoutData += dataStr
-      
-      // Try to parse progress data if available
-      try {
-        const progressMatch = dataStr.match(/Progress: (\d+)%\s+(.+)/)
-        if (progressMatch) {
-          const progress = parseInt(progressMatch[1], 10)
-          const currentStep = progressMatch[2]
-          updateJobStatus(jobId, { progress, currentStep })
-        }
-      } catch (e) {
-        // Ignore parse errors
-      }
     })
-
     proc.stderr?.on('data', (data: Buffer) => {
       const dataStr = data.toString()
       stderrData += dataStr
       console.error(`Audit stderr: ${dataStr}`)
     })
-
-    proc.on('exit', (code: number | null) => {
+    proc.on('exit', async (code: number | null) => {
       console.log(`Audit completed with code ${code}`)
       if (code === 0) {
-        updateJobStatus(jobId, {
-          status: 'completed',
-          progress: 100,
-          currentStep: 'Audit completed successfully',
-          stdout: stdoutData,
-          completed: Date.now()
+        // Try to read results file if it exists
+        let resultJson: string | null = null
+        const resultsFile = path.join(scriptDir, `${cat.replace(/_/g, '-')}-results.json`)
+        if (fs.existsSync(resultsFile)) {
+          try {
+            resultJson = fs.readFileSync(resultsFile, 'utf-8')
+          } catch (e) {
+            resultJson = null
+          }
+        }
+        await prisma.auditjob.update({
+          where: { id: jobId },
+          data: {
+            status: 'completed',
+            completed: new Date(),
+            result: resultJson,
+          },
         })
       } else {
-        updateJobStatus(jobId, {
-          status: 'error',
-          error: `Script exited with code ${code}: ${stderrData}`,
-          stdout: stdoutData,
-          stderr: stderrData
+        await prisma.auditjob.update({
+          where: { id: jobId },
+          data: {
+            status: 'error',
+            error: `Script exited with code ${code}: ${stderrData}`,
+          },
         })
       }
     })
-
     proc.unref()
-
     return NextResponse.json({ jobId })
   } catch (error) {
     console.error('Error running audit:', error)
-    return NextResponse.json({ 
-      error: `Failed to run audit: ${error instanceof Error ? error.message : String(error)}` 
-    }, { status: 500 })
+    return NextResponse.json({ error: `Failed to run audit: ${error instanceof Error ? error.message : String(error)}` }, { status: 500 })
   }
 } 
