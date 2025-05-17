@@ -59,3 +59,15 @@ model AuditItem {
   lastRun     DateTime?
   lastResult  String?      // JSON string containing last audit results
 }
+
+model AuditJob {
+  id        String   @id @default(uuid())
+  projectId String
+  userId    String
+  category  String
+  status    String   // 'running', 'completed', 'error'
+  result    String?  // JSON string with results
+  started   DateTime @default(now())
+  completed DateTime?
+  error     String?
+}
