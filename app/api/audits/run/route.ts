@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import path from 'path'
+import { verifyCsrf } from '@/lib/csrf'
+import { rateLimit } from '@/lib/rate-limit'
 
 const prisma = new PrismaClient()
 
@@ -29,6 +31,10 @@ const CATEGORY_TO_SCRIPT: Record<string, string> = {
 }
 
 export async function POST(request: Request) {
+  const rateLimitError = rateLimit(request, { limit: 5, windowMs: 60_000 })
+  if (rateLimitError) return rateLimitError
+  const csrfError = verifyCsrf(request)
+  if (csrfError) return csrfError
   try {
     const { projectId, category, userId = 'demo-user' } = await request.json()
     if (!projectId) {

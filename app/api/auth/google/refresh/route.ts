@@ -1,11 +1,18 @@
-import { NextResponse } from 'next/server';
+// @ts-ignore: No type definitions for 'cookie'
 import { serialize } from 'cookie';
+import { NextResponse } from 'next/server';
 import { cookies as nextCookies } from 'next/headers';
+import { verifyCsrf } from '@/lib/csrf';
+import { rateLimit } from '@/lib/rate-limit';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 export async function POST(request: Request) {
+  const rateLimitError = rateLimit(request, { limit: 5, windowMs: 60_000 });
+  if (rateLimitError) return rateLimitError;
+  const csrfError = verifyCsrf(request);
+  if (csrfError) return csrfError;
   // Refresh the access token using the refresh token from the cookie
   const cookieStore = nextCookies();
   const refreshToken = cookieStore.get('refresh_token')?.value;

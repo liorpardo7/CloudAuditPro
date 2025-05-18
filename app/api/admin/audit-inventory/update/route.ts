@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { verifyCsrf } from '@/lib/csrf';
+import { rateLimit } from '@/lib/rate-limit';
 
 const prisma = new PrismaClient();
 
@@ -14,6 +16,12 @@ type UpdateRequest = {
 };
 
 export async function POST(request: Request) {
+  const rateLimitError = rateLimit(request, { limit: 10, windowMs: 60_000 });
+  if (rateLimitError) return rateLimitError;
+
+  const csrfError = verifyCsrf(request);
+  if (csrfError) return csrfError;
+
   try {
     const body: UpdateRequest = await request.json();
     const { category, name, updates } = body;

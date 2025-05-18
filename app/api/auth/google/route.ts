@@ -29,6 +29,7 @@ export async function GET(request: Request) {
     `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
     `&response_type=code` +
     `&scope=${encodeURIComponent(
+      'openid email profile ' +
       'https://www.googleapis.com/auth/cloud-platform.read-only ' +
       'https://www.googleapis.com/auth/cloud-billing.readonly ' +
       'https://www.googleapis.com/auth/logging.read'

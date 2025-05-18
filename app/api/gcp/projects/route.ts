@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { cookies } from 'next/headers';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 // Helper to get the Resource Manager client
 const getResourceManager = async (accessToken: string) => {
@@ -10,12 +13,25 @@ const getResourceManager = async (accessToken: string) => {
 };
 
 export async function GET(req: NextRequest) {
-  // Read access_token from HTTP-only cookie
+  // Read session_id from HTTP-only cookie
   const cookieStore = cookies();
-  const accessToken = cookieStore.get('access_token')?.value;
-  if (!accessToken) {
-    return NextResponse.json({ error: 'Missing or invalid access token cookie' }, { status: 401 });
+  const sessionId = cookieStore.get('session_id')?.value;
+  if (!sessionId) {
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId },
+    include: { user: { include: { projects: { include: { tokens: true } } } } },
+  });
+  if (!session || !session.user) {
+    return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
+  }
+  // Use the first project's access token for demonstration (can be improved)
+  const userProjects = session.user.projects;
+  if (!userProjects.length || !userProjects[0].tokens.length) {
+    return NextResponse.json({ error: 'No projects or tokens found for user' }, { status: 404 });
+  }
+  const accessToken = userProjects[0].tokens[0].accessToken;
 
   try {
     const resourceManager = await getResourceManager(accessToken);

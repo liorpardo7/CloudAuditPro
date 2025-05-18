@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from 'react'
+import { useProjectStore } from '@/lib/store'
 
 interface Project {
   id: string
@@ -35,6 +36,7 @@ const AUDIT_CATEGORIES = [
 ]
 
 export default function SettingsPage() {
+  const { selectedProject } = useProjectStore()
   const [projects, setProjects] = React.useState<Project[]>([])
   const [isAddProjectOpen, setIsAddProjectOpen] = React.useState(false)
   const [addProjectInitialStep, setAddProjectInitialStep] = React.useState<'start' | 'select'>('start')
@@ -49,11 +51,17 @@ export default function SettingsPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   React.useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      setAddProjectInitialStep('select');
-      setIsAddProjectOpen(true);
-    }
-  }, [searchParams]);
+    // Fetch user and projects from /api/auth/me
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.projects) {
+          setProjects(data.user.projects)
+        }
+        setIsAuthenticated(true)
+      })
+      .catch(() => setIsAuthenticated(false))
+  }, [])
 
   // Poll for audit status
   React.useEffect(() => {
@@ -89,41 +97,6 @@ export default function SettingsPage() {
     interval = setInterval(poll, 2000)
     return () => clearInterval(interval)
   }, [runningJob, router, toast])
-
-  useEffect(() => {
-    // On mount, check if user is authenticated
-    fetch('/api/auth/status', { credentials: 'include' })
-      .then(res => {
-        if (res.ok) setIsAuthenticated(true);
-        else setIsAuthenticated(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const accessToken = url.searchParams.get('access_token');
-    if (accessToken) {
-      // Exchange Google access token for session cookie
-      fetch('/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ googleAccessToken: accessToken }),
-        credentials: 'include',
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            localStorage.removeItem('google_access_token');
-            url.searchParams.delete('access_token');
-            window.history.replaceState({}, document.title, url.pathname + url.search);
-            setAddProjectInitialStep('select');
-            setIsAddProjectOpen(true);
-          } else {
-            window.location.href = '/api/auth/google';
-          }
-        });
-    }
-  }, []);
 
   const handleLogout = async () => {
     await fetch('/auth/logout', { method: 'POST', credentials: 'include' });

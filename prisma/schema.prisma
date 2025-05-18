@@ -6,12 +6,24 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
+  // output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  googleId  String   @unique
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  projects  Project[]
+  sessions  Session[]
+  auditLogs AuditLog[]
 }
 
 model Project {
@@ -20,6 +32,7 @@ model Project {
   status    String   // 'active' | 'inactive'
   lastSync  DateTime
   userId    String
+  user      User     @relation(fields: [userId], references: [id])
   tokens    OAuthToken[]
 }
 
@@ -58,5 +71,33 @@ model AuditItem {
   updatedAt   DateTime     @updatedAt
   lastRun     DateTime?
   lastResult  String?      // JSON string containing last audit results
-  @@unique([categoryId, name])
+}
+
+model AuditJob {
+  id        String   @id @default(uuid())
+  projectId String
+  userId    String
+  category  String
+  status    String   // 'running', 'completed', 'error'
+  result    String?  // JSON string with results
+  started   DateTime @default(now())
+  completed DateTime?
+  error     String?
+}
+
+model Session {
+  id        String   @id // session ID (random hex)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
 }
