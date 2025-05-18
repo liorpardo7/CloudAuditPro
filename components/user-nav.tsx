@@ -63,7 +63,12 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () => {
+            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.href = '/api/auth/google';
+          }}
+        >
           <svg
             className="mr-2 h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"

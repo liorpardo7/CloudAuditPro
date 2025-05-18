@@ -11,6 +11,48 @@ const CHECKLIST_PATH = path.resolve(__dirname, '../../../../GCP_AUDIT_CHECKLIST.
 const CREDENTIALS_PATH = path.join(__dirname, 'dba-inventory-services-prod-8a97ca8265b5.json');
 const OUTPUT_DIR = __dirname;
 
+// BEGIN: Use the full auditScripts list from run-all-audits.js
+const auditScripts = [
+  'compute-audit.js',
+  'persistent-disk-audit.js',
+  'serverless-audit.js',
+  'gke-audit.js',
+  'storage-audit.js',
+  'storage_folder_lifecycle.js',
+  'storage-lifecycle-audit.js',
+  // 'storage-advanced-audit.js', // Uncomment if active
+  'bigquery_deep_dive.js',
+  'bigquery-audit.js',
+  'cloudsql_audit.js',
+  'data-protection-audit.js',
+  'networking-audit.js',
+  'idle_external_ips.js',
+  'iam-audit.js',
+  'security-audit.js',
+  'securitycenter-audit.js',
+  'org-policy-audit.js',
+  'permissions-audit.js',
+  'monitoring-audit.js',
+  'cost-audit.js',
+  'cost-allocation-audit.js',
+  'cost-management-audit.js',
+  'billing-audit.js',
+  'discount-audit.js',
+  'budget-audit.js',
+  'resource-utilization-audit.js',
+  'resource-optimization-audit.js',
+  'devops-audit.js',
+  'compliance-audit.js',
+  'pubsub_audit.js',
+  'scheduler_audit.js',
+  'composer_dag_audit.js',
+  'cross_project_audit.js',
+  'label_consistency.js',
+  'recommendations_engine.js',
+  'advanced_audits.js',
+];
+// END: Use the full auditScripts list from run-all-audits.js
+
 // Map checklist items to audit scripts (expand as needed)
 const AUDIT_SCRIPT_MAP = {
   'VM Instance Inventory': 'compute-audit.js',
@@ -314,18 +356,22 @@ async function runAuditScript(scriptName, projectId, tokens) {
       throw new Error(`Script ${scriptName} does not export a run(projectId, tokens) function.`);
     }
     const result = await scriptModule.run(projectId, tokens);
+    console.log(`SUCCESS: ${scriptName} completed at ${new Date().toISOString()}`);
     return { status: '✓', error: null, result };
   } catch (err) {
+    console.error(`ERROR: ${scriptName} failed at ${new Date().toISOString()}:`, err);
     return { status: '✗', error: err.message, result: null };
   }
 }
 
-async function main() {
-  // Load tokens and projectId from a config file or environment
-  // For demonstration, assume tokens are loaded from oauth-tokens.json and projectId from selected-projects.json
-  const tokens = JSON.parse(fs.readFileSync(path.join(__dirname, 'oauth-tokens.json'), 'utf-8'));
-  const selectedProjects = JSON.parse(fs.readFileSync(path.join(__dirname, 'selected-projects.json'), 'utf-8'));
-  const projectId = Array.isArray(selectedProjects) ? selectedProjects[0] : selectedProjects;
+async function main(tokens, projectId) {
+  console.log(`\n[FullAudit] Starting full GCP audit for projectId=${projectId} at ${new Date().toISOString()}`);
+  if (!tokens) {
+    throw new Error('OAuth tokens must be provided by the backend/database. Local oauth-tokens.json usage is not allowed.');
+  }
+  if (!projectId) {
+    throw new Error('Project ID must be provided by the backend/database. Local selected-projects.json usage is not allowed.');
+  }
 
   const results = {
     timestamp: new Date().toISOString(),
@@ -344,7 +390,7 @@ async function main() {
   // Run problematic scripts
   for (const [script, info] of Object.entries(PROBLEMATIC_SCRIPTS)) {
     results.summary.total++;
-    console.log(`\nRunning problematic script: ${script}`);
+    console.log(`\n[FullAudit] Running problematic script: ${script}`);
     const result = await runAuditScript(script, projectId, tokens);
     results.problematicScripts[script] = {
       ...info,
@@ -358,7 +404,7 @@ async function main() {
   // Check JSON parsing issues
   for (const script of JSON_PARSING_ISSUES) {
     results.summary.total++;
-    console.log(`\nChecking JSON parsing for: ${script}`);
+    console.log(`\n[FullAudit] Checking JSON parsing for: ${script}`);
     const result = await runAuditScript(script, projectId, tokens);
     results.jsonParsingIssues[script] = {
       result,
@@ -371,7 +417,7 @@ async function main() {
   // Check missing results
   for (const script of MISSING_RESULTS) {
     results.summary.total++;
-    console.log(`\nChecking missing results for: ${script}`);
+    console.log(`\n[FullAudit] Checking missing results for: ${script}`);
     const result = await runAuditScript(script, projectId, tokens);
     results.missingResults[script] = {
       result,
@@ -416,6 +462,22 @@ async function main() {
     }));
 
   writeAuditResults("focused-gcp-checklist-audit", findings, summary, errors, results.projectId);
+  console.log(`\n[FullAudit] Completed full GCP audit for projectId=${projectId} at ${new Date().toISOString()}`);
 }
 
-main().catch(console.error); 
+async function runFullAudit(projectId, tokens) {
+  return await main(tokens, projectId);
+}
+
+if (require.main === module) {
+  // CLI usage: node run-full-gcp-checklist-audit.js <projectId> <tokensJson>
+  const [,, projectId, tokensJson] = process.argv;
+  if (!projectId || !tokensJson) {
+    console.error('Usage: node run-full-gcp-checklist-audit.js <projectId> <tokensJson>');
+    process.exit(1);
+  }
+  const tokens = JSON.parse(tokensJson);
+  main(tokens, projectId).catch(console.error);
+}
+
+module.exports = { runFullAudit }; 

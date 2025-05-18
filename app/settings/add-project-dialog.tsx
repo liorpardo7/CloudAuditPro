@@ -26,12 +26,8 @@ export function AddProjectDialog({ open, onOpenChange, onProjectAdded, initialSt
     console.log("Dialog open:", open, "Step:", step);
     if (open && step === 'select') {
       setIsLoading(true)
-      const accessToken = localStorage.getItem('google_access_token')
-      console.log("Fetching projects with token:", accessToken);
       fetch('/api/gcp/projects', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+        credentials: 'include',
       })
         .then(res => res.json())
         .then(data => {
@@ -55,7 +51,8 @@ export function AddProjectDialog({ open, onOpenChange, onProjectAdded, initialSt
     await fetch('/api/gcp/save-projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ projectIds: selected })
+      body: JSON.stringify({ projectIds: selected }),
+      credentials: 'include',
     })
     setIsLoading(false)
     setStep('done')

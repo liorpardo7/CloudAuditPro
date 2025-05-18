@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
+import { cookies } from 'next/headers';
 
 // Helper to get the Resource Manager client
 const getResourceManager = async (accessToken: string) => {
@@ -9,11 +10,12 @@ const getResourceManager = async (accessToken: string) => {
 };
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ error: 'Missing or invalid Authorization header' }, { status: 401 });
+  // Read access_token from HTTP-only cookie
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get('access_token')?.value;
+  if (!accessToken) {
+    return NextResponse.json({ error: 'Missing or invalid access token cookie' }, { status: 401 });
   }
-  const accessToken = authHeader.replace('Bearer ', '');
 
   try {
     const resourceManager = await getResourceManager(accessToken);

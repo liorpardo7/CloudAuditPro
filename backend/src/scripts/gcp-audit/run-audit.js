@@ -14,6 +14,11 @@ async function runAudit() {
     console.log('Authentication successful!');
     console.log(`Selected projects: ${selectedProjects.join(', ')}`);
     
+    // Tokens must be managed by the backend/database only. Remove any code that writes tokens to local files.
+    if (!tokens) {
+      throw new Error('OAuth tokens must be provided by the backend/database. Local file usage is not allowed.');
+    }
+    
     // Create audit configuration
     const config = {
       tokens,

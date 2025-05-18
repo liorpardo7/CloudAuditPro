@@ -321,7 +321,7 @@ class DiscountAudit extends BaseValidator {
 }
 
 async function run(projectId, tokens) {
-  const audit = new DiscountAudit();
+      const audit = new DiscountAudit();
   // Set up OAuth2 client
   const authClient = new google.auth.OAuth2();
   authClient.setCredentials(tokens);
@@ -329,7 +329,7 @@ async function run(projectId, tokens) {
   audit.projectId = projectId;
   // Initialize API clients with OAuth
   // ...
-  const results = await audit.auditAll();
+      const results = await audit.auditAll();
   await writeAuditResults('discount-audit', results.discountPrograms.commitments, results.discountPrograms.sustainedUse, results.recommendations, projectId);
   return results;
 }

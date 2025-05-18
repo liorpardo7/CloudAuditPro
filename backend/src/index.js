@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const { limiter, csrfProtection, securityHeaders, cookieMiddleware } = require('./middleware/security');
 const gcp = require('./scripts/gcp-audit/gcpClient');
 const auditRoutes = require('./routes/audit');
+const { PrismaClient } = require('./generated/prisma');
+const { runFullAudit } = require('./scripts/gcp-audit/run-full-gcp-checklist-audit');
 require('dotenv').config();
 
 // Validate required environment variables
@@ -34,7 +36,7 @@ app.use(cookieMiddleware);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:7777',
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
@@ -72,6 +74,18 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+// Helper for cookie options
+function getCookieOptions() {
+  const isProd = process.env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'strict' : 'lax',
+    path: '/',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  };
+}
+
 // API routes
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
@@ -80,37 +94,26 @@ app.get('/api/health', (req, res) => {
 // Login route
 app.post('/auth/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
-
-    // Validate input
-    if (!username || !password) {
-      return res.status(400).json({ error: 'Username and password are required' });
+    const { googleAccessToken } = req.body;
+    if (!googleAccessToken) {
+      return res.status(400).json({ error: 'Missing Google access token' });
     }
-
-    // In production, this would be a database lookup
-    // const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin', 10);
-    // const isValid = await bcrypt.compare(password, hashedPassword);
-    const isValid = password === process.env.ADMIN_PASSWORD;
-
-    if (!isValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+    // Verify token with Google
+    const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${googleAccessToken}` },
+    });
+    if (!userInfoRes.ok) {
+      return res.status(401).json({ error: 'Invalid Google access token' });
     }
-
+    const userInfo = await userInfoRes.json();
+    // userInfo: { sub, email, name, ... }
     const token = jwt.sign(
-      { username, role: 'admin' },
+      { userId: userInfo.sub, email: userInfo.email, name: userInfo.name, role: 'user' },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRATION || '24h' }
     );
-
-    // Set token in HttpOnly cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    });
-
-    res.json({ success: true });
+    res.cookie('token', token, getCookieOptions());
+    res.json({ success: true, user: { email: userInfo.email, name: userInfo.name } });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -129,7 +132,7 @@ app.get('/auth/me', authenticateToken, (req, res) => {
 
 // Logout route
 app.post('/auth/logout', (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', getCookieOptions());
   res.json({ success: true });
 });
 
@@ -246,6 +249,33 @@ app.get('/api/v2/cloud-accounts', authenticateToken, (req, res) => {
 
 // Register routes
 app.use('/api/audit', auditRoutes);
+
+// Add a placeholder for /api/audits/run endpoint with detailed logging for token lookup
+const prisma = new PrismaClient();
+
+app.post('/api/audits/run', authenticateToken, async (req, res) => {
+  const { projectId } = req.body;
+  const userId = req.user?.id || req.user?.username || 'unknown';
+  console.log(`[AUDIT] /api/audits/run called by userId=${userId} for projectId=${projectId}`);
+  try {
+    const tokenRecord = await prisma.oAuthToken.findFirst({
+      where: { projectId },
+    });
+    if (!tokenRecord) {
+      console.warn(`[AUDIT] No OAuth tokens found for userId=${userId}, projectId=${projectId}`);
+      return res.status(401).json({ error: 'No OAuth tokens found for this user/project. Please re-authenticate.' });
+    }
+    console.log(`[AUDIT] Found OAuth tokens for userId=${userId}, projectId=${projectId}`);
+    // Run the full audit and return results
+    console.log(`[AUDIT] Starting full audit for userId=${userId}, projectId=${projectId}`);
+    const results = await runFullAudit(projectId, tokenRecord);
+    console.log(`[AUDIT] Full audit complete for userId=${userId}, projectId=${projectId}`);
+    res.json({ success: true, results });
+  } catch (err) {
+    console.error(`[AUDIT] Error running full audit for userId=${userId}, projectId=${projectId}:`, err);
+    res.status(500).json({ error: 'Internal server error during full audit.' });
+  }
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

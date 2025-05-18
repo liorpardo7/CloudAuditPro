@@ -1,3 +1,4 @@
+// DEPRECATED: Use run-full-gcp-checklist-audit.js for all production and full audits.
 const fs = require('fs');
 const path = require('path');
 const { AuditValidator } = require('./audit-validator');

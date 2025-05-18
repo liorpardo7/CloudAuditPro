@@ -11,7 +11,7 @@ async function run(projectId, tokens) {
     authClient.setCredentials(tokens);
     const composer = google.composer({ version: 'v1', auth: authClient });
     const crm = google.cloudresourcemanager('v1');
-
+    
     // Get valid locations
     let validLocations = [];
     try {
@@ -22,7 +22,7 @@ async function run(projectId, tokens) {
       validLocations = ['us-central1', 'us-east1', 'us-west1', 'europe-west1', 'asia-east1'];
     }
     console.log('Valid locations:', validLocations);
-
+    
     // List all Composer environments across valid locations
     const allEnvironments = [];
     for (const location of validLocations) {

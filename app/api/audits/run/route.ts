@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-import { spawn } from 'child_process'
 import { PrismaClient } from '@prisma/client'
-import fs from 'fs'
 import path from 'path'
 
 const prisma = new PrismaClient()
@@ -36,6 +34,22 @@ export async function POST(request: Request) {
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 })
     }
+    // Look up tokens for this user/project
+    const tokenRecord = await prisma.oAuthToken.findFirst({
+      where: { projectId, project: { userId } },
+      orderBy: { createdAt: 'desc' },
+    })
+    if (!tokenRecord) {
+      return NextResponse.json({ error: 'No OAuth tokens found for this user/project. Please re-authenticate.' }, { status: 401 })
+    }
+    // Prepare tokens object for audit script
+    const tokens = {
+      access_token: tokenRecord.accessToken,
+      refresh_token: tokenRecord.refreshToken,
+      scope: tokenRecord.scopes,
+      expiry_date: tokenRecord.expiry.getTime(),
+      token_type: 'Bearer',
+    }
     const cat = category || 'all'
     const script = CATEGORY_TO_SCRIPT[cat]
     if (!script) {
@@ -54,70 +68,33 @@ export async function POST(request: Request) {
       },
     })
     const jobId = job.id
-    // Always use the test service account key
-    const credentialPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json')
-    if (!fs.existsSync(credentialPath)) {
-      await prisma.auditJob.update({ where: { id: jobId }, data: { status: 'error', error: 'Test service account key not found at backend/src/scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json' } })
-      return NextResponse.json({ jobId, error: 'Test service account key not found' }, { status: 400 })
-    }
-    const scriptDir = path.join(process.cwd(), 'backend/src/scripts/gcp-audit');
-    const scriptEnv: NodeJS.ProcessEnv = {
-      ...process.env,
-      GOOGLE_APPLICATION_CREDENTIALS: credentialPath,
-      GCP_PROJECT_ID: projectId,
-      NODE_ENV: 'production',
-    }
-    console.log(`Running audit: ${script} for project ${projectId} with credentials ${credentialPath}`)
-    const proc = spawn('node', [script], {
-      cwd: scriptDir,
-      env: scriptEnv,
-      stdio: 'pipe',
-      detached: true,
-    })
-    let stdoutData = ''
-    let stderrData = ''
-    proc.stdout?.on('data', (data: Buffer) => {
-      const dataStr = data.toString()
-      stdoutData += dataStr
-    })
-    proc.stderr?.on('data', (data: Buffer) => {
-      const dataStr = data.toString()
-      stderrData += dataStr
-      console.error(`Audit stderr: ${dataStr}`)
-    })
-    proc.on('exit', async (code: number | null) => {
-      console.log(`Audit completed with code ${code}`)
-      if (code === 0) {
-        // Try to read results file if it exists
-        let resultJson: string | null = null
-        const resultsFile = path.join(scriptDir, `${cat.replace(/_/g, '-')}-results.json`)
-        if (fs.existsSync(resultsFile)) {
-          try {
-            resultJson = fs.readFileSync(resultsFile, 'utf-8')
-          } catch (e) {
-            resultJson = null
-          }
-        }
-        await prisma.auditJob.update({
-          where: { id: jobId },
-          data: {
-            status: 'completed',
-            completed: new Date(),
-            result: resultJson,
-          },
-        })
-      } else {
-        await prisma.auditJob.update({
-          where: { id: jobId },
-          data: {
-            status: 'error',
-            error: `Script exited with code ${code}: ${stderrData}`,
-          },
-        })
+    try {
+      // Dynamically require and run the audit script
+      const scriptPath = path.join(process.cwd(), 'backend/src/scripts/gcp-audit', script)
+      const auditModule = require(scriptPath)
+      if (typeof auditModule.run !== 'function') {
+        throw new Error(`Audit script ${script} does not export a run(projectId, tokens) function`)
       }
-    })
-    proc.unref()
-    return NextResponse.json({ jobId })
+      const result = await auditModule.run(projectId, tokens)
+      await prisma.auditJob.update({
+        where: { id: jobId },
+        data: {
+          status: 'completed',
+          completed: new Date(),
+          result: JSON.stringify(result),
+        },
+      })
+      return NextResponse.json({ jobId, result })
+    } catch (err) {
+      await prisma.auditJob.update({
+        where: { id: jobId },
+        data: {
+          status: 'error',
+          error: err instanceof Error ? err.message : String(err),
+        },
+      })
+      return NextResponse.json({ jobId, error: err instanceof Error ? err.message : String(err) }, { status: 500 })
+    }
   } catch (error) {
     console.error('Error running audit:', error)
     return NextResponse.json({ error: `Failed to run audit: ${error instanceof Error ? error.message : String(error)}` }, { status: 500 })

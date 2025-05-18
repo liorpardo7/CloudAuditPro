@@ -70,3 +70,4 @@ next-env.d.ts
 
 # Include documentation
 !*.md
+.env

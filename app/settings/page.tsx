@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useEffect, useState } from 'react'
 
 interface Project {
   id: string
@@ -45,6 +46,7 @@ export default function SettingsPage() {
   const [progressOpen, setProgressOpen] = React.useState(false)
   const router = useRouter()
   const searchParams = useSearchParams();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   React.useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -88,6 +90,46 @@ export default function SettingsPage() {
     return () => clearInterval(interval)
   }, [runningJob, router, toast])
 
+  useEffect(() => {
+    // On mount, check if user is authenticated
+    fetch('/api/auth/status', { credentials: 'include' })
+      .then(res => {
+        if (res.ok) setIsAuthenticated(true);
+        else setIsAuthenticated(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const accessToken = url.searchParams.get('access_token');
+    if (accessToken) {
+      // Exchange Google access token for session cookie
+      fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ googleAccessToken: accessToken }),
+        credentials: 'include',
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.removeItem('google_access_token');
+            url.searchParams.delete('access_token');
+            window.history.replaceState({}, document.title, url.pathname + url.search);
+            setAddProjectInitialStep('select');
+            setIsAddProjectOpen(true);
+          } else {
+            window.location.href = '/api/auth/google';
+          }
+        });
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+    window.location.href = '/api/auth/google';
+  };
+
   const handleRunAudit = async (projectId: string, category: string) => {
     setIsLoading(true)
     setProgressProject(projectId)
@@ -95,7 +137,8 @@ export default function SettingsPage() {
     const res = await fetch('/api/audits/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ projectId, category })
+      body: JSON.stringify({ projectId, category }),
+      credentials: 'include',
     })
     const data = await res.json()
     if (data.jobId) {
@@ -111,18 +154,19 @@ export default function SettingsPage() {
     }
   }
 
-  React.useEffect(() => {
-    const url = new URL(window.location.href);
-    const accessToken = url.searchParams.get('access_token');
-    if (accessToken) {
-      localStorage.setItem('google_access_token', accessToken);
-      // Remove the token from the URL for cleanliness
-      url.searchParams.delete('access_token');
-      window.history.replaceState({}, document.title, url.pathname + url.search);
-      setAddProjectInitialStep('select');
-      setIsAddProjectOpen(true);
-    }
-  }, []);
+  if (isAuthenticated === null) {
+    return <div className="flex items-center justify-center h-full">Checking authentication...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Account</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google account.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Account</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -136,7 +180,7 @@ export default function SettingsPage() {
             <PlusCircle className="mr-2 h-4 w-4" />
             Add Project
           </Button>
-          <Button variant="outline" onClick={() => { localStorage.removeItem('google_access_token'); window.location.reload(); }}>
+          <Button variant="outline" onClick={handleLogout}>
             Logout
           </Button>
         </div>

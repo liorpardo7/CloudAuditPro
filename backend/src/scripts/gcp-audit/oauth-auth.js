@@ -77,10 +77,6 @@ class OAuthAuthenticator {
       this.tokens = tokens;
       oauth2Client.setCredentials(tokens);
       
-      // Save tokens to file
-      const tokenPath = path.join(__dirname, 'oauth-tokens.json');
-      fs.writeFileSync(tokenPath, JSON.stringify(tokens));
-      
       // Get project info
       const cloudResourceManager = google.cloudresourcemanager('v1');
       const result = await cloudResourceManager.projects.list({

@@ -1,0 +1,6 @@
+
+> cloudauditpro-backend@1.0.0 start
+> node dist/index.js
+
+Server running on port 7778
+Sun, 18 May 2025 17:22:20 GMT express deprecated res.clearCookie: Passing "options.maxAge" is deprecated. In v5.0.0 of Express, this option will be ignored, as res.clearCookie will automatically set cookies to expire immediately. Please update your code to omit this option. at dist/index.js:129:9
