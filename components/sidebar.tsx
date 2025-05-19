@@ -157,6 +157,11 @@ const routes = [
         icon: Database,
         href: "/bigquery/storage-api-cost-monitoring",
       },
+      {
+        label: "Slot Utilization & Reservation Sizing",
+        icon: Database,
+        href: "/bigquery/slot-utilization",
+      },
     ],
     href: "/bigquery",
   },

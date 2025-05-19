@@ -64,6 +64,7 @@ Update the CloudAuditPro platform's pages, main menu, and submenus to fully refl
 - This plan should be reviewed with design/UX before implementation.
 - All changes should be made in the `update-platform-pages-for-full-audit` branch.
 - After implementation, update onboarding and help docs to match new navigation.
+- All pages from AUDIT_ITEM_PAGE_MAPPING.md are now present in the sidebar/main menu, including the new BigQuery submenu item for Slot Utilization & Reservation Sizing.
 
 ## AuditFlow Platform Page Completion Plan
 
