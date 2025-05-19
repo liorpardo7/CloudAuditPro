@@ -261,7 +261,7 @@
 | BigQuery | BigQuery Analysis | BigQuery Analysis | BigQuery cost optimization | /bigquery | ✓ |
 | BigQuery | BigQuery Analysis | BigQuery Analysis | Dataset access controls review | /bigquery | ✓ |
 | BigQuery | BigQuery Analysis | BigQuery Analysis | BigQuery job monitoring | /bigquery | ✓ |
-| BigQuery | BigQuery Analysis | BigQuery Analysis | BigQuery Storage API Cost Monitoring | /bigquery/storage-api-cost-monitoring | ✓ |
+| BigQuery | BigQuery Analysis | BigQuery Analysis | BigQuery Storage API Cost Monitoring | /bigquery/storage-api-cost-monitoring | Sidebar: BigQuery > Storage API Cost Monitoring |
 | BigQuery | BigQuery Analysis | BigQuery Analysis | BigQuery Slot Utilization & Reservation Sizing | /bigquery/slot-utilization | ✓ |
 | Resource Utilization | Cloud SQL Optimization | Cloud SQL instance utilization | /resource-utilization | ✓ |
 | Resource Utilization | Cloud SQL Optimization | Database CPU utilization analysis | /resource-utilization | ✓ |

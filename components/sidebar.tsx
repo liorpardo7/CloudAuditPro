@@ -152,6 +152,11 @@ const routes = [
         icon: Database,
         href: "/bigquery/deprecated-udfs",
       },
+      {
+        label: "Storage API Cost Monitoring",
+        icon: Database,
+        href: "/bigquery/storage-api-cost-monitoring",
+      },
     ],
     href: "/bigquery",
   },
