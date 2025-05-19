@@ -519,6 +519,29 @@ export default function StoragePage() {
           </CardContent>
         </Card>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <Link href="/storage/persistent-disk-optimization">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Persistent Disk Type & Snapshot Cost-Effectiveness</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Analyze persistent disk types and snapshot usage for the selected project to optimize storage costs and performance.
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/storage/filestore-optimization">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Filestore Instance Optimization</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Analyze Filestore instance usage and configuration for the selected project to optimize storage costs and performance.
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
     </div>
   )
 }

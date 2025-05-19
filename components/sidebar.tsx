@@ -75,6 +75,16 @@ const routes = [
     href: "/compute",
   },
   {
+    label: "GKE Audit",
+    icon: Server,
+    href: "/gke",
+  },
+  {
+    label: "Serverless Audit",
+    icon: require('lucide-react').Zap,
+    href: "/serverless",
+  },
+  {
     label: "Storage",
     icon: Database,
     children: [

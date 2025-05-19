@@ -4,6 +4,7 @@ import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { Percent, AlertTriangle, DollarSign } from "lucide-react"
+import Link from "next/link"
 
 type DiscountData = {
   committedUseDiscounts: {
@@ -121,6 +122,16 @@ export default function DiscountsPage() {
             <div className="text-2xl font-bold">{data.recommendations.length}</div>
           </CardContent>
         </Card>
+        <Link href="/discounts/flexible-vs-resource-cuds">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Flexible CUDs vs. Resource-based CUDs Strategy</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Analyze spending patterns and recommend the optimal mix of flexible and resource-based committed use discounts for your projects.
+            </CardContent>
+          </Card>
+        </Link>
       </div>
       <Tabs value={tab} onValueChange={setTab} className="mt-8">
         <TabsList className="mb-4">

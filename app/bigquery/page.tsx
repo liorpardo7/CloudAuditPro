@@ -531,6 +531,17 @@ export default function BigQueryPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Link href="/bigquery/slot-utilization">
+        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <CardHeader>
+            <CardTitle>BigQuery Slot Utilization & Reservation Sizing</CardTitle>
+          </CardHeader>
+          <CardContent>
+            Analyze slot utilization for reservations and evaluate flat-rate/flex slots for on-demand optimization in the selected project.
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   )
 } 

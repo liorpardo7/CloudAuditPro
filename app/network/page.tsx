@@ -582,6 +582,69 @@ export default function NetworkPage() {
           </CardContent>
         </Card>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+        <Link href="/network/service-tier-analysis">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Network Service Tier Analysis (Egress Costs)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Analyze network service tier usage and egress costs for the selected project to optimize network spend.
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/network/nat-efficiency">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Cloud NAT Gateway Efficiency</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Analyze Cloud NAT gateway usage and configuration for the selected project to optimize cost and performance.
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/network/inter-region-traffic">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Inter-Region/Zone Traffic Cost Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Analyze inter-region and inter-zone network traffic for the selected project to identify cost optimization opportunities.
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/network/cdn-egress-optimization">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Cloud CDN for Egress Optimization</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Identify workloads serving cacheable static content and optimize egress costs using Cloud CDN for the selected project.
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/network/dormant-projects">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Dormant/Unused Projects Review</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Identify projects with no significant activity or billing changes to optimize your GCP environment.
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/network/cud-sud-coverage">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <CardTitle>Holistic CUD/SUD Coverage Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              Systematically check CUD/SUD eligibility for all applicable services and optimize discount coverage.
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
     </div>
   )
 } 
