@@ -25,17 +25,47 @@ import {
   Play,
   HardDrive,
   Timer,
-  Code2
+  Code2,
+  Loader2
 } from "lucide-react"
+import { RunAuditButton } from "@/components/RunAuditButton"
+import { useProjectStore } from '@/lib/store'
 
 export default function BigQueryPage() {
+  const { selectedProject } = useProjectStore()
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("datasets")
   // Audit cards state (from audit-process)
-  const [stalePartitioning, setStalePartitioning] = React.useState<any[]>([]);
-  const [deprecatedUDFs, setDeprecatedUDFs] = React.useState<any[]>([]);
-  const [auditLoading, setAuditLoading] = React.useState(true);
-  const [auditError, setAuditError] = React.useState<string | null>(null);
+  const [stalePartitioning, setStalePartitioning] = React.useState<any[]>([])
+  const [deprecatedUDFs, setDeprecatedUDFs] = React.useState<any[]>([])
+  const [auditLoading, setAuditLoading] = React.useState(true)
+  const [auditError, setAuditError] = React.useState<string | null>(null)
+  const [loading, setLoading] = React.useState(false)
+  const [data, setData] = React.useState<any>(null)
+
+  // Refactor data fetching into a function
+  const fetchData = React.useCallback(() => {
+    setLoading(true)
+    let jobId = typeof window !== 'undefined' ? localStorage.getItem('lastAuditJobId') : null
+    if (!jobId) jobId = 'test'
+    fetch(`/api/audits/status?id=${jobId}`)
+      .then(res => res.json())
+      .then(res => {
+        setStalePartitioning(res.bigqueryResults?.bigquery?.stalePartitioning || [])
+        setDeprecatedUDFs(res.bigqueryResults?.bigquery?.deprecatedUDFs || [])
+        setAuditLoading(false)
+        setData(res.bigqueryResults?.bigquery || null)
+      })
+      .catch(() => {
+        setAuditError('Failed to fetch audit results.')
+        setAuditLoading(false)
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  React.useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   // Mock data - would come from API in a real application
   const bigqueryData = {
@@ -66,31 +96,15 @@ export default function BigQueryPage() {
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case "high":
-        return "text-red-500 bg-red-100 dark:bg-red-900/30";
+        return "text-red-500 bg-red-100 dark:bg-red-900/30"
       case "medium":
-        return "text-amber-500 bg-amber-100 dark:bg-amber-900/30";
+        return "text-amber-500 bg-amber-100 dark:bg-amber-900/30"
       case "low":
-        return "text-blue-500 bg-blue-100 dark:bg-blue-900/30";
+        return "text-blue-500 bg-blue-100 dark:bg-blue-900/30"
       default:
-        return "text-slate-500 bg-slate-100 dark:bg-slate-900/30";
+        return "text-slate-500 bg-slate-100 dark:bg-slate-900/30"
     }
   }
-
-  React.useEffect(() => {
-    let jobId = typeof window !== 'undefined' ? localStorage.getItem('lastAuditJobId') : null;
-    if (!jobId) jobId = 'test';
-    fetch(`/api/audits/status?id=${jobId}`)
-      .then(res => res.json())
-      .then(res => {
-        setStalePartitioning(res.bigqueryResults?.bigquery?.stalePartitioning || []);
-        setDeprecatedUDFs(res.bigqueryResults?.bigquery?.deprecatedUDFs || []);
-        setAuditLoading(false);
-      })
-      .catch(() => {
-        setAuditError('Failed to fetch audit results.');
-        setAuditLoading(false);
-      });
-  }, []);
 
   return (
     <div className="flex-1 space-y-6 p-8 pt-0">
@@ -100,6 +114,13 @@ export default function BigQueryPage() {
           <p className="text-muted-foreground mt-1">Manage datasets, tables, and queries</p>
         </div>
         <div className="flex items-center space-x-2">
+          {selectedProject && (
+            <RunAuditButton
+              category="bigquery"
+              projectId={selectedProject.id}
+              onComplete={fetchData}
+            />
+          )}
           <Button variant="outline" className="h-9 flex items-center gap-1.5">
             <Code className="h-4 w-4" />
             <span>SQL Editor</span>
@@ -111,23 +132,30 @@ export default function BigQueryPage() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-        <div className="flex w-full sm:w-auto space-x-2">
-          <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search datasets and tables..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          
-          <Button variant="outline" size="icon" className="h-10 w-10">
-            <Filter className="h-4 w-4" />
-          </Button>
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Loading latest audit results...</span>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div className="flex w-full sm:w-auto space-x-2">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search datasets and tables..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <Button variant="outline" size="icon" className="h-10 w-10">
+              <Filter className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Card className="premium-card">
         <CardHeader className="pb-3">
