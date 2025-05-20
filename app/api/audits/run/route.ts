@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import path from 'path'
 import { verifyCsrf } from '@/lib/csrf'
 import { rateLimit } from '@/lib/rate-limit'
+import { cookies } from 'next/headers'
 
 const prisma = new PrismaClient()
 
@@ -36,17 +37,40 @@ export async function POST(request: Request) {
   const csrfError = verifyCsrf(request)
   if (csrfError) return csrfError
   try {
-    const { projectId, category, userId = 'demo-user' } = await request.json()
+    const { projectId, category } = await request.json()
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 })
     }
+
+    // --- Extract userId from session cookie ---
+    const cookieStore = cookies()
+    const sessionId = cookieStore.get('session_id')?.value
+    if (!sessionId) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    }
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { user: true },
+    })
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Invalid session' }, { status: 401 })
+    }
+    const userId = session.user.id
+
+    // --- LOGGING ---
+    console.log(`[AUDIT] /api/audits/run: userId=${userId}, projectId=${projectId}`)
+
     // Look up tokens for this user/project
     const tokenRecord = await prisma.oAuthToken.findFirst({
       where: { projectId, project: { userId } },
       orderBy: { createdAt: 'desc' },
     })
     if (!tokenRecord) {
-      return NextResponse.json({ error: 'No OAuth tokens found for this user/project. Please re-authenticate.' }, { status: 401 })
+      console.warn(`[AUDIT] No OAuth tokens found for userId=${userId}, projectId=${projectId}`)
+      return NextResponse.json(
+        { error: 'You are authenticated, but have not connected this project. Please connect your Google account for this project.' },
+        { status: 401 }
+      )
     }
     // Prepare tokens object for audit script
     const tokens = {

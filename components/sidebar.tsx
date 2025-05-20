@@ -14,7 +14,9 @@ import {
   Settings,
   PlayCircle,
   ClipboardList,
-  FileText
+  FileText,
+  HardDrive,
+  Gauge
 } from "lucide-react"
 import { useState } from "react"
 
@@ -24,82 +26,6 @@ const routes = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/",
-  },
-  {
-    label: "Audits",
-    icon: ClipboardList,
-    href: "/audits",
-  },
-  {
-    label: "New Audit",
-    icon: PlayCircle,
-    href: "/audit",
-  },
-  {
-    label: "Security",
-    icon: ShieldCheck,
-    href: "/security",
-  },
-  {
-    label: "Compliance",
-    icon: ShieldCheck,
-    children: [
-      {
-        label: "Data Protection",
-        icon: ShieldCheck,
-        href: "/data-protection",
-      },
-      {
-        label: "Audit Logs",
-        icon: FileText,
-        href: "/compliance/audit-logs",
-      },
-      {
-        label: "Compliance Dashboard",
-        icon: ShieldCheck,
-        href: "/compliance",
-      },
-    ],
-    href: "/compliance",
-  },
-  {
-    label: "Compute",
-    icon: Server,
-    children: [
-      {
-        label: "Resource Utilization",
-        icon: BarChart3,
-        href: "/resource-utilization",
-      },
-    ],
-    href: "/compute",
-  },
-  {
-    label: "GKE Audit",
-    icon: Server,
-    href: "/gke",
-  },
-  {
-    label: "Serverless Audit",
-    icon: require('lucide-react').Zap,
-    href: "/serverless",
-  },
-  {
-    label: "Storage",
-    icon: Database,
-    children: [
-      {
-        label: "Storage Lifecycle Policies",
-        icon: Database,
-        href: "/storage-lifecycle",
-      },
-    ],
-    href: "/storage",
-  },
-  {
-    label: "Network",
-    icon: Network,
-    href: "/network",
   },
   {
     label: "Cost",
@@ -134,6 +60,82 @@ const routes = [
     href: "/cost",
   },
   {
+    label: "Security",
+    icon: ShieldCheck,
+    href: "/security",
+  },
+  {
+    label: "Resource Utilization",
+    icon: BarChart3,
+    href: "/resource-utilization",
+  },
+  {
+    label: "Storage",
+    icon: Database,
+    children: [
+      {
+        label: "Storage Lifecycle Policies",
+        icon: Database,
+        href: "/storage-lifecycle",
+      },
+      {
+        label: "Persistent Disk Optimization",
+        icon: HardDrive,
+        href: "/storage/persistent-disk-optimization",
+      },
+      {
+        label: "Filestore Optimization",
+        icon: HardDrive,
+        href: "/storage/filestore-optimization",
+      },
+    ],
+    href: "/storage",
+  },
+  {
+    label: "Compute",
+    icon: Server,
+    children: [
+      {
+        label: "Resource Utilization",
+        icon: BarChart3,
+        href: "/resource-utilization",
+      },
+      {
+        label: "Optimize Machine Images",
+        icon: HardDrive,
+        href: "/compute/optimize-machine-images",
+      },
+      {
+        label: "Right-Sizing",
+        icon: Gauge,
+        href: "/compute/right-sizing",
+      },
+      {
+        label: "Sole-Tenant Efficiency",
+        icon: Gauge,
+        href: "/compute/sole-tenant-efficiency",
+      },
+    ],
+    href: "/compute",
+  },
+  {
+    label: "Serverless Audit",
+    icon: require('lucide-react').Zap,
+    children: [
+      {
+        label: "Cloud Run Optimization",
+        icon: require('lucide-react').Zap,
+        href: "/serverless/cloud-run-optimization",
+      },
+      {
+        label: "Cloud Functions Optimization",
+        icon: require('lucide-react').Zap,
+        href: "/serverless/cloud-functions-optimization",
+      },
+    ],
+    href: "/serverless",
+  },
+  {
     label: "Big Query",
     icon: Database,
     children: [
@@ -164,6 +166,43 @@ const routes = [
       },
     ],
     href: "/bigquery",
+  },
+  {
+    label: "Network",
+    icon: Network,
+    href: "/network",
+  },
+  {
+    label: "Compliance",
+    icon: ShieldCheck,
+    children: [
+      {
+        label: "Data Protection",
+        icon: ShieldCheck,
+        href: "/data-protection",
+      },
+      {
+        label: "Audit Logs",
+        icon: FileText,
+        href: "/compliance/audit-logs",
+      },
+      {
+        label: "Compliance Dashboard",
+        icon: ShieldCheck,
+        href: "/compliance",
+      },
+    ],
+    href: "/compliance",
+  },
+  {
+    label: "Audits",
+    icon: ClipboardList,
+    href: "/audits",
+  },
+  {
+    label: "New Audit",
+    icon: PlayCircle,
+    href: "/audit",
   },
   {
     label: "Operations",

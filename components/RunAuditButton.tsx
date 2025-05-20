@@ -2,6 +2,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, PlayCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 interface RunAuditButtonProps {
   category: string;
@@ -13,6 +14,7 @@ interface RunAuditButtonProps {
 export function RunAuditButton({ category, projectId, onComplete, className }: RunAuditButtonProps) {
   const [loading, setLoading] = React.useState(false);
   const { toast } = useToast();
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
 
   const handleRunAudit = async () => {
     setLoading(true);
@@ -31,6 +33,15 @@ export function RunAuditButton({ category, projectId, onComplete, className }: R
         body: JSON.stringify({ projectId, category }),
         credentials: "include"
       });
+      if (res.status === 401) {
+        const data = await res.json();
+        if (data.error && data.error.includes("No OAuth tokens found")) {
+          setShowAuthModal(true);
+          return;
+        } else {
+          throw new Error(data.error || "Unauthorized");
+        }
+      }
       const data = await res.json();
       if (!data.jobId) throw new Error(data.error || "Failed to start audit");
 
@@ -57,9 +68,32 @@ export function RunAuditButton({ category, projectId, onComplete, className }: R
   };
 
   return (
-    <Button onClick={handleRunAudit} disabled={loading} className={className}>
-      {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="mr-2 h-4 w-4" />}
-      {loading ? "Running..." : "Run Audit"}
-    </Button>
+    <>
+      <Button onClick={handleRunAudit} disabled={loading} className={className}>
+        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="mr-2 h-4 w-4" />}
+        {loading ? "Running..." : "Run Audit"}
+      </Button>
+      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Connect Google Account</DialogTitle>
+          </DialogHeader>
+          <div className="py-2">You need to connect your Google account to run this audit for the selected project.</div>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setShowAuthModal(false);
+                window.location.href = "/api/auth/google";
+              }}
+            >
+              Connect Google Account
+            </Button>
+            <Button variant="outline" onClick={() => setShowAuthModal(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 } 
