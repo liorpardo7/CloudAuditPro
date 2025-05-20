@@ -63,6 +63,14 @@ export default function SettingsPage() {
       .catch(() => setIsAuthenticated(false))
   }, [])
 
+  // Open Add Project dialog if selectProject=1 in query or no projects
+  React.useEffect(() => {
+    if (searchParams.get('selectProject') === '1' || (projects && projects.length === 0)) {
+      setIsAddProjectOpen(true)
+      setAddProjectInitialStep('select')
+    }
+  }, [searchParams, projects])
+
   // Poll for audit status
   React.useEffect(() => {
     if (!runningJob) return
@@ -100,7 +108,7 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-    window.location.href = '/api/auth/google';
+    window.location.href = '/settings';
   };
 
   const handleRunAudit = async (projectId: string, category: string) => {
@@ -259,11 +267,11 @@ export default function SettingsPage() {
       <AddProjectDialog
         open={isAddProjectOpen}
         onOpenChange={setIsAddProjectOpen}
-        onProjectAdded={(project) => {
-          setProjects([...projects, ...project])
+        initialStep={addProjectInitialStep}
+        onProjectAdded={(newProjects) => {
+          setProjects((prev) => [...prev, ...newProjects])
           setIsAddProjectOpen(false)
         }}
-        initialStep={addProjectInitialStep}
       />
       <Dialog open={progressOpen} onOpenChange={setProgressOpen}>
         <DialogContent className="max-w-md text-center">

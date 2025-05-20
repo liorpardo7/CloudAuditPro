@@ -106,45 +106,9 @@ export async function GET(request: Request) {
     });
 
     // Set tokens in HTTP-only cookies and return a 200 HTML response with JS redirect
-    // --- Fetch and save GCP projects for the user ---
-    try {
-      const resourceManagerRes = await fetch('https://cloudresourcemanager.googleapis.com/v1/projects', {
-        headers: { Authorization: `Bearer ${tokens.access_token}` },
-      });
-      if (resourceManagerRes.ok) {
-        const gcpData = await resourceManagerRes.json();
-        const gcpProjects = gcpData.projects || [];
-        for (const gcpProject of gcpProjects) {
-          // Find project by name and userId
-          const existing = await prisma.project.findFirst({
-            where: { name: gcpProject.name, userId: user.id },
-          });
-          if (existing) {
-            await prisma.project.update({
-              where: { id: existing.id },
-              data: {
-                status: 'active',
-                lastSync: new Date(),
-              },
-            });
-          } else {
-            await prisma.project.create({
-              data: {
-                name: gcpProject.name,
-                status: 'active',
-                lastSync: new Date(),
-                userId: user.id,
-              },
-            });
-          }
-        }
-      } else {
-        console.error('Failed to fetch GCP projects:', await resourceManagerRes.text());
-      }
-    } catch (err) {
-      console.error('Error fetching/saving GCP projects:', err);
-    }
-    const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=${process.env.NEXT_PUBLIC_APP_URL}/settings?success=true" /></head><body>If you are not redirected, <a href="${process.env.NEXT_PUBLIC_APP_URL}/settings?success=true">click here</a>.</body></html>`;
+    // --- Do NOT fetch and save GCP projects for the user here ---
+    // Instead, redirect to settings with selectProject param so user can select projects
+    const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=${process.env.NEXT_PUBLIC_APP_URL}/settings?selectProject=1" /></head><body>If you are not redirected, <a href="${process.env.NEXT_PUBLIC_APP_URL}/settings?selectProject=1">click here</a>.</body></html>`;
     const response = new NextResponse(html, {
       status: 200,
       headers: {

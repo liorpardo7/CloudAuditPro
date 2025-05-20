@@ -1,0 +1,41 @@
+# Audit Auto-Enhance Prompt Sequence Template: /cost
+
+## Step 1: Context
+- **Category/Page:** Cost
+- **GCP API Endpoint(s):**
+  - /api/cost
+  - /api/cost-allocation
+  - /api/discounts
+  - /api/monitoring
+  - /api/budgeting
+  - [Add any additional relevant endpoints]
+- **Raw API Response (JSON):**
+```
+[Paste the full raw JSON response from the /cost audit here]
+```
+
+## Step 2: Field Discovery
+- **Extract and list all unique fields (including nested fields) from the raw response.**
+- **Highlight any fields not currently mapped in the UI or inventory.**
+
+## Step 3: Field Mapping & Suggestions
+- **For each new/unmapped field:**
+  - Suggest possible metrics, charts, or table columns.
+  - Suggest aggregation or transformation if relevant.
+  - Suggest if the field is actionable (can drive a recommendation).
+
+## Step 4: Metrics/Charts/Recommendations Planning
+- **Based on all available fields, propose:**
+  - The most impactful and accurate metrics for this category/page.
+  - The most useful charts/visualizations (with chart type suggestions).
+  - Actionable recommendations that can be generated from the data.
+
+## Step 5: Implementation Plan
+- **Summarize the changes to make in the codebase (backend and frontend) to surface new fields, metrics, and recommendations.**
+- **List any new UI components or backend logic needed.**
+
+---
+
+### Usage:
+- Use this filled template for the /cost page.
+- After running the audit, paste the raw data above and proceed through the steps to drive the next automation or enhancement. 

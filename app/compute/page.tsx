@@ -22,10 +22,18 @@ import {
   ChevronRight, 
   PlusCircle
 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useProjectStore } from '@/lib/store'
+import { RunAuditButton } from '@/components/RunAuditButton'
 
 export default function ComputePage() {
+  const { selectedProject } = useProjectStore()
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("instances")
+  const [raw, setRaw] = React.useState<string | null>(null)
+  const [copyMsg, setCopyMsg] = React.useState("")
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
   
   // Mock data - would come from API in a real application
   const computeResources = {
@@ -169,6 +177,37 @@ export default function ComputePage() {
     return "text-emerald-500";
   }
 
+  const fetchAudit = async () => {
+    if (!selectedProject) return
+    setLoading(true)
+    setError(null)
+    fetch(`/api/compute/summary?projectId=${selectedProject.id}`)
+      .then(res => res.json())
+      .then(json => setRaw(JSON.stringify(json, null, 2)))
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }
+
+  const handleCopy = () => {
+    if (raw) {
+      navigator.clipboard.writeText(raw)
+      setCopyMsg("Copied!")
+      setTimeout(() => setCopyMsg(""), 1200)
+    }
+  }
+
+  React.useEffect(() => { fetchAudit() }, [selectedProject])
+
+  if (!selectedProject) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 space-y-6 p-8 pt-0">
       <div className="flex items-center justify-between">
@@ -206,6 +245,14 @@ export default function ComputePage() {
             <Filter className="h-4 w-4" />
           </Button>
         </div>
+      </div>
+
+      <div className="flex items-center gap-4 mb-4">
+        {selectedProject && (
+          <RunAuditButton category="compute" gcpProjectId={selectedProject.gcpProjectId} onComplete={fetchAudit} />
+        )}
+        <Button variant="outline" size="sm" onClick={handleCopy} disabled={!raw} className="ml-2">Copy Raw Response</Button>
+        {copyMsg && <span className="ml-2 text-emerald-600 text-xs">{copyMsg}</span>}
       </div>
 
       <Card className="premium-card">
@@ -629,6 +676,30 @@ export default function ComputePage() {
           </CardContent>
         </Card>
       </div>
+      {raw && (
+        <pre className="bg-muted/30 rounded p-4 text-xs mt-4 overflow-x-auto max-h-64">{raw}</pre>
+      )}
     </div>
   )
+}
+
+export function ComputeSummaryPage() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    setLoading(true)
+    fetch("/api/compute/summary")
+      .then(res => res.json())
+      .then(setData)
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="p-8">Loading compute summary...</div>
+  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
+  if (!data || typeof data !== 'object') return <div className="p-8">No data available.</div>
+
+  // ... render summary cards, charts, and recommendations using 'data' ...
 } 

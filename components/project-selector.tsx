@@ -29,6 +29,7 @@ export function ProjectSelector() {
             setSelectedProject({
               id: data.user.projects[0].id,
               name: data.user.projects[0].name,
+              gcpProjectId: data.user.projects[0].gcpProjectId,
             })
           }
         }
@@ -54,7 +55,10 @@ export function ProjectSelector() {
               key={project.id}
               onClick={() => setSelectedProject(project)}
             >
-              {project.name}
+              <div>
+                <div className="font-medium">{project.name}</div>
+                <div className="text-xs text-muted-foreground">{project.gcpProjectId}</div>
+              </div>
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

@@ -20,6 +20,7 @@ import {
   FileText,
   Filter
 } from "lucide-react"
+import { useEffect, useState } from "react"
 
 interface Audit {
   id: string
@@ -368,4 +369,25 @@ export default function AuditsPage() {
       </Card>
     </div>
   )
+}
+
+export function AuditsSummaryPage() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    setLoading(true)
+    fetch("/api/audits/summary")
+      .then(res => res.json())
+      .then(setData)
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="p-8">Loading audits summary...</div>
+  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
+  if (!data) return <div className="p-8">No data available.</div>
+
+  // ... render summary cards, charts, and recommendations using 'data' ...
 } 

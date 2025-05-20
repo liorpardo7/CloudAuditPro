@@ -3,8 +3,50 @@
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronRight, Zap } from "lucide-react"
+import * as React from "react"
+import { useEffect, useState } from "react"
+import { useProjectStore } from '@/lib/store'
+import { RunAuditButton } from '@/components/RunAuditButton'
+import { Button } from '@/components/ui/button'
 
 export default function ServerlessAuditLandingPage() {
+  const { selectedProject } = useProjectStore()
+  const [raw, setRaw] = React.useState<string | null>(null)
+  const [copyMsg, setCopyMsg] = React.useState("")
+  const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
+
+  const fetchAudit = async () => {
+    if (!selectedProject) return
+    setLoading(true)
+    setError(null)
+    fetch(`/api/serverless/summary?projectId=${selectedProject.id}`)
+      .then(res => res.json())
+      .then(json => setRaw(JSON.stringify(json, null, 2)))
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }
+
+  const handleCopy = () => {
+    if (raw) {
+      navigator.clipboard.writeText(raw)
+      setCopyMsg("Copied!")
+      setTimeout(() => setCopyMsg(""), 1200)
+    }
+  }
+
+  React.useEffect(() => { fetchAudit() }, [selectedProject])
+
+  if (!selectedProject) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
       <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
@@ -15,6 +57,13 @@ export default function ServerlessAuditLandingPage() {
       <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
         <Zap className="h-6 w-6 text-primary" /> Serverless Audit
       </h1>
+      <div className="flex items-center gap-4 mb-4">
+        {selectedProject && (
+          <RunAuditButton category="serverless" gcpProjectId={selectedProject.gcpProjectId} onComplete={fetchAudit} />
+        )}
+        <Button variant="outline" size="sm" onClick={handleCopy} disabled={!raw} className="ml-2">Copy Raw Response</Button>
+        {copyMsg && <span className="ml-2 text-emerald-600 text-xs">{copyMsg}</span>}
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Link href="/serverless/cloud-functions-optimization">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -27,6 +76,48 @@ export default function ServerlessAuditLandingPage() {
           </Card>
         </Link>
         {/* Future serverless audit sub-pages can be added here */}
+      </div>
+      {raw && (
+        <pre className="bg-muted/30 rounded p-4 text-xs mt-4 overflow-x-auto max-h-64">{raw}</pre>
+      )}
+    </div>
+  )
+}
+
+export function ServerlessSummaryPage() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    setLoading(true)
+    fetch("/api/serverless/summary")
+      .then(res => res.json())
+      .then(setData)
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="p-8">Loading serverless summary...</div>
+  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
+  if (!data) return <div className="p-8">No data available.</div>
+
+  return (
+    <div className="flex-1 space-y-6 p-8 pt-6">
+      <h1 className="text-2xl font-bold tracking-tight">Serverless Overview</h1>
+      <p className="text-muted-foreground mt-1 max-w-2xl">Summary of Cloud Functions and Cloud Run resource and concurrency optimization across your GCP environment.</p>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">{/* Add summary cards here */}</div>
+      {/* Charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">{/* Add charts here */}</div>
+      {/* Top Recommendations */}
+      <div className="bg-card rounded-lg shadow p-4">
+        <h2 className="text-lg font-semibold mb-2">Top Recommendations</h2>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Review memory/CPU allocation and concurrency settings for all serverless workloads.</li>
+          <li>Monitor execution trends and optimize for cost and performance.</li>
+          <li>Review security and access controls for serverless resources.</li>
+        </ul>
       </div>
     </div>
   )

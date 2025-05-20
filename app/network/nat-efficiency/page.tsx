@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BarChart4, Network, Download, ChevronRight, Info, AlertTriangle, ArrowLeft } from "lucide-react"
-import { ProjectSelector } from "@/components/project-selector"
 import { useProjectStore } from '@/lib/store'
 
 export default function CloudNATGatewayEfficiencyPage() {
@@ -29,6 +28,16 @@ export default function CloudNATGatewayEfficiencyPage() {
       .finally(() => setLoading(false))
   }, [selectedProject])
 
+  if (!selectedProject) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
       {/* Breadcrumbs */}
@@ -49,7 +58,6 @@ export default function CloudNATGatewayEfficiencyPage() {
             Analyze Cloud NAT gateway usage and configuration for the selected project to optimize cost and performance.
           </p>
         </div>
-        <ProjectSelector />
       </div>
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

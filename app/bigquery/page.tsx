@@ -30,6 +30,7 @@ import {
 } from "lucide-react"
 import { RunAuditButton } from "@/components/RunAuditButton"
 import { useProjectStore } from '@/lib/store'
+import { useEffect, useState } from "react"
 
 export default function BigQueryPage() {
   const { selectedProject } = useProjectStore()
@@ -104,6 +105,16 @@ export default function BigQueryPage() {
       default:
         return "text-slate-500 bg-slate-100 dark:bg-slate-900/30"
     }
+  }
+
+  if (!selectedProject) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
+      </div>
+    );
   }
 
   return (
@@ -572,4 +583,25 @@ export default function BigQueryPage() {
       </Link>
     </div>
   )
+}
+
+export function BigQuerySummaryPage() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    setLoading(true)
+    fetch("/api/bigquery/summary")
+      .then(res => res.json())
+      .then(setData)
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="p-8">Loading BigQuery summary...</div>
+  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
+  if (!data) return <div className="p-8">No data available.</div>
+
+  // ... render summary cards, charts, and recommendations using 'data' ...
 } 

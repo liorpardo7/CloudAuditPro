@@ -1,154 +1,71 @@
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ShieldCheck, FileText, AlertCircle, CheckCircle2, Loader2, BarChart3 } from "lucide-react";
+"use client"
 
-const CompliancePage: React.FC = () => {
+import * as React from "react"
+import { useEffect, useState } from "react"
+import { useProjectStore } from '@/lib/store'
+import { RunAuditButton } from '@/components/RunAuditButton'
+import { Button } from '@/components/ui/button'
+
+export default function ComplianceSummaryPage() {
+  const { selectedProject } = useProjectStore()
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [raw, setRaw] = useState(null)
+  const [copyMsg, setCopyMsg] = useState("")
+
+  const fetchAudit = async () => {
+    if (!selectedProject) return
+    setLoading(true)
+    setError(null)
+    fetch(`/api/compliance/summary?projectId=${selectedProject.id}`)
+      .then(res => res.json())
+      .then(json => { setData(json); setRaw(JSON.stringify(json, null, 2)) })
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }
+
+  const handleCopy = () => {
+    if (raw) {
+      navigator.clipboard.writeText(raw)
+      setCopyMsg("Copied!")
+      setTimeout(() => setCopyMsg(""), 1200)
+    }
+  }
+
+  useEffect(() => { fetchAudit() }, [selectedProject])
+
+  if (loading) return <div className="p-8">Loading compliance summary...</div>
+  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
+  if (!data) return <div className="p-8">No data available.</div>
+
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <ShieldCheck className="h-7 w-7 text-primary" /> Compliance
-          </h1>
-          <p className="text-muted-foreground mt-2 max-w-2xl">
-            Review your cloud environment's compliance with major regulatory standards. Run compliance scans, view audit logs, and get actionable recommendations to maintain and improve your compliance posture.
-          </p>
-        </div>
-        <Button className="flex items-center gap-2" variant="outline">
-          <BarChart3 className="h-5 w-5" />
-          Run Compliance Scan
-        </Button>
+    <div className="flex-1 space-y-6 p-8 pt-6">
+      <div className="flex items-center gap-4 mb-4">
+        {selectedProject && (
+          <RunAuditButton category="compliance" gcpProjectId={selectedProject.gcpProjectId} onComplete={fetchAudit} />
+        )}
+        <Button variant="outline" size="sm" onClick={handleCopy} disabled={!raw} className="ml-2">Copy Raw Response</Button>
+        {copyMsg && <span className="ml-2 text-emerald-600 text-xs">{copyMsg}</span>}
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-500" /> GDPR
-            </CardTitle>
-            <CardDescription>General Data Protection Regulation</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span className="font-medium">Compliant</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-purple-500" /> HIPAA
-            </CardTitle>
-            <CardDescription>Health Insurance Portability and Accountability Act</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span className="font-medium">Compliant</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-yellow-500" /> PCI DSS
-            </CardTitle>
-            <CardDescription>Payment Card Industry Data Security Standard</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-amber-500" />
-              <span className="font-medium">Partial</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-pink-500" /> SOC 2
-            </CardTitle>
-            <CardDescription>Service Organization Control 2</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span className="font-medium">Compliant</span>
-            </div>
-          </CardContent>
-        </Card>
+      <h1 className="text-2xl font-bold tracking-tight">Compliance Overview</h1>
+      <p className="text-muted-foreground mt-1 max-w-2xl">Summary of GDPR, HIPAA, PCI, SOC2, audit logs, privacy, consent, and data access compliance across your GCP environment.</p>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">{/* Add summary cards here */}</div>
+      {/* Charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">{/* Add charts here */}</div>
+      {/* Top Recommendations */}
+      <div className="bg-card rounded-lg shadow p-4">
+        <h2 className="text-lg font-semibold mb-2">Top Recommendations</h2>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Review compliance status for all major frameworks (GDPR, HIPAA, PCI, SOC2).</li>
+          <li>Monitor audit logs and data access for anomalies.</li>
+          <li>Ensure privacy and consent management is up to date.</li>
+        </ul>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Audit Log Status</CardTitle>
-            <CardDescription>Ensure all required audit logs are enabled and retained.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2 mb-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>Admin Activity Logs</span>
-            </div>
-            <div className="flex items-center gap-2 mb-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>Data Access Logs</span>
-            </div>
-            <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="h-5 w-5 text-amber-500" />
-              <span>System Event Logs (Partial)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
-              <span>Log Export in Progress</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Recommendations</CardTitle>
-            <CardDescription>Improve your compliance posture with these actions:</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="list-disc pl-5 space-y-2 text-sm">
-              <li>Enable full Data Access Logging for all resources.</li>
-              <li>Review and update your data retention policies.</li>
-              <li>Address partial PCI DSS compliance by remediating flagged controls.</li>
-              <li>Export and archive audit logs regularly.</li>
-              <li>Schedule periodic compliance scans.</li>
-            </ul>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Compliance Findings</CardTitle>
-          <CardDescription>Latest issues and alerts from your compliance scans.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="divide-y divide-muted">
-            <li className="py-3 flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-red-500" />
-              <span className="font-medium">PCI DSS:</span>
-              <span className="text-muted-foreground">Unencrypted cardholder data found in storage bucket <span className="font-mono">prod-payments</span>.</span>
-            </li>
-            <li className="py-3 flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-amber-500" />
-              <span className="font-medium">System Event Logs:</span>
-              <span className="text-muted-foreground">Retention policy not configured for <span className="font-mono">system-logs</span>.</span>
-            </li>
-            <li className="py-3 flex items-center gap-3">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span className="font-medium">GDPR:</span>
-              <span className="text-muted-foreground">All data subject requests processed within SLA.</span>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
+      {raw && (
+        <pre className="bg-muted/30 rounded p-4 text-xs mt-4 overflow-x-auto max-h-64">{raw}</pre>
+      )}
     </div>
-  );
-};
-
-export default CompliancePage; 
+  )
+} 

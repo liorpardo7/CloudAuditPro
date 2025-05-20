@@ -19,6 +19,7 @@ import {
   Gauge
 } from "lucide-react"
 import { useState } from "react"
+import { ProjectSelector } from "@/components/project-selector"
 
 // New nested routes structure
 const routes = [
@@ -50,11 +51,6 @@ const routes = [
         label: "Monitoring & Alerts",
         icon: ShieldCheck,
         href: "/monitoring",
-      },
-      {
-        label: "Cost",
-        icon: BarChart3,
-        href: "/cost",
       },
     ],
     href: "/cost",
@@ -140,11 +136,6 @@ const routes = [
     icon: Database,
     children: [
       {
-        label: "Overview",
-        icon: Database,
-        href: "/bigquery",
-      },
-      {
         label: "Stale Partitioning",
         icon: Database,
         href: "/bigquery/stale-partitioning",
@@ -185,11 +176,6 @@ const routes = [
         label: "Audit Logs",
         icon: FileText,
         href: "/compliance/audit-logs",
-      },
-      {
-        label: "Compliance Dashboard",
-        icon: ShieldCheck,
-        href: "/compliance",
       },
     ],
     href: "/compliance",
@@ -238,6 +224,7 @@ export function Sidebar() {
           <span className="text-xl font-bold tracking-tight">CloudAuditPro</span>
         </Link>
       </div>
+      <ProjectSelector />
       <div className="flex-1 overflow-auto py-6 px-4">
         <nav className="grid items-start gap-2 relative">
           {routes.map((route) => {
@@ -265,25 +252,30 @@ export function Sidebar() {
               (route.children && route.children.some((child) => child.href === pathname)) || pathname === route.href
             return (
               <div key={route.label} className="relative">
-                <button
-                  type="button"
-                  onClick={() => handleToggle(route.label)}
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors focus:outline-none relative",
-                    isOpen || isParentActive
-                      ? "bg-primary/10 border-l-4 border-primary text-primary font-bold shadow-sm"
-                      : "text-sidebar-foreground opacity-80"
-                  )}
-                  aria-expanded={isOpen}
-                  aria-controls={`submenu-${route.label}`}
-                  style={isOpen || isParentActive ? { boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' } : {}}
-                >
-                  <route.icon className={cn("h-5 w-5 z-10", isOpen || isParentActive ? "text-primary" : "")}/>
-                  {route.label}
-                  <span className="ml-auto z-10">
+                <div className="flex w-full items-center">
+                  <Link
+                    href={route.href}
+                    className={cn(
+                      "flex-1 flex items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                      isParentActive
+                        ? "bg-primary/10 border-l-4 border-primary text-primary font-bold shadow-sm"
+                        : "text-sidebar-foreground opacity-80"
+                    )}
+                    style={isParentActive ? { boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)' } : {}}
+                  >
+                    <route.icon className={cn("h-5 w-5", isParentActive ? "text-primary" : "")}/>
+                    {route.label}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleToggle(route.label)}
+                    className="ml-2 p-1"
+                    aria-expanded={isOpen}
+                    aria-controls={`submenu-${route.label}`}
+                  >
                     <svg className={`h-5 w-5 font-bold transition-transform duration-200 ${isOpen ? 'rotate-90 text-primary' : 'text-muted-foreground'}`} fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                  </span>
-                </button>
+                  </button>
+                </div>
                 {isOpen && (
                   <div id={`submenu-${route.label}`} className="ml-6 mt-1 space-y-1 border-l border-muted pl-3 bg-primary/5 rounded-md py-2">
                     {route.children.map((child) => {

@@ -6,12 +6,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 
 interface RunAuditButtonProps {
   category: string;
-  projectId: string;
+  gcpProjectId: string;
   onComplete?: () => void;
   className?: string;
 }
 
-export function RunAuditButton({ category, projectId, onComplete, className }: RunAuditButtonProps) {
+export function RunAuditButton({ category, gcpProjectId, onComplete, className }: RunAuditButtonProps) {
   const [loading, setLoading] = React.useState(false);
   const { toast } = useToast();
   const [showAuthModal, setShowAuthModal] = React.useState(false);
@@ -30,7 +30,7 @@ export function RunAuditButton({ category, projectId, onComplete, className }: R
           "Content-Type": "application/json",
           "x-csrf-token": csrfToken
         },
-        body: JSON.stringify({ projectId, category }),
+        body: JSON.stringify({ projectId: gcpProjectId, category }),
         credentials: "include"
       });
       if (res.status === 401) {

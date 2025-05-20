@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BarChart4, Percent, Download, ChevronRight, Info, AlertTriangle, ArrowLeft } from "lucide-react"
-import { ProjectSelector } from "@/components/project-selector"
 import { useProjectStore } from '@/lib/store'
 
 export default function CudSudCoveragePage() {
@@ -49,7 +48,6 @@ export default function CudSudCoveragePage() {
             Systematically check CUD/SUD eligibility for all applicable services and optimize discount coverage for the selected project.
           </p>
         </div>
-        <ProjectSelector />
       </div>
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

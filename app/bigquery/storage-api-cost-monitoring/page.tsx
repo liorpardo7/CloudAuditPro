@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BarChart4, Database, Download, ChevronRight, Info, AlertTriangle, ArrowLeft, Loader2 } from "lucide-react"
-import { ProjectSelector } from "@/components/project-selector"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from "@/components/RunAuditButton"
 
@@ -34,10 +33,19 @@ export default function StorageApiCostMonitoringPage() {
     fetchData()
   }, [fetchData])
 
+  if (!selectedProject) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
       <div className="flex items-center gap-4 mb-4">
-        <ProjectSelector />
         {selectedProject && (
           <RunAuditButton
             category="bigquery"

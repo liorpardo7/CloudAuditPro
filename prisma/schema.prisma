@@ -29,11 +29,14 @@ model User {
 model Project {
   id        String   @id @default(uuid())
   name      String
+  gcpProjectId String
   status    String   // 'active' | 'inactive'
   lastSync  DateTime
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   tokens    OAuthToken[]
+
+  @@unique([gcpProjectId, userId])
 }
 
 model OAuthToken {

@@ -66,7 +66,7 @@ export function UserNav() {
         <DropdownMenuItem
           onClick={async () => {
             await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-            window.location.href = '/api/auth/google';
+            window.location.href = '/settings';
           }}
         >
           <svg
