@@ -71,10 +71,10 @@ export default function Home() {
           <p className="text-muted-foreground mt-1">Monitor and optimize your cloud infrastructure</p>
         </div>
         <div className="flex items-center space-x-3">
-          <Link href="/audit">
+          <Link href="/admin/audit-inventory">
             <Button className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700">
               <PlayCircle className="h-4 w-4" />
-              <span>Run New Audit</span>
+              <span>Run Comprehensive Audit</span>
             </Button>
           </Link>
           <div className="text-xs bg-muted/50 text-muted-foreground px-2.5 py-1 rounded-full font-medium">

@@ -193,10 +193,10 @@ export default function AuditsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Audits</h2>
           <p className="text-muted-foreground mt-1">View and manage cloud infrastructure audits</p>
         </div>
-        <Link href="/audit">
+        <Link href="/admin/audit-inventory">
           <Button className="flex items-center space-x-2">
             <PlusCircle className="h-4 w-4" />
-            <span>New Audit</span>
+            <span>Run Comprehensive Audit</span>
           </Button>
         </Link>
       </div>

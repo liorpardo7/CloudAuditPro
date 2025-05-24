@@ -33,13 +33,13 @@ export function Layout({ children }: LayoutProps) {
                 Dashboard
               </Link>
               <Link
-                href="/audit"
+                href="/admin/audit-inventory"
                 className={cn(
                   "transition-colors hover:text-foreground/80",
-                  pathname === "/audit" ? "text-foreground" : "text-foreground/60"
+                  pathname === "/admin/audit-inventory" ? "text-foreground" : "text-foreground/60"
                 )}
               >
-                Audit
+                Admin Dashboard
               </Link>
               <Link
                 href="/settings"

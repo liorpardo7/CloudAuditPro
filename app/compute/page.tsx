@@ -20,7 +20,8 @@ import {
   HardDrive, 
   Gauge, 
   ChevronRight, 
-  PlusCircle
+  PlusCircle,
+  PlayCircle
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
@@ -242,10 +243,10 @@ export default function ComputePage() {
             <Download className="h-4 w-4" />
             <span>Export</span>
           </Button>
-          <Link href="/audit">
-            <Button className="h-9 flex items-center gap-1.5">
-              <PlusCircle className="h-4 w-4" />
-              <span>New Audit</span>
+          <Link href="/admin/audit-inventory">
+            <Button className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700">
+              <PlayCircle className="h-4 w-4" />
+              <span>Run Comprehensive Audit</span>
             </Button>
           </Link>
         </div>

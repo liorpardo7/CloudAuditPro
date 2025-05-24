@@ -31,9 +31,9 @@ const routes = [
   
   // === AUDIT & MANAGEMENT ===
   {
-    label: "New Audit",
-    icon: PlayCircle,
-    href: "/audit",
+    label: "Admin Dashboard",
+    icon: ShieldCheck,
+    href: "/admin/audit-inventory",
   },
   {
     label: "Audits",
