@@ -1,0 +1,770 @@
+{
+  "timestamp": "2025-05-24T18:23:07.447Z",
+  "summary": {
+    "total": 28,
+    "working": 23,
+    "issues": 0,
+    "missing": 0
+  },
+  "scripts": {
+    "bigquery-audit.js": {
+      "name": "bigquery-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 224,
+        "complexity": "complex"
+      }
+    },
+    "compute-audit.js": {
+      "name": "compute-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 214,
+        "complexity": "complex"
+      }
+    },
+    "storage-audit.js": {
+      "name": "storage-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 287,
+        "complexity": "complex"
+      }
+    },
+    "networking-audit.js": {
+      "name": "networking-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 471,
+        "complexity": "complex"
+      }
+    },
+    "security-audit.js": {
+      "name": "security-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 475,
+        "complexity": "complex"
+      }
+    },
+    "monitoring-audit.js": {
+      "name": "monitoring-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 355,
+        "complexity": "complex"
+      }
+    },
+    "cost-audit.js": {
+      "name": "cost-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 215,
+        "complexity": "complex"
+      }
+    },
+    "cost-allocation-audit.js": {
+      "name": "cost-allocation-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 246,
+        "complexity": "complex"
+      }
+    },
+    "cost-management-audit.js": {
+      "name": "cost-management-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 257,
+        "complexity": "complex"
+      }
+    },
+    "billing-audit.js": {
+      "name": "billing-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 190,
+        "complexity": "medium"
+      }
+    },
+    "billing-advanced-audit.js": {
+      "name": "billing-advanced-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": false,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": false,
+        "hasAsyncAwait": true,
+        "linesOfCode": 18,
+        "complexity": "simple"
+      }
+    },
+    "budget-audit.js": {
+      "name": "budget-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 229,
+        "complexity": "complex"
+      }
+    },
+    "discount-audit.js": {
+      "name": "discount-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 338,
+        "complexity": "complex"
+      }
+    },
+    "gke-audit.js": {
+      "name": "gke-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 183,
+        "complexity": "medium"
+      }
+    },
+    "serverless-audit.js": {
+      "name": "serverless-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 193,
+        "complexity": "medium"
+      }
+    },
+    "storage-lifecycle-audit.js": {
+      "name": "storage-lifecycle-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 240,
+        "complexity": "complex"
+      }
+    },
+    "resource-utilization-audit.js": {
+      "name": "resource-utilization-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 385,
+        "complexity": "complex"
+      }
+    },
+    "data-protection-audit.js": {
+      "name": "data-protection-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 155,
+        "complexity": "medium"
+      }
+    },
+    "compliance-audit.js": {
+      "name": "compliance-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": false,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 33,
+        "complexity": "simple"
+      }
+    },
+    "devops-audit.js": {
+      "name": "devops-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 98,
+        "complexity": "medium"
+      }
+    },
+    "iam-audit.js": {
+      "name": "iam-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 71,
+        "complexity": "medium"
+      }
+    },
+    "org-policy-audit.js": {
+      "name": "org-policy-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 175,
+        "complexity": "medium"
+      }
+    },
+    "permissions-audit.js": {
+      "name": "permissions-audit.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "run"
+      ],
+      "hasRunFunction": true,
+      "runFunctionType": "function",
+      "issues": [],
+      "status": "working",
+      "execution": {
+        "canExecute": true,
+        "mockTestPassed": true,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": false,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 63,
+        "complexity": "medium"
+      }
+    },
+    "run-all-audits.js": {
+      "name": "run-all-audits.js",
+      "exists": true,
+      "loads": true,
+      "exports": [],
+      "hasRunFunction": false,
+      "runFunctionType": null,
+      "issues": [
+        "Missing run function export",
+        "Missing exports: run"
+      ],
+      "status": "broken",
+      "execution": {
+        "canExecute": false,
+        "mockTestPassed": false,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": false,
+        "hasWriteAuditResults": false,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 147,
+        "complexity": "medium"
+      }
+    },
+    "writeAuditResults.js": {
+      "name": "writeAuditResults.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "writeAuditResults"
+      ],
+      "hasRunFunction": false,
+      "runFunctionType": null,
+      "issues": [
+        "Missing run function export",
+        "Missing exports: run"
+      ],
+      "status": "broken",
+      "execution": {
+        "canExecute": false,
+        "mockTestPassed": false,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": false,
+        "hasWriteAuditResults": true,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 68,
+        "complexity": "medium"
+      }
+    },
+    "gcpClient.js": {
+      "name": "gcpClient.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "initializeGoogleClient",
+        "getAuthClient",
+        "getProjectId",
+        "getCompute",
+        "getMonitoring",
+        "getContainer",
+        "getStorage",
+        "getCloudFunctions",
+        "getBigQuery",
+        "getCloudSQL",
+        "getResourceManager",
+        "getBilling",
+        "getDlp",
+        "getOrgPolicy",
+        "getKms"
+      ],
+      "hasRunFunction": false,
+      "runFunctionType": null,
+      "issues": [
+        "Missing run function export",
+        "Missing exports: run"
+      ],
+      "status": "broken",
+      "execution": {
+        "canExecute": false,
+        "mockTestPassed": false,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": false,
+        "hasErrorHandling": false,
+        "hasAsyncAwait": true,
+        "linesOfCode": 124,
+        "complexity": "medium"
+      }
+    },
+    "auth.js": {
+      "name": "auth.js",
+      "exists": true,
+      "loads": true,
+      "exports": [
+        "getAuthClient",
+        "getProjectId",
+        "initializeGoogleClient"
+      ],
+      "hasRunFunction": false,
+      "runFunctionType": null,
+      "issues": [
+        "Missing run function export",
+        "Missing exports: run"
+      ],
+      "status": "broken",
+      "execution": {
+        "canExecute": false,
+        "mockTestPassed": false,
+        "returnStructure": null,
+        "executionError": null
+      },
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": false,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 168,
+        "complexity": "medium"
+      }
+    },
+    "oauth-auth.js": {
+      "name": "oauth-auth.js",
+      "exists": true,
+      "loads": false,
+      "exports": [],
+      "hasRunFunction": false,
+      "runFunctionType": null,
+      "issues": [
+        "Load error: Cannot find module 'express'\nRequire stack:\n- /Users/liorpardo/CloudAuditPro-1/shared-scripts/gcp-audit/oauth-auth.js\n- /Users/liorpardo/CloudAuditPro-1/scripts/test-audit-system.js"
+      ],
+      "status": "broken",
+      "analysis": {
+        "hasGoogleAPIs": true,
+        "hasWriteAuditResults": false,
+        "hasErrorHandling": true,
+        "hasAsyncAwait": true,
+        "linesOfCode": 200,
+        "complexity": "complex"
+      }
+    }
+  },
+  "recommendations": {
+    "immediate": [
+      "Fix or implement run-all-audits.js",
+      "Fix or implement writeAuditResults.js",
+      "Fix or implement gcpClient.js",
+      "Fix or implement auth.js",
+      "Fix or implement oauth-auth.js"
+    ],
+    "shortTerm": [],
+    "longTerm": []
+  }
+}

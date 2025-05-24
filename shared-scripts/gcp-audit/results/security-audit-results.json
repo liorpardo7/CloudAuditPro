@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-05-24T18:43:02.490Z",
+  "projectId": "dba-inventory-services-prod",
+  "findings": [],
+  "summary": {
+    "totalChecks": 0,
+    "passed": 0,
+    "failed": 0,
+    "costSavingsPotential": 0
+  },
+  "errors": []
+}g results: ENOENT: no such file or directory, open '/Users/liorpardo/CloudAuditPro-1/shared-scripts/gcp-audit/dba-inventory-services-prod-8a97ca8265b5.json'"
+  ]
+}      "severity": "WARNING",
+      "details": "Some service account keys are older than 90 days",
+      "recommendation": "Rotate service account keys every 90 days",
+      "projectId": "cloudauditpro"
+    },
+    {
+      "check": "Public Bucket Access",
+      "status": "FAILED",
+      "severity": "HIGH",
+      "details": "Found 2 buckets with public access",
+      "recommendation": "Review and restrict public access to buckets",
+      "projectId": "cloudauditpro"
+    },
+    {
+      "check": "Firewall Rules",
+      "status": "PASSED",
+      "severity": "INFO",
+      "details": "Firewall rules are properly configured",
+      "recommendation": null,
+      "projectId": "cloudauditpro"
+    },
+    {
+      "check": "Encryption at Rest",
+      "status": "PASSED",
+      "severity": "INFO",
+      "details": "All resources have encryption at rest enabled",
+      "recommendation": null,
+      "projectId": "cloudauditpro"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 3,
+    "failed": 2
+  },
+  "errors": []
+}

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { useProjectStore } from '@/lib/store'
-import { verifyCsrf } from '@/lib/csrf'
+import { verifyCsrf } from '@/lib/csrf-server'
 import { rateLimit } from '@/lib/rate-limit'
 import { PrismaClient } from '@prisma/client'
 import { cookies } from 'next/headers'

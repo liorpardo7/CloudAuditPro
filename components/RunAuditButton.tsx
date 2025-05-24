@@ -1,20 +1,50 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, PlayCircle } from "lucide-react";
+import { Loader2, PlayCircle, Shield, Play } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
 
 interface RunAuditButtonProps {
-  category: string;
-  gcpProjectId: string;
+  category?: string;
+  gcpProjectId?: string;
   onComplete?: () => void;
   className?: string;
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
-export function RunAuditButton({ category, gcpProjectId, onComplete, className }: RunAuditButtonProps) {
+export function RunAuditButton({ category, gcpProjectId, onComplete, className, size }: RunAuditButtonProps) {
   const [loading, setLoading] = React.useState(false);
   const { toast } = useToast();
   const [showAuthModal, setShowAuthModal] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
+  const [permissionMessage, setPermissionMessage] = useState<string>('');
+
+  // Check audit permissions on component mount
+  useEffect(() => {
+    const checkPermissions = async () => {
+      try {
+        const response = await fetch('/api/audit-permissions', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setHasPermissions(data.hasPermissions);
+          setPermissionMessage(data.message);
+          
+          if (!data.hasPermissions) {
+            console.warn('[PERMISSIONS] Insufficient audit permissions:', data);
+          }
+        }
+      } catch (error) {
+        console.error('[PERMISSIONS] Error checking audit permissions:', error);
+      }
+    };
+
+    checkPermissions();
+  }, []);
 
   const handleRunAudit = async () => {
     console.log('[RUN_AUDIT] ===== Starting audit =====')
@@ -112,8 +142,35 @@ export function RunAuditButton({ category, gcpProjectId, onComplete, className }
       const data = await res.json();
       console.log('[RUN_AUDIT] Audit response data:', data)
       
+      // Check if we got immediate results (new direct response format)
+      if (data.success && data.results) {
+        console.log('[RUN_AUDIT] Got immediate audit results:', data.results)
+        
+        // Enhanced success message with option to view details
+        const findingsCount = data.results.summary?.total_checks || data.results.findings?.length || 0;
+        const potentialSavings = data.results.summary?.potential_savings || 'N/A';
+        
+        let description = `${data.results.category} audit completed with ${findingsCount} checks!`;
+        if (potentialSavings !== 'N/A' && potentialSavings !== '$0/month') {
+          description += ` 💰 Potential savings: ${potentialSavings}`;
+        }
+        if (data.jobId) {
+          description += ` 📊 View detailed results at /audits/${data.jobId}`;
+        }
+        
+        toast({ 
+          title: "Audit Complete ✅", 
+          description: description,
+          variant: "default",
+          duration: 8000  // Longer duration for more content
+        });
+        onComplete && onComplete();
+        return;
+      }
+      
+      // Legacy job-based workflow (fallback)
       if (!data.jobId) {
-        console.error('[RUN_AUDIT] No job ID returned:', data)
+        console.error('[RUN_AUDIT] No job ID or immediate results returned:', data)
         throw new Error(data.error || "Failed to start audit");
       }
       
@@ -150,11 +207,67 @@ export function RunAuditButton({ category, gcpProjectId, onComplete, className }
     }
   };
 
+  if (isLoading) {
+    return (
+      <Button disabled size={size} className={className}>
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Running Audit...
+      </Button>
+    );
+  }
+
+  // Show permission warning if needed
+  if (hasPermissions === false) {
+    return (
+      <div className="space-y-2">
+        <Button 
+          size={size} 
+          className={`${className} bg-orange-600 hover:bg-orange-700`}
+          onClick={() => {
+            toast({
+              title: "🔐 Audit Permissions Required",
+              description: "Your Google account needs additional permissions to run cloud audits. Please re-authenticate with expanded scopes.",
+              variant: "destructive"
+            });
+          }}
+        >
+          <Shield className="mr-2 h-4 w-4" />
+          Grant Audit Permissions
+        </Button>
+        <div className="text-sm text-orange-600 bg-orange-50 p-2 rounded border">
+          <p className="font-medium">🔒 Missing GCP audit permissions</p>
+          <p className="text-xs mt-1">Required scopes: Cloud Platform, Compute, BigQuery, Monitoring</p>
+          <p className="text-xs mt-1">💡 Contact your admin or re-authenticate your Google account</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <Button onClick={handleRunAudit} disabled={loading || !gcpProjectId} className={className}>
-        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="mr-2 h-4 w-4" />}
-        {loading ? "Running..." : "Run Audit"}
+      <Button 
+        onClick={handleRunAudit} 
+        disabled={loading || hasPermissions === false}
+        className={className}
+        size={size}
+        data-audit-category={category}
+      >
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            {category ? `Running ${category} audit...` : "Running audit..."}
+          </>
+        ) : hasPermissions === false ? (
+          <>
+            <Shield className="mr-2 h-4 w-4" />
+            Insufficient Permissions
+          </>
+        ) : (
+          <>
+            <Play className="mr-2 h-4 w-4" />
+            {category ? `Run ${category.charAt(0).toUpperCase() + category.slice(1)} Audit` : "Run Audit"}
+          </>
+        )}
       </Button>
       <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
         <DialogContent>

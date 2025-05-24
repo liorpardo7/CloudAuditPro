@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import path from 'path'
-import { verifyCsrf } from '@/lib/csrf'
+import { verifyCsrf } from '@/lib/csrf-server'
 import { rateLimit } from '@/lib/rate-limit'
 import { cookies } from 'next/headers'
 
@@ -36,33 +36,69 @@ export async function POST(request: Request) {
   const backendUrl = process.env.BACKEND_URL || 'http://localhost:7778/api/audits/run';
   const body = await request.text();
   const headers = new Headers(request.headers);
+  
   // Forward cookies for authentication
   const cookie = headers.get('cookie');
-  // Try both lower and upper case for CSRF token
-  const csrfToken = headers.get('x-csrf-token') || headers.get('X-CSRF-Token') || '';
+  
+  // Get CSRF token from various possible header formats
+  const csrfToken = headers.get('x-csrf-token') || 
+                   headers.get('X-CSRF-Token') || 
+                   headers.get('csrf-token') ||
+                   '';
+  
   console.log('Proxying /api/audits/run with headers:', {
-    cookie,
-    csrfToken,
+    cookie: cookie ? 'present' : 'missing',
+    csrfToken: csrfToken ? 'present' : 'missing',
+    csrfTokenValue: csrfToken,
     allHeaders: Object.fromEntries(headers.entries()),
   });
-  const res = await fetch(backendUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(cookie ? { cookie } : {}),
-      ...(csrfToken ? { 'x-csrf-token': csrfToken } : {}),
-    },
-    body,
-    credentials: 'include',
-  });
-  let data;
-  const contentType = res.headers.get('content-type') || '';
-  if (contentType.includes('application/json')) {
-    data = await res.json();
-  } else {
-    const text = await res.text();
-    console.error('Non-JSON response from backend:', text);
-    data = { error: 'Internal server error. Non-JSON response from backend.' };
+
+  const proxyHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (cookie) {
+    proxyHeaders.cookie = cookie;
   }
-  return NextResponse.json(data, { status: res.status });
+
+  if (csrfToken) {
+    // Use the exact header name the backend expects
+    proxyHeaders['x-csrf-token'] = csrfToken;
+  }
+
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: proxyHeaders,
+      body,
+    });
+
+    let data;
+    const contentType = res.headers.get('content-type') || '';
+    
+    if (contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      console.error('Non-JSON response from backend:', text.substring(0, 500));
+      
+      // If it's a CSRF error, try to provide a more helpful response
+      if (text.includes('invalid csrf token')) {
+        data = { 
+          error: 'CSRF token validation failed. Please refresh the page and try again.',
+          details: 'Authentication token expired or invalid'
+        };
+      } else {
+        data = { error: 'Internal server error. Non-JSON response from backend.' };
+      }
+    }
+    
+    return NextResponse.json(data, { status: res.status });
+  } catch (error) {
+    console.error('Error proxying to backend:', error);
+    return NextResponse.json(
+      { error: 'Failed to connect to backend server' }, 
+      { status: 500 }
+    );
+  }
 } 

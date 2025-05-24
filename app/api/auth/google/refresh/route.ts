@@ -2,8 +2,9 @@
 import { serialize } from 'cookie';
 import { NextResponse } from 'next/server';
 import { cookies as nextCookies } from 'next/headers';
-import { verifyCsrf } from '@/lib/csrf';
+import { PrismaClient } from '@prisma/client';
 import { rateLimit } from '@/lib/rate-limit';
+import { verifyCsrf } from '@/lib/csrf-server';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;

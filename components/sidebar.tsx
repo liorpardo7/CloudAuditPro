@@ -28,65 +28,20 @@ const routes = [
     icon: LayoutDashboard,
     href: "/",
   },
+  
+  // === AUDIT & MANAGEMENT ===
   {
-    label: "Cost",
-    icon: BarChart3,
-    children: [
-      {
-        label: "Cost Allocation & Tagging",
-        icon: BarChart3,
-        href: "/cost-allocation",
-      },
-      {
-        label: "Budgeting & Forecasting",
-        icon: BarChart3,
-        href: "/budgeting",
-      },
-      {
-        label: "Discount Program Evaluation",
-        icon: BarChart3,
-        href: "/discounts",
-      },
-      {
-        label: "Monitoring & Alerts",
-        icon: ShieldCheck,
-        href: "/monitoring",
-      },
-    ],
-    href: "/cost",
+    label: "New Audit",
+    icon: PlayCircle,
+    href: "/audit",
   },
   {
-    label: "Security",
-    icon: ShieldCheck,
-    href: "/security",
+    label: "Audits",
+    icon: ClipboardList,
+    href: "/audits",
   },
-  {
-    label: "Resource Utilization",
-    icon: BarChart3,
-    href: "/resource-utilization",
-  },
-  {
-    label: "Storage",
-    icon: Database,
-    children: [
-      {
-        label: "Storage Lifecycle Policies",
-        icon: Database,
-        href: "/storage-lifecycle",
-      },
-      {
-        label: "Persistent Disk Optimization",
-        icon: HardDrive,
-        href: "/storage/persistent-disk-optimization",
-      },
-      {
-        label: "Filestore Optimization",
-        icon: HardDrive,
-        href: "/storage/filestore-optimization",
-      },
-    ],
-    href: "/storage",
-  },
+  
+  // === CORE INFRASTRUCTURE ===
   {
     label: "Compute",
     icon: Server,
@@ -115,22 +70,34 @@ const routes = [
     href: "/compute",
   },
   {
-    label: "Serverless Audit",
-    icon: require('lucide-react').Zap,
+    label: "Storage",
+    icon: Database,
     children: [
       {
-        label: "Cloud Run Optimization",
-        icon: require('lucide-react').Zap,
-        href: "/serverless/cloud-run-optimization",
+        label: "Storage Lifecycle Policies",
+        icon: Database,
+        href: "/storage-lifecycle",
       },
       {
-        label: "Cloud Functions Optimization",
-        icon: require('lucide-react').Zap,
-        href: "/serverless/cloud-functions-optimization",
+        label: "Persistent Disk Optimization",
+        icon: HardDrive,
+        href: "/storage/persistent-disk-optimization",
+      },
+      {
+        label: "Filestore Optimization",
+        icon: HardDrive,
+        href: "/storage/filestore-optimization",
       },
     ],
-    href: "/serverless",
+    href: "/storage",
   },
+  {
+    label: "Network",
+    icon: Network,
+    href: "/network",
+  },
+  
+  // === DATA & ANALYTICS ===
   {
     label: "Big Query",
     icon: Database,
@@ -158,10 +125,43 @@ const routes = [
     ],
     href: "/bigquery",
   },
+  
+  // === MODERN ARCHITECTURES ===
   {
-    label: "Network",
-    icon: Network,
-    href: "/network",
+    label: "Serverless",
+    icon: require('lucide-react').Zap,
+    children: [
+      {
+        label: "Cloud Run Optimization",
+        icon: require('lucide-react').Zap,
+        href: "/serverless/cloud-run-optimization",
+      },
+      {
+        label: "Cloud Functions Optimization",
+        icon: require('lucide-react').Zap,
+        href: "/serverless/cloud-functions-optimization",
+      },
+    ],
+    href: "/serverless",
+  },
+  {
+    label: "Operations",
+    icon: Server,
+    children: [
+      {
+        label: "DevOps",
+        icon: Server,
+        href: "/devops",
+      },
+    ],
+    href: "/operations",
+  },
+  
+  // === GOVERNANCE & OPTIMIZATION ===
+  {
+    label: "Security",
+    icon: ShieldCheck,
+    href: "/security",
   },
   {
     label: "Compliance",
@@ -181,27 +181,39 @@ const routes = [
     href: "/compliance",
   },
   {
-    label: "Audits",
-    icon: ClipboardList,
-    href: "/audits",
-  },
-  {
-    label: "New Audit",
-    icon: PlayCircle,
-    href: "/audit",
-  },
-  {
-    label: "Operations",
-    icon: Server,
+    label: "Cost Management",
+    icon: BarChart3,
     children: [
       {
-        label: "DevOps",
-        icon: Server,
-        href: "/devops",
+        label: "Cost Allocation & Tagging",
+        icon: BarChart3,
+        href: "/cost-allocation",
+      },
+      {
+        label: "Budgeting & Forecasting",
+        icon: BarChart3,
+        href: "/budgeting",
+      },
+      {
+        label: "Discount Program Evaluation",
+        icon: BarChart3,
+        href: "/discounts",
+      },
+      {
+        label: "Monitoring & Alerts",
+        icon: ShieldCheck,
+        href: "/monitoring",
       },
     ],
-    href: "/operations",
+    href: "/cost",
   },
+  {
+    label: "Resource Utilization",
+    icon: BarChart3,
+    href: "/resource-utilization",
+  },
+  
+  // === SYSTEM ===
   {
     label: "Settings",
     icon: Settings,

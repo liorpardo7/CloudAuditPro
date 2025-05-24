@@ -1,0 +1,65 @@
+{
+  "timestamp": "2025-05-24T18:43:04.282Z",
+  "projectId": "cloudauditpro",
+  "findings": [
+    {
+      "check": "IAM Policy Binding",
+      "role": "roles/compute.serviceAgent",
+      "members": [
+        "serviceAccount:service-260609144873@compute-system.iam.gserviceaccount.com"
+      ],
+      "overlyPermissive": false,
+      "passed": true,
+      "details": {
+        "role": "roles/compute.serviceAgent",
+        "members": [
+          "serviceAccount:service-260609144873@compute-system.iam.gserviceaccount.com"
+        ]
+      }
+    },
+    {
+      "check": "IAM Policy Binding",
+      "role": "roles/editor",
+      "members": [
+        "serviceAccount:260609144873-compute@developer.gserviceaccount.com",
+        "serviceAccount:260609144873@cloudservices.gserviceaccount.com"
+      ],
+      "overlyPermissive": true,
+      "passed": false,
+      "details": {
+        "role": "roles/editor",
+        "members": [
+          "serviceAccount:260609144873-compute@developer.gserviceaccount.com",
+          "serviceAccount:260609144873@cloudservices.gserviceaccount.com"
+        ]
+      }
+    },
+    {
+      "check": "IAM Policy Binding",
+      "role": "roles/owner",
+      "members": [
+        "user:hacvana@gmail.com"
+      ],
+      "overlyPermissive": true,
+      "passed": false,
+      "details": {
+        "role": "roles/owner",
+        "members": [
+          "user:hacvana@gmail.com"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "totalChecks": 3,
+    "passed": 1,
+    "failed": 2,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "IAM Audit",
+      "error": "Insufficient Permission"
+    }
+  ]
+}

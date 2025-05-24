@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-05-24T18:43:03.556Z",
+  "projectId": "cloudauditpro",
+  "findings": [],
+  "summary": {
+    "totalChecks": 5,
+    "passed": 0,
+    "failed": 5,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Idle VMs",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Unattached Disks",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Budget Alerts",
+      "error": "Cannot read properties of undefined (reading 'list')"
+    },
+    {
+      "check": "Committed Use Discounts",
+      "error": "Missing required parameters: region"
+    },
+    {
+      "check": "Oversized Instances",
+      "error": "Insufficient Permission"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "timestamp": "2025-05-24T18:43:08.492Z",
+  "projectId": "cloudauditpro",
+  "findings": [
+    {
+      "check": "Data Retention",
+      "result": "0 buckets with retention policies",
+      "passed": false,
+      "details": []
+    },
+    {
+      "check": "Data Residency",
+      "result": "0 buckets with location settings",
+      "passed": false,
+      "details": []
+    }
+  ],
+  "summary": {
+    "totalChecks": 5,
+    "passed": 0,
+    "failed": 5,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Sensitive Data Detection",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Data Encryption",
+      "error": "Missing required parameters: zone"
+    },
+    {
+      "check": "Data Security",
+      "error": "Insufficient Permission"
+    }
+  ]
+}

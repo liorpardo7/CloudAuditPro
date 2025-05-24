@@ -41,13 +41,14 @@ export default function BigQueryPage() {
   const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("datasets")
-  // Audit cards state (from audit-process)
-  const [stalePartitioning, setStalePartitioning] = React.useState<any[]>([])
-  const [deprecatedUDFs, setDeprecatedUDFs] = React.useState<any[]>([])
-  const [auditLoading, setAuditLoading] = React.useState(true)
+  
+  // State for real data
+  const [auditResults, setAuditResults] = React.useState<any>(null)
+  const [auditLoading, setAuditLoading] = React.useState(false)
   const [auditError, setAuditError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
-  const [data, setData] = React.useState<any>(null)
+  const [realData, setRealData] = React.useState<any>(null)
+  const [hasRealData, setHasRealData] = React.useState(false)
 
   React.useEffect(() => {
     // On mount, sync ?project= param to store
@@ -66,32 +67,53 @@ export default function BigQueryPage() {
     }
   }, [selectedProject]);
 
-  // Refactor data fetching into a function
-  const fetchData = React.useCallback(() => {
-    setLoading(true)
-    let jobId = typeof window !== 'undefined' ? localStorage.getItem('lastAuditJobId') : null
-    if (!jobId) jobId = 'test'
-    fetch(`/api/audits/status?id=${jobId}`)
-      .then(res => res.json())
-      .then(res => {
-        setStalePartitioning(res.bigqueryResults?.bigquery?.stalePartitioning || [])
-        setDeprecatedUDFs(res.bigqueryResults?.bigquery?.deprecatedUDFs || [])
-        setAuditLoading(false)
-        setData(res.bigqueryResults?.bigquery || null)
-      })
-      .catch(() => {
-        setAuditError('Failed to fetch audit results.')
-        setAuditLoading(false)
-      })
-      .finally(() => setLoading(false))
-  }, [])
+  // Load real audit data from database
+  const loadRealAuditData = React.useCallback(async () => {
+    if (!selectedProject) return
+    
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/bigquery/audit-results?projectId=${selectedProject.gcpProjectId}`)
+      const data = await response.json()
+      
+      if (data.hasData) {
+        setRealData(data)
+        setHasRealData(true)
+        console.log('[BIGQUERY] Loaded real audit data:', data)
+      } else {
+        setHasRealData(false)
+        console.log('[BIGQUERY] No real audit data found:', data.message)
+      }
+    } catch (error) {
+      console.error('[BIGQUERY] Failed to load real audit data:', error)
+      setHasRealData(false)
+    } finally {
+      setLoading(false)
+    }
+  }, [selectedProject])
 
+  // Handle audit results from RunAuditButton
+  const handleAuditComplete = React.useCallback((results: any) => {
+    console.log('[BIGQUERY] Received audit results:', results)
+    setAuditResults(results)
+    setAuditLoading(false)
+    setAuditError(null)
+    // Reload real data after audit completes
+    loadRealAuditData()
+  }, [loadRealAuditData])
+
+  // Try to load any existing audit results on mount
   React.useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    loadRealAuditData()
+  }, [loadRealAuditData])
 
-  // Mock data - would come from API in a real application
-  const bigqueryData = {
+  // Use real data if available, otherwise fall back to mock data
+  const bigqueryData = hasRealData ? {
+    datasets: realData.datasets || [],
+    tables: realData.tables || [],
+    recentQueries: realData.recentQueries || [],
+    recommendations: realData.recommendations || []
+  } : {
     datasets: [
       { id: "analytics-prod", name: "Production Analytics", location: "us-central1", tables: 24, size: "1.8TB", lastModified: "2 hours ago", defaultExpiration: "Never", labels: ["production", "analytics"], access: ["All authenticated users"] },
       { id: "marketing-data", name: "Marketing Data", location: "us-central1", tables: 8, size: "560GB", lastModified: "1 day ago", defaultExpiration: "Never", labels: ["marketing"], access: ["marketing@company.com"] },
@@ -150,8 +172,8 @@ export default function BigQueryPage() {
           {selectedProject && (
             <RunAuditButton
               category="bigquery"
-              projectId={selectedProject.id}
-              onComplete={fetchData}
+              gcpProjectId={selectedProject.gcpProjectId}
+              onComplete={handleAuditComplete}
             />
           )}
           <Button variant="outline" className="h-9 flex items-center gap-1.5">
@@ -164,6 +186,55 @@ export default function BigQueryPage() {
           </Button>
         </div>
       </div>
+
+      {/* Data Source Indicator */}
+      {!loading && (
+        <div className={`p-3 rounded-lg border ${
+          hasRealData 
+            ? 'bg-green-50 border-green-200 text-green-800' 
+            : 'bg-blue-50 border-blue-200 text-blue-800'
+        }`}>
+          <div className="flex items-center gap-2">
+            {hasRealData ? (
+              <>
+                <Database className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Showing real audit data from {new Date(realData.lastUpdated).toLocaleString()}
+                </span>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={loadRealAuditData}
+                  className="ml-auto h-6 px-2 text-xs"
+                >
+                  Refresh
+                </Button>
+              </>
+            ) : (
+              <>
+                <AlertTriangle className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  Showing demo data - Run a BigQuery audit to see your real data
+                </span>
+                {selectedProject && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      // Auto-click the audit button to run an audit
+                      const auditButton = document.querySelector('[data-audit-category="bigquery"]') as HTMLButtonElement;
+                      if (auditButton) auditButton.click();
+                    }}
+                    className="ml-auto h-6 px-2 text-xs"
+                  >
+                    Run Audit Now
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center items-center h-40">
@@ -223,207 +294,279 @@ export default function BigQueryPage() {
           </div>
 
           <TabsContent value="datasets" className="m-0">
-            <div className="rounded-md border">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b bg-muted/50">
-                      <th className="h-10 px-4 text-left font-medium">
-                        <div className="flex items-center space-x-1">
-                          <span>Dataset Name</span>
-                          <ArrowUpDown className="h-3 w-3" />
-                        </div>
-                      </th>
-                      <th className="h-10 px-2 text-left font-medium">Location</th>
-                      <th className="h-10 px-2 text-center font-medium">Tables</th>
-                      <th className="h-10 px-2 text-right font-medium">Size</th>
-                      <th className="h-10 px-2 text-left font-medium">Last Modified</th>
-                      <th className="h-10 px-2 text-left font-medium">Default Expiration</th>
-                      <th className="h-10 px-2 text-left font-medium">Labels</th>
-                      <th className="h-10 px-2 text-right font-medium">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bigqueryData.datasets.map((dataset) => (
-                      <tr key={dataset.id} className="border-b hover:bg-muted/30 transition-colors">
-                        <td className="px-4 py-3">
-                          <div>
-                            <div className="font-medium">{dataset.name}</div>
-                            <div className="text-xs text-muted-foreground">{dataset.id}</div>
-                          </div>
-                        </td>
-                        <td className="px-2 py-3 text-xs">{dataset.location}</td>
-                        <td className="px-2 py-3 text-center text-xs">{dataset.tables}</td>
-                        <td className="px-2 py-3 text-right text-xs">{dataset.size}</td>
-                        <td className="px-2 py-3 text-xs">
-                          <div className="flex items-center space-x-1">
-                            <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                            <span>{dataset.lastModified}</span>
-                          </div>
-                        </td>
-                        <td className="px-2 py-3 text-xs">{dataset.defaultExpiration}</td>
-                        <td className="px-2 py-3">
-                          <div className="flex flex-wrap gap-1">
-                            {dataset.labels.map((label) => (
-                              <span 
-                                key={label} 
-                                className="px-2 py-0.5 rounded-full text-xs bg-muted text-muted-foreground"
-                              >
-                                {label}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="px-2 py-3 text-right">
-                          <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
-                            View
-                            <ChevronRight className="ml-1 h-3 w-3" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {bigqueryData.datasets.length === 0 ? (
+              <div className="text-center py-12">
+                <Database className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">No Datasets Found</h3>
+                <p className="text-muted-foreground mb-4">
+                  {hasRealData 
+                    ? "No BigQuery datasets were found in your project."
+                    : "This is demo data. Run an audit to see your actual BigQuery datasets."
+                  }
+                </p>
+                {!hasRealData && selectedProject && (
+                  <Button 
+                    onClick={() => {
+                      const auditButton = document.querySelector('[data-audit-category="bigquery"]') as HTMLButtonElement;
+                      if (auditButton) auditButton.click();
+                    }}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Run BigQuery Audit
+                  </Button>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="rounded-md border">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b bg-muted/50">
+                        <th className="h-10 px-4 text-left font-medium">
+                          <div className="flex items-center space-x-1">
+                            <span>Dataset Name</span>
+                            <ArrowUpDown className="h-3 w-3" />
+                          </div>
+                        </th>
+                        <th className="h-10 px-2 text-left font-medium">Location</th>
+                        <th className="h-10 px-2 text-center font-medium">Tables</th>
+                        <th className="h-10 px-2 text-right font-medium">Size</th>
+                        <th className="h-10 px-2 text-left font-medium">Last Modified</th>
+                        <th className="h-10 px-2 text-left font-medium">Default Expiration</th>
+                        <th className="h-10 px-2 text-left font-medium">Labels</th>
+                        <th className="h-10 px-2 text-right font-medium">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bigqueryData.datasets.map((dataset: any) => (
+                        <tr key={dataset.id} className="border-b hover:bg-muted/30 transition-colors">
+                          <td className="px-4 py-3">
+                            <div>
+                              <div className="font-medium">{dataset.name}</div>
+                              <div className="text-xs text-muted-foreground">{dataset.id}</div>
+                            </div>
+                          </td>
+                          <td className="px-2 py-3 text-xs">{dataset.location}</td>
+                          <td className="px-2 py-3 text-center text-xs">{dataset.tables}</td>
+                          <td className="px-2 py-3 text-right text-xs">{dataset.size}</td>
+                          <td className="px-2 py-3 text-xs">
+                            <div className="flex items-center space-x-1">
+                              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span>{dataset.lastModified}</span>
+                            </div>
+                          </td>
+                          <td className="px-2 py-3 text-xs">{dataset.defaultExpiration}</td>
+                          <td className="px-2 py-3">
+                            <div className="flex flex-wrap gap-1">
+                              {dataset.labels.map((label: string) => (
+                                <span 
+                                  key={label} 
+                                  className="px-2 py-0.5 rounded-full text-xs bg-muted text-muted-foreground"
+                                >
+                                  {label}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="px-2 py-3 text-right">
+                            <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                              View
+                              <ChevronRight className="ml-1 h-3 w-3" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="tables" className="m-0">
-            <div className="rounded-md border">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b bg-muted/50">
-                      <th className="h-10 px-4 text-left font-medium">
-                        <div className="flex items-center space-x-1">
-                          <span>Table Name</span>
-                          <ArrowUpDown className="h-3 w-3" />
-                        </div>
-                      </th>
-                      <th className="h-10 px-2 text-left font-medium">Dataset</th>
-                      <th className="h-10 px-2 text-left font-medium">Type</th>
-                      <th className="h-10 px-2 text-right font-medium">Rows</th>
-                      <th className="h-10 px-2 text-right font-medium">Size</th>
-                      <th className="h-10 px-2 text-left font-medium">Schema</th>
-                      <th className="h-10 px-2 text-center font-medium">Partitioned</th>
-                      <th className="h-10 px-2 text-center font-medium">Clustered</th>
-                      <th className="h-10 px-2 text-right font-medium">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bigqueryData.tables.map((table) => (
-                      <tr key={table.id} className="border-b hover:bg-muted/30 transition-colors">
-                        <td className="px-4 py-3">
-                          <div>
-                            <div className="font-medium">{table.name}</div>
-                            <div className="text-xs text-muted-foreground">
-                              <Clock className="inline h-3 w-3 mr-0.5 text-muted-foreground" />
-                              {table.lastModified}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-2 py-3 text-xs">{table.dataset}</td>
-                        <td className="px-2 py-3 text-xs">
-                          <span className={`px-2 py-0.5 rounded-full text-xs ${
-                            table.type === 'VIEW' 
-                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
-                          }`}>
-                            {table.type}
-                          </span>
-                        </td>
-                        <td className="px-2 py-3 text-right text-xs">{table.rows}</td>
-                        <td className="px-2 py-3 text-right text-xs">{table.size}</td>
-                        <td className="px-2 py-3 text-xs">{table.schema}</td>
-                        <td className="px-2 py-3 text-center">
-                          {table.partitioned ? (
-                            <div className="flex items-center justify-center">
-                              <div className="h-2 w-2 bg-emerald-500 rounded-full" />
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-center">
-                              <div className="h-2 w-2 bg-slate-300 dark:bg-slate-700 rounded-full" />
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-2 py-3 text-center">
-                          {table.clustered ? (
-                            <div className="flex items-center justify-center">
-                              <div className="h-2 w-2 bg-emerald-500 rounded-full" />
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-center">
-                              <div className="h-2 w-2 bg-slate-300 dark:bg-slate-700 rounded-full" />
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-2 py-3 text-right">
-                          <div className="flex justify-end space-x-1">
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <Table className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <FileText className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {bigqueryData.tables.length === 0 ? (
+              <div className="text-center py-12">
+                <Table className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">No Tables Found</h3>
+                <p className="text-muted-foreground mb-4">
+                  {hasRealData 
+                    ? "No BigQuery tables were found in your project."
+                    : "This is demo data. Run an audit to see your actual BigQuery tables."
+                  }
+                </p>
+                {!hasRealData && selectedProject && (
+                  <Button 
+                    onClick={() => {
+                      const auditButton = document.querySelector('[data-audit-category="bigquery"]') as HTMLButtonElement;
+                      if (auditButton) auditButton.click();
+                    }}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Run BigQuery Audit
+                  </Button>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="rounded-md border">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b bg-muted/50">
+                        <th className="h-10 px-4 text-left font-medium">
+                          <div className="flex items-center space-x-1">
+                            <span>Table Name</span>
+                            <ArrowUpDown className="h-3 w-3" />
+                          </div>
+                        </th>
+                        <th className="h-10 px-2 text-left font-medium">Dataset</th>
+                        <th className="h-10 px-2 text-left font-medium">Type</th>
+                        <th className="h-10 px-2 text-right font-medium">Rows</th>
+                        <th className="h-10 px-2 text-right font-medium">Size</th>
+                        <th className="h-10 px-2 text-left font-medium">Schema</th>
+                        <th className="h-10 px-2 text-center font-medium">Partitioned</th>
+                        <th className="h-10 px-2 text-center font-medium">Clustered</th>
+                        <th className="h-10 px-2 text-right font-medium">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bigqueryData.tables.map((table: any) => (
+                        <tr key={table.id} className="border-b hover:bg-muted/30 transition-colors">
+                          <td className="px-4 py-3">
+                            <div>
+                              <div className="font-medium">{table.name}</div>
+                              <div className="text-xs text-muted-foreground">
+                                <Clock className="inline h-3 w-3 mr-0.5 text-muted-foreground" />
+                                {table.lastModified}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-2 py-3 text-xs">{table.dataset}</td>
+                          <td className="px-2 py-3 text-xs">
+                            <span className={`px-2 py-0.5 rounded-full text-xs ${
+                              table.type === 'VIEW' 
+                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                            }`}>
+                              {table.type}
+                            </span>
+                          </td>
+                          <td className="px-2 py-3 text-right text-xs">{table.rows}</td>
+                          <td className="px-2 py-3 text-right text-xs">{table.size}</td>
+                          <td className="px-2 py-3 text-xs">{table.schema}</td>
+                          <td className="px-2 py-3 text-center">
+                            {table.partitioned ? (
+                              <div className="flex items-center justify-center">
+                                <div className="h-2 w-2 bg-emerald-500 rounded-full" />
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center">
+                                <div className="h-2 w-2 bg-slate-300 dark:bg-slate-700 rounded-full" />
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-2 py-3 text-center">
+                            {table.clustered ? (
+                              <div className="flex items-center justify-center">
+                                <div className="h-2 w-2 bg-emerald-500 rounded-full" />
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center">
+                                <div className="h-2 w-2 bg-slate-300 dark:bg-slate-700 rounded-full" />
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-2 py-3 text-right">
+                            <div className="flex justify-end space-x-1">
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <Table className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <FileText className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="queries" className="m-0">
-            <div className="space-y-4">
-              {bigqueryData.recentQueries.map((query) => (
-                <Card key={query.id} className="border shadow-none overflow-hidden">
-                  <CardHeader className="p-4 pb-2 bg-muted/20">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Play className="h-4 w-4 text-blue-500" />
-                        <div className="text-sm font-medium">Query {query.id}</div>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {query.timestamp} by {query.user}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-3">
-                    <div className="bg-muted/30 rounded-md p-3 text-xs font-mono whitespace-pre-wrap overflow-x-auto">
-                      {query.query}
-                    </div>
-                    <div className="flex flex-wrap justify-between mt-4 text-xs text-muted-foreground gap-y-2">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-1">
-                          <HardDrive className="h-3.5 w-3.5" />
-                          <span>Processed: {query.processed}</span>
+            {bigqueryData.recentQueries.length === 0 ? (
+              <div className="text-center py-12">
+                <Code2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">No Recent Queries</h3>
+                <p className="text-muted-foreground mb-4">
+                  {hasRealData 
+                    ? "No recent BigQuery queries were found."
+                    : "This is demo data. Run an audit to see your actual query history."
+                  }
+                </p>
+                {!hasRealData && selectedProject && (
+                  <Button 
+                    onClick={() => {
+                      const auditButton = document.querySelector('[data-audit-category="bigquery"]') as HTMLButtonElement;
+                      if (auditButton) auditButton.click();
+                    }}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Run BigQuery Audit
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {bigqueryData.recentQueries.map((query: any) => (
+                  <Card key={query.id} className="border shadow-none overflow-hidden">
+                    <CardHeader className="p-4 pb-2 bg-muted/20">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Play className="h-4 w-4 text-blue-500" />
+                          <div className="text-sm font-medium">Query {query.id}</div>
                         </div>
-                        <div className="flex items-center space-x-1">
-                          <Timer className="h-3.5 w-3.5" />
-                          <span>Duration: {query.duration}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Database className="h-3.5 w-3.5" />
-                          <span>Location: {query.location}</span>
+                        <div className="text-xs text-muted-foreground">
+                          {query.timestamp} by {query.user}
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" className="h-7 text-xs">
-                          <FileText className="h-3.5 w-3.5 mr-1" />
-                          Results
-                        </Button>
-                        <Button variant="outline" size="sm" className="h-7 text-xs">
-                          <ExternalLink className="h-3.5 w-3.5 mr-1" />
-                          Open in SQL Editor
-                        </Button>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-3">
+                      <div className="bg-muted/30 rounded-md p-3 text-xs font-mono whitespace-pre-wrap overflow-x-auto">
+                        {query.query}
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                      <div className="flex flex-wrap justify-between mt-4 text-xs text-muted-foreground gap-y-2">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-1">
+                            <HardDrive className="h-3.5 w-3.5" />
+                            <span>Processed: {query.processed}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Timer className="h-3.5 w-3.5" />
+                            <span>Duration: {query.duration}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Database className="h-3.5 w-3.5" />
+                            <span>Location: {query.location}</span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm" className="h-7 text-xs">
+                            <FileText className="h-3.5 w-3.5 mr-1" />
+                            Results
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-7 text-xs">
+                            <ExternalLink className="h-3.5 w-3.5 mr-1" />
+                            Open in SQL Editor
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </TabsContent>
         </Tabs>
         
@@ -498,19 +641,24 @@ export default function BigQueryPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {bigqueryData.recommendations.map((rec) => (
-                <div key={rec.id} className="flex items-start space-x-2 p-3 rounded border border-l-4 bg-muted/10" style={{ borderLeftColor: rec.impact === 'high' ? 'var(--red-500)' : rec.impact === 'medium' ? 'var(--amber-500)' : 'var(--blue-500)' }}>
-                  <div>
-                    <div className="font-medium text-sm">{rec.title}</div>
-                    <div className="text-xs text-muted-foreground mt-1">{rec.description}</div>
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                        Save {rec.estimatedSavings}
-                      </span>
-                      <Button variant="outline" size="sm" className="h-7 text-xs">
-                        Apply
-                      </Button>
+              {bigqueryData.recommendations.map((rec: any) => (
+                <div key={rec.id} className="border rounded-lg p-4 hover:bg-muted/20 transition-colors">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-medium">{rec.title}</h4>
+                      <p className="text-xs text-muted-foreground">{rec.description}</p>
                     </div>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(rec.impact)}`}>
+                      {rec.impact}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-xs font-medium text-green-600">
+                      Save {rec.estimatedSavings}
+                    </span>
+                    <Button variant="outline" size="sm" className="h-7 text-xs">
+                      Apply
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -518,91 +666,6 @@ export default function BigQueryPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* --- Audit Cards from audit-process branch, only at the bottom --- */}
-      <div className="grid gap-6 md:grid-cols-2 mt-10">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="text-yellow-500" />
-              Stale Partitioning
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {auditLoading ? (
-              <div>Loading...</div>
-            ) : auditError ? (
-              <div className="text-red-500">{auditError}</div>
-            ) : stalePartitioning.length === 0 ? (
-              <div className="text-muted-foreground">No stale partitioning issues found.</div>
-            ) : (
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr>
-                    <th className="text-left font-semibold">Table</th>
-                    <th className="text-left font-semibold">Partition</th>
-                    <th className="text-left font-semibold">Last Modified</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stalePartitioning.map((item, idx) => (
-                    <tr key={idx} className="border-t">
-                      <td className="py-1">{item.table}</td>
-                      <td className="py-1">{item.partition}</td>
-                      <td className="py-1">{item.lastModified}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Code2 className="text-blue-500" />
-              Deprecated SQL UDFs
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {auditLoading ? (
-              <div>Loading...</div>
-            ) : auditError ? (
-              <div className="text-red-500">{auditError}</div>
-            ) : deprecatedUDFs.length === 0 ? (
-              <div className="text-muted-foreground">No deprecated UDFs found.</div>
-            ) : (
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr>
-                    <th className="text-left font-semibold">Dataset</th>
-                    <th className="text-left font-semibold">Table</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deprecatedUDFs.map((item, idx) => (
-                    <tr key={idx} className="border-t">
-                      <td className="py-1">{item.dataset}</td>
-                      <td className="py-1">{item.table}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Link href="/bigquery/slot-utilization">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle>BigQuery Slot Utilization & Reservation Sizing</CardTitle>
-          </CardHeader>
-          <CardContent>
-            Analyze slot utilization for reservations and evaluate flat-rate/flex slots for on-demand optimization in the selected project.
-          </CardContent>
-        </Card>
-      </Link>
     </div>
   )
 } 

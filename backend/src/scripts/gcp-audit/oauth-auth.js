@@ -12,15 +12,47 @@ const oauth2Client = new google.auth.OAuth2(
   'http://localhost:3000/oauth2callback'
 );
 
-// Scopes required for all audit scripts
+// Comprehensive scopes required for all audit scripts - using only VALID scopes confirmed by Google
 const SCOPES = [
+  // Core identity and profile (Google's preferred format)
+  'openid',
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile',
+  
+  // Core GCP platform access
   'https://www.googleapis.com/auth/cloud-platform',
   'https://www.googleapis.com/auth/cloud-platform.read-only',
   'https://www.googleapis.com/auth/cloudplatformprojects.readonly',
-  'https://www.googleapis.com/auth/cloud-billing.readonly',
+  
+  // Compute Engine
   'https://www.googleapis.com/auth/compute.readonly',
+  'https://www.googleapis.com/auth/compute',
+  
+  // Cloud Storage (using valid scope only)
+  'https://www.googleapis.com/auth/devstorage.read_write',
+  
+  // BigQuery
   'https://www.googleapis.com/auth/bigquery.readonly',
-  'https://www.googleapis.com/auth/monitoring.readonly'
+  'https://www.googleapis.com/auth/bigquery',
+  
+  // Cloud Monitoring and Logging
+  'https://www.googleapis.com/auth/monitoring.read',
+  'https://www.googleapis.com/auth/monitoring.write',
+  'https://www.googleapis.com/auth/logging.read',
+  'https://www.googleapis.com/auth/logging.write',
+  
+  // Cloud Billing
+  'https://www.googleapis.com/auth/cloud-billing.readonly',
+  
+  // Service Management
+  'https://www.googleapis.com/auth/service.management.readonly',
+  'https://www.googleapis.com/auth/servicecontrol',
+  
+  // Cloud DNS
+  'https://www.googleapis.com/auth/ndev.clouddns.readonly',
+  
+  // Cloud Trace
+  'https://www.googleapis.com/auth/trace.readonly'
 ];
 
 class OAuthAuthenticator {

@@ -70,6 +70,56 @@ model AuditItem {
   category    AuditCategory @relation(fields: [categoryId], references: [id])
 }
 
+// New models for admin audit tracking
+model AdminAuditCategory {
+  id              String   @id @default(uuid())
+  categoryId      String   @unique // matches the frontend category IDs (compute, storage, etc.)
+  name            String
+  path            String
+  description     String
+  subcategories   Json     // Array of subcategory names
+  status          String   @default("idle") // idle, running, completed, failed, pending
+  lastRun         DateTime?
+  duration        Int?     // Duration in milliseconds
+  progress        Int?     // Progress percentage
+  results         Json?    // Processed audit results
+  rawData         Json?    // Raw GCP API responses
+  error           String?  // Error message if failed
+  adminComments   AdminComment[]
+  backups         AdminAuditBackup[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("admin_audit_categories")
+}
+
+model AdminComment {
+  id         String              @id @default(uuid())
+  categoryId String
+  comment    String
+  priority   String              @default("medium") // low, medium, high, critical
+  status     String              @default("open")   // open, in-progress, resolved
+  tags       String[]            // Array of tags like ["bug", "improvement", "feature"]
+  adminEmail String?             // Email of admin who left the comment
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  category   AdminAuditCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("admin_comments")
+}
+
+model AdminAuditBackup {
+  id          String              @id @default(uuid())
+  categoryId  String
+  backupData  Json                // Complete backup of the audit category data
+  backupType  String              @default("auto") // auto, manual
+  description String?
+  createdAt   DateTime            @default(now())
+  category    AdminAuditCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("admin_audit_backups")
+}
+
 model AuditJob {
   id        String    @id @default(uuid())
   projectId String

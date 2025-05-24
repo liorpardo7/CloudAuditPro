@@ -1,0 +1,23 @@
+{
+  "id": "59944186-be88-4064-8a6d-5fb344720f5b",
+  "categoryId": "bigquery",
+  "name": "BigQuery",
+  "path": "/bigquery",
+  "description": "Data warehouse optimization and query analysis",
+  "subcategories": [
+    "Dataset Inventory",
+    "Query Performance",
+    "Slot Utilization",
+    "Table Partitioning",
+    "Cost Optimization"
+  ],
+  "status": "idle",
+  "lastRun": null,
+  "duration": null,
+  "progress": null,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.451Z",
+  "updatedAt": "2025-05-24T19:08:51.451Z"
+}

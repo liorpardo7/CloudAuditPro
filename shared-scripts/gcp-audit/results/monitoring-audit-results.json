@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-05-24T18:43:06.111Z",
+  "projectId": "cloudauditpro",
+  "findings": [],
+  "summary": {
+    "totalChecks": 10,
+    "passed": 0,
+    "failed": 10,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Monitoring Dashboards",
+      "error": "Cannot read properties of undefined (reading 'list')"
+    },
+    {
+      "check": "Cost Anomaly Alerts",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Critical Alerts Coverage",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Alert Notification Channels",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Alert Coverage Analysis",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Custom Metrics",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Alert Effectiveness",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Monitoring Security",
+      "error": "monitoring.projects.getIamPolicy is not a function"
+    },
+    {
+      "check": "Monitoring Automation",
+      "error": "Insufficient Permission"
+    },
+    {
+      "check": "Monitoring Cost Optimization",
+      "error": "Insufficient Permission"
+    }
+  ]
+}

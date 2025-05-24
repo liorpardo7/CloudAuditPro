@@ -1,0 +1,49 @@
+{
+  "timestamp": "2025-05-24T19:19:26.027Z",
+  "projectId": "cloudauditpro",
+  "findings": [
+    {
+      "check": "Stale Partitioning",
+      "result": "0 tables with stale partitioning",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "Deprecated UDFs",
+      "result": "0 deprecated UDFs found",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "Query Optimization",
+      "result": "0 recent queries analyzed",
+      "passed": false,
+      "details": []
+    },
+    {
+      "check": "Cost Optimization",
+      "result": "0 large tables identified",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "Dataset Access Controls",
+      "result": "0 datasets reviewed",
+      "passed": false,
+      "details": []
+    },
+    {
+      "check": "Job Monitoring",
+      "result": "0 running jobs",
+      "passed": false,
+      "details": []
+    }
+  ],
+  "summary": {
+    "totalChecks": 6,
+    "passed": 3,
+    "failed": 3,
+    "costSavingsPotential": 0
+  },
+  "errors": []
+}

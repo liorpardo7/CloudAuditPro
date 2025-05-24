@@ -3,8 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+import { ConditionalLayout } from "@/components/conditional-layout"
 import { Toaster as ShadcnToaster } from "@/components/ui/toaster"
 import { Toaster } from "sonner"
 
@@ -29,15 +28,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <Header />
-              <main className="flex-1 overflow-y-auto">
-                {children}
-              </main>
-            </div>
-          </div>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
           <ShadcnToaster />
           <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>

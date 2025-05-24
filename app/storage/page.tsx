@@ -254,7 +254,7 @@ export default function StoragePage() {
 
       <div className="flex items-center gap-4 mb-4">
         {selectedProject && (
-          <RunAuditButton category="storage" projectId={selectedProject.id} onComplete={fetchAudit} />
+          <RunAuditButton category="storage" gcpProjectId={selectedProject.gcpProjectId} onComplete={fetchAudit} />
         )}
         <Button variant="outline" size="sm" onClick={handleCopy} disabled={!raw} className="ml-2">Copy Raw Response</Button>
         {copyMsg && <span className="ml-2 text-emerald-600 text-xs">{copyMsg}</span>}

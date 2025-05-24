@@ -6,6 +6,12 @@ const path = require('path');
 async function run(projectId, tokens) {
   const findings = [];
   const errors = [];
+  let summary = {
+    totalInstances: 0,
+    findings: 0,
+    errors: 0
+  };
+  
   try {
     const authClient = new google.auth.OAuth2();
     authClient.setCredentials(tokens);
@@ -26,7 +32,7 @@ async function run(projectId, tokens) {
     }
     
     // Generate summary
-    const summary = {
+    summary = {
       totalInstances: instances.length,
       findings: findings.length,
       errors: errors.length
@@ -43,6 +49,7 @@ async function run(projectId, tokens) {
   } catch (error) {
     console.error('Error in compute audit:', error);
     errors.push({ error: error.message });
+    summary.errors = errors.length;
     await writeAuditResults('compute-audit', findings, summary, errors, projectId);
     throw error;
   }

@@ -1,83 +1,143 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Server, Database, FileText, BarChart3, ClipboardList, ChevronDown, ChevronUp, Terminal, RefreshCw, Clipboard, CheckCircle2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  ShieldCheck, Server, Database, FileText, BarChart3, ClipboardList, 
+  ChevronDown, ChevronUp, Terminal, RefreshCw, Clipboard, CheckCircle2,
+  AlertTriangle, Eye, Play, Square, Monitor, Cloud, 
+  DollarSign, Lock, Network, Cpu, HardDrive, GitBranch,
+  Calendar, Settings, Users, Activity, Bug, Code, Download,
+  CheckCircle, XCircle, Clock, Zap, Filter, Search,
+  ArrowRight, Loader2, PauseCircle, Timer, ChevronRight,
+  MessageSquare, Plus, Edit, Trash2, Save, X, Archive
+} from "lucide-react";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useProjectStore } from '@/lib/store'
+import { makeAuthenticatedRequest } from '@/lib/csrf';
 
 // TODO: Replace with real auth check
 const ADMIN_EMAIL = "admin@cloudauditpro.com";
 const currentUserEmail = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
 
 const statusColors = {
-  "Reviewed": "bg-green-100 text-green-800",
-  "Needs Work": "bg-yellow-100 text-yellow-800",
-  "Missing": "bg-red-100 text-red-800",
-  "Ready for Prod": "bg-blue-100 text-blue-800",
-  "Needs Review": "bg-gray-100 text-gray-800"
+  "completed": "bg-green-100 text-green-800",
+  "running": "bg-blue-100 text-blue-800",
+  "failed": "bg-red-100 text-red-800",
+  "pending": "bg-yellow-100 text-yellow-800",
+  "idle": "bg-gray-100 text-gray-800"
 } as const;
 
-type AuditItem = {
-  category: string;
-  name: string;
-  page: string;
-  script: string;
-  endpoint: string;
-  description: string;
-  formula: string;
-  status: keyof typeof statusColors;
-  notes: string;
-  reviewed: boolean;
-  lastRun: string;
-  results: any;
-  id: string;
+const priorityColors = {
+  "low": "bg-blue-100 text-blue-800",
+  "medium": "bg-yellow-100 text-yellow-800", 
+  "high": "bg-orange-100 text-orange-800",
+  "critical": "bg-red-100 text-red-800"
+} as const;
+
+const commentStatusColors = {
+  "open": "bg-red-100 text-red-800",
+  "in-progress": "bg-yellow-100 text-yellow-800",
+  "resolved": "bg-green-100 text-green-800"
+} as const;
+
+// Icon mapping for categories
+const iconMapping = {
+  "compute": Cpu,
+  "storage": HardDrive,
+  "bigquery": Database,
+  "network": Network,
+  "security": Lock,
+  "cost": DollarSign,
+  "gke": Monitor,
+  "serverless": Zap,
+  "devops": GitBranch,
+  "monitoring": Activity,
+  "compliance": CheckCircle,
+  "data-protection": ShieldCheck
 };
 
-// FULL STATIC AUDIT INVENTORY: One row per audit sub-item from GCP_AUDIT_CHECKLIST.md
-const STATIC_AUDIT_ITEMS: AuditItem[] = [
-  // --- Compute: Virtual Machines ---
-  { category: "Compute", name: "VM Instance Inventory", page: "/compute", script: "compute-audit.js", endpoint: "/api/audits/compute/vm-instance-inventory", description: "List all VM instances", formula: "compute.instances.list", status: "Needs Review", notes: "", reviewed: false, lastRun: new Date().toISOString(), results: {}, id: "vm-instance-inventory" },
-  { category: "Compute", name: "Check instance types and sizes", page: "/compute", script: "compute-audit.js", endpoint: "/api/audits/compute/check-instance-types", description: "Check instance types and sizes", formula: "compute.machineTypes.list", status: "Needs Review", notes: "", reviewed: false, lastRun: new Date().toISOString(), results: {}, id: "check-instance-types" },
-  { category: "Compute", name: "Verify machine family usage", page: "/compute", script: "compute-audit.js", endpoint: "/api/audits/compute/verify-machine-family", description: "Verify machine family usage", formula: "compute.machineTypes.list", status: "Needs Review", notes: "", reviewed: false, lastRun: new Date().toISOString(), results: {}, id: "verify-machine-family" },
-  { category: "Compute", name: "Review instance labels and tags", page: "/compute", script: "compute-audit.js", endpoint: "/api/audits/compute/review-labels-tags", description: "Review instance labels and tags", formula: "compute.instances.list", status: "Needs Review", notes: "", reviewed: false, lastRun: new Date().toISOString(), results: {}, id: "review-labels-tags" },
-  { category: "Compute", name: "Check for deprecated machine types", page: "/compute", script: "compute-audit.js", endpoint: "/api/audits/compute/check-deprecated-types", description: "Check for deprecated machine types", formula: "compute.machineTypes.list", status: "Needs Review", notes: "", reviewed: false, lastRun: new Date().toISOString(), results: {}, id: "check-deprecated-types" },
-  { category: "Compute", name: "Verify instance naming conventions", page: "/compute", script: "compute-audit.js", endpoint: "/api/audits/compute/verify-naming-conventions", description: "Verify instance naming conventions", formula: "compute.instances.list", status: "Needs Review", notes: "", reviewed: false, lastRun: new Date().toISOString(), results: {}, id: "verify-naming-conventions" },
-  // ... (repeat for every sub-item in every section of the checklist, including Storage, Networking, Security, Cost, Data Protection, DevOps, Compliance, etc.) ...
-];
+type AuditStatus = "idle" | "pending" | "running" | "completed" | "failed";
 
-// Add a helper for copying text to clipboard
-function copyToClipboard(text: string) {
-  navigator.clipboard.writeText(text);
-}
+type AdminComment = {
+  id: string;
+  comment: string;
+  priority: "low" | "medium" | "high" | "critical";
+  status: "open" | "in-progress" | "resolved";
+  tags: string[];
+  adminEmail?: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-// Group items by script file
-function groupByScript(items: AuditItem[]) {
-  const groups: Record<string, AuditItem[]> = {};
-  for (const item of items) {
-    if (!groups[item.script]) groups[item.script] = [];
-    groups[item.script].push(item);
-  }
-  return groups;
-}
+type AuditCategory = {
+  id: string;
+  name: string;
+  path: string;
+  icon: any;
+  description: string;
+  subcategories: string[];
+  status: AuditStatus;
+  lastRun?: Date;
+  duration?: number;
+  progress?: number;
+  results?: any;
+  logs?: string[];
+  rawData?: any;
+  error?: string;
+  comments?: AdminComment[];
+  updatedAt?: string;
+};
+
+type DebugLog = {
+  timestamp: Date;
+  level: "info" | "warn" | "error" | "debug";
+  category: string;
+  message: string;
+  data?: any;
+};
 
 export default function AdminAuditInventoryPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
+
+  // State management
+  const [categories, setCategories] = useState<AuditCategory[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [debugLogs, setDebugLogs] = useState<DebugLog[]>([]);
+  const [isRunningAll, setIsRunningAll] = useState(false);
+  const [currentOperation, setCurrentOperation] = useState<string | null>(null);
+  const [searchFilter, setSearchFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<AuditStatus | "all">("all");
+  const [showRawData, setShowRawData] = useState<Record<string, boolean>>({});
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [loading, setLoading] = useState(true);
+  
+  // Comment management
+  const [showComments, setShowComments] = useState<Record<string, boolean>>({});
+  const [editingComment, setEditingComment] = useState<string | null>(null);
+  const [newComment, setNewComment] = useState<Record<string, {
+    comment: string;
+    priority: string;
+    tags: string;
+  }>>({});
+
+  // Project sync
   React.useEffect(() => {
-    // On mount, sync ?project= param to store
     const urlProject = searchParams.get('project');
     if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
       setSelectedProjectByGcpId(urlProject);
     }
   }, []);
+
   React.useEffect(() => {
-    // When project changes, update URL param
     if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
       const params = new URLSearchParams(Array.from(searchParams.entries()));
       params.set('project', selectedProject.gcpProjectId);
@@ -85,512 +145,1029 @@ export default function AdminAuditInventoryPage() {
     }
   }, [selectedProject]);
 
-  // TODO: Replace with real auth check
+  // Auth check
   if (currentUserEmail && currentUserEmail !== ADMIN_EMAIL) {
     return <div className="p-8 text-center text-lg text-red-600">Access denied. Admins only.</div>;
   }
 
-  const [expanded, setExpanded] = useState<number | null>(null);
-  const [search, setSearch] = useState("");
-  const [items, setItems] = useState<AuditItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
-  const [needsAudit, setNeedsAudit] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [testResults, setTestResults] = useState<Record<string, any>>({});
-  const [testLoading, setTestLoading] = useState<Record<string, boolean>>({});
-  const [testError, setTestError] = useState<Record<string, string | null>>({});
-  const [showNetworkError, setShowNetworkError] = useState<Record<string, boolean>>({});
-  const [groupTestLoading, setGroupTestLoading] = useState<Record<string, boolean>>({});
-  const [results, setResults] = useState<any>(null);
-  const [runSuccessStatus, setRunSuccessStatus] = useState<Record<string, { success: boolean, timestamp: string } | null>>({});
-  const [isRunningAll, setIsRunningAll] = useState(false);
-
-  const fetchAuditData = async () => {
+  // Load categories from database
+  const loadCategories = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
-      setMessage(null);
-      const response = await fetch('/api/admin/audit-inventory');
-      if (!response.ok) throw new Error('Failed to fetch audit data');
+      const response = await makeAuthenticatedRequest('/api/admin/audit-inventory');
+      if (response.ok) {
       const data = await response.json();
-      setItems(data.items);
-      setNeedsAudit(data.needsAudit);
-      setMessage(data.message);
-      setLastRefresh(new Date());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch audit data');
+        const categoriesWithIcons = data.categories.map((cat: any) => ({
+          ...cat,
+          icon: iconMapping[cat.id as keyof typeof iconMapping] || Database,
+          lastRun: cat.lastRun ? new Date(cat.lastRun) : undefined
+        }));
+        setCategories(categoriesWithIcons);
+        addDebugLog("info", "system", `Loaded ${categoriesWithIcons.length} categories from database`);
+      } else {
+        throw new Error('Failed to load categories');
+      }
+    } catch (error: any) {
+      addDebugLog("error", "system", `Failed to load categories: ${error.message}`);
+      toast.error("Failed to load audit categories");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleRunAllAudits = async () => {
-    setIsRunningAll(true);
+  // Load categories on mount
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
+  // Debug logging function
+  const addDebugLog = useCallback((level: "info" | "warn" | "error" | "debug", category: string, message: string, data?: any) => {
+    const log: DebugLog = {
+      timestamp: new Date(),
+      level,
+      category,
+      message,
+      data
+    };
+    setDebugLogs(prev => [log, ...prev].slice(0, 1000)); // Keep last 1000 logs
+  }, []);
+
+  // Update category status in database
+  const updateCategoryInDB = useCallback(async (categoryId: string, updates: Partial<AuditCategory>) => {
     try {
-      const res = await fetch('/api/audits/run', {
+      const response = await makeAuthenticatedRequest('/api/admin/audit-inventory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId: 'demo-project-123', category: 'all' })
+        body: JSON.stringify({
+          action: 'updateStatus',
+          categoryId,
+          ...updates
+        })
       });
-      if (res.ok) {
-        toast.success('All audits started!');
-        fetchAuditData(); // Optionally refresh data
-      } else {
-        const data = await res.json();
-        toast.error(data.error || 'Failed to start all audits');
+
+      if (!response.ok) {
+        throw new Error('Failed to update category in database');
       }
-    } finally {
-      setIsRunningAll(false);
+
+      addDebugLog("info", categoryId, "Category updated in database", updates);
+    } catch (error: any) {
+      addDebugLog("error", categoryId, `Failed to update category: ${error.message}`);
     }
-  };
+  }, [addDebugLog]);
 
-  // Initial fetch
-  useEffect(() => {
-    fetchAuditData();
-  }, []);
+  // Update category status locally and in database
+  const updateCategoryStatus = useCallback((categoryId: string, updates: Partial<AuditCategory>) => {
+    setCategories(prev => prev.map(cat => 
+      cat.id === categoryId ? { ...cat, ...updates } : cat
+    ));
+    
+    // Update in database
+    updateCategoryInDB(categoryId, updates);
+  }, [updateCategoryInDB]);
 
-  // Auto-refresh every 5 minutes
-  useEffect(() => {
-    const interval = setInterval(fetchAuditData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleRowClick = (idx: number) => {
-    setExpanded(expanded === idx ? null : idx);
-  };
-
-  const handleStatusChange = async (idx: number, newStatus: keyof typeof statusColors) => {
+  // Add comment to category
+  const addComment = async (categoryId: string, comment: string, priority: string, tags: string[]) => {
     try {
-      const item = items[idx];
-      const response = await fetch('/api/admin/audit-inventory/update', {
+      const response = await makeAuthenticatedRequest('/api/admin/audit-inventory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category: item.category,
-          name: item.name,
-          updates: { status: newStatus }
+          action: 'addComment',
+          categoryId,
+          comment,
+          priority,
+          tags,
+          adminEmail: currentUserEmail
         })
       });
 
-      if (!response.ok) throw new Error('Failed to update status');
-      
-      const updated = [...items];
-      updated[idx].status = newStatus;
-      setItems(updated);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update status');
+      if (response.ok) {
+        await loadCategories(); // Reload to get updated comments
+        setNewComment(prev => ({ ...prev, [categoryId]: { comment: '', priority: 'medium', tags: '' } }));
+        toast.success("Comment added successfully");
+        addDebugLog("info", categoryId, "Comment added", { comment, priority, tags });
+      } else {
+        throw new Error('Failed to add comment');
+      }
+    } catch (error: any) {
+      toast.error("Failed to add comment");
+      addDebugLog("error", categoryId, `Failed to add comment: ${error.message}`);
     }
   };
 
-  const handleNotesChange = async (idx: number, newNotes: string) => {
+  // Update comment status
+  const updateCommentStatus = async (commentId: string, status: string) => {
     try {
-      const item = items[idx];
-      const response = await fetch('/api/admin/audit-inventory/update', {
+      const response = await makeAuthenticatedRequest('/api/admin/audit-inventory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category: item.category,
-          name: item.name,
-          updates: { notes: newNotes }
+          action: 'updateComment',
+          commentId,
+          status
         })
       });
 
-      if (!response.ok) throw new Error('Failed to update notes');
-      
-      const updated = [...items];
-      updated[idx].notes = newNotes;
-      setItems(updated);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update notes');
+      if (response.ok) {
+        await loadCategories();
+        toast.success("Comment updated");
+      } else {
+        throw new Error('Failed to update comment');
+      }
+    } catch (error: any) {
+      toast.error("Failed to update comment");
     }
   };
 
-  const handleReviewedChange = async (idx: number, checked: boolean) => {
+  // Delete comment
+  const deleteComment = async (commentId: string) => {
     try {
-      const item = items[idx];
-      const updates = {
-        reviewed: checked,
-        status: checked ? "Reviewed" as const : 
-          (item.status === "Reviewed" || item.status === "Ready for Prod") ? "Needs Work" as const : item.status
-      };
-
-      const response = await fetch('/api/admin/audit-inventory/update', {
+      const response = await makeAuthenticatedRequest('/api/admin/audit-inventory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category: item.category,
-          name: item.name,
-          updates
+          action: 'deleteComment',
+          commentId
         })
       });
 
-      if (!response.ok) throw new Error('Failed to update reviewed status');
-      
-      const updated = [...items];
-      updated[idx].reviewed = checked;
-      updated[idx].status = updates.status;
-      setItems(updated);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update reviewed status');
+      if (response.ok) {
+        await loadCategories();
+        toast.success("Comment deleted");
+      } else {
+        throw new Error('Failed to delete comment');
+      }
+    } catch (error: any) {
+      toast.error("Failed to delete comment");
     }
   };
 
-  // Helper to test the API endpoint for a given item
-  const handleTestApi = async (scriptFile: string) => {
+  // Create manual backup
+  const createBackup = async (categoryId: string) => {
     try {
-      setLoading(true);
-      setError(null);
-      setResults(null);
+      const response = await makeAuthenticatedRequest('/api/admin/audit-inventory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'createBackup',
+          categoryId,
+          description: `Manual backup by ${currentUserEmail}`
+        })
+      });
 
-      // Convert script file to API endpoint format
-      const scriptName = scriptFile.replace('.py', '').replace(/_/g, '-');
-      const response = await fetch(`/api/audits/${scriptName}`);
+      if (response.ok) {
+        toast.success("Backup created successfully");
+        addDebugLog("info", categoryId, "Manual backup created");
+      } else {
+        throw new Error('Failed to create backup');
+      }
+    } catch (error: any) {
+      toast.error("Failed to create backup");
+      addDebugLog("error", categoryId, `Failed to create backup: ${error.message}`);
+    }
+  };
+
+  // Run individual audit
+  const runAudit = async (categoryId: string) => {
+    if (!selectedProject) {
+      toast.error('Please select a project first');
+      return;
+    }
+
+    const category = categories.find(c => c.id === categoryId);
+    if (!category) return;
+
+    addDebugLog("info", categoryId, `Starting audit for ${category.name}`);
+    updateCategoryStatus(categoryId, { 
+      status: "running", 
+      progress: 0, 
+      error: undefined,
+      lastRun: new Date()
+    });
+
+    try {
+      const startTime = Date.now();
+      
+      const response = await makeAuthenticatedRequest('/api/audits/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId: selectedProject.gcpProjectId,
+          category: categoryId
+        })
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to run audit');
+        throw new Error(errorData.error || 'Audit failed');
       }
-
-      const data = await response.json();
-      setResults(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Test all items in a script group
-  const handleGroupTestApi = async (script: string) => {
-    setGroupTestLoading((prev) => ({ ...prev, [script]: true }));
-    try {
-      // Use the script name directly, removing .js extension
-      const scriptName = script.replace('.js', '');
-      // TODO: Replace with real project selection logic
-      const projectId = 'demo-project-123';
-      const response = await fetch(`/api/audits/run`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          projectId,
-          category: scriptName
-        })
-      });
       
       const data = await response.json();
-      
-      if (response.ok) {
-        // Poll for job status
-        const jobId = data.jobId;
-        let intervalId = setInterval(async () => {
-          const statusResponse = await fetch(`/api/audits/status?id=${jobId}`);
+      addDebugLog("info", categoryId, `Audit request sent, job ID: ${data.jobId}`, data);
+
+      // Poll for completion
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusResponse = await makeAuthenticatedRequest(`/api/audits/status?id=${data.jobId}`);
           const statusData = await statusResponse.json();
           
+          addDebugLog("debug", categoryId, `Polling status: ${statusData.status}`, statusData);
+          
           if (statusData.status === 'completed') {
-            clearInterval(intervalId);
+            clearInterval(pollInterval);
+            const duration = Date.now() - startTime;
             
-            // Update all items in this group in the UI
-            setItems((prev) => prev.map(item =>
-              item.script === script
-                ? { ...item, lastRun: new Date().toISOString(), results: statusData.auditResults || {} }
-                : item
-            ));
-            
-            // Set success status for this script
-            setRunSuccessStatus(prev => ({ 
-              ...prev, 
-              [script]: { 
-                success: true, 
-                timestamp: new Date().toISOString() 
-              } 
-            }));
-            
-            // Show success toast
-            toast.success(`Audit ${scriptName} completed successfully!`, {
-              description: `Results updated at ${new Date().toLocaleTimeString()}`
+            updateCategoryStatus(categoryId, {
+              status: "completed",
+              duration,
+              progress: 100,
+              results: statusData.result ? JSON.parse(statusData.result) : null,
+              rawData: statusData.rawData
             });
-            
-            setGroupTestLoading(prev => ({ ...prev, [script]: false }));
+
+            addDebugLog("info", categoryId, `Audit completed in ${duration}ms`, statusData);
+            toast.success(`${category.name} audit completed!`);
+
           } else if (statusData.status === 'error') {
-            clearInterval(intervalId);
-            setGroupTestLoading(prev => ({ ...prev, [script]: false }));
-            setRunSuccessStatus(prev => ({ 
-              ...prev, 
-              [script]: { 
-                success: false, 
-                timestamp: new Date().toISOString() 
-              } 
-            }));
-            toast.error(`Audit ${scriptName} failed: ${statusData.error || 'Unknown error'}`);
+            clearInterval(pollInterval);
+            const duration = Date.now() - startTime;
+            
+            updateCategoryStatus(categoryId, {
+              status: "failed",
+              duration,
+              error: statusData.error
+            });
+
+            addDebugLog("error", categoryId, `Audit failed: ${statusData.error}`, statusData);
+            toast.error(`${category.name} audit failed: ${statusData.error}`);
           }
-        }, 1000);
-        
-        // Stop polling after 30 seconds to prevent infinite polling
+        } catch (pollError) {
+          addDebugLog("error", categoryId, `Error polling status: ${pollError}`, pollError);
+        }
+      }, 2000);
+
+      // Timeout after 5 minutes
         setTimeout(() => {
-          clearInterval(intervalId);
-          if (groupTestLoading[script]) {
-            setGroupTestLoading(prev => ({ ...prev, [script]: false }));
-            toast.error(`Audit ${scriptName} timed out. The operation may still be running in the background.`);
-          }
-        }, 30000);
-      } else {
-        toast.error(`Failed to start audit: ${data.error || 'Unknown error'}`);
-        setGroupTestLoading((prev) => ({ ...prev, [script]: false }));
-      }
-    } catch (err: any) {
-      toast.error(`Failed to run audit: ${err.message || 'Unknown error'}`);
-      setGroupTestLoading((prev) => ({ ...prev, [script]: false }));
+        clearInterval(pollInterval);
+        updateCategoryStatus(categoryId, {
+          status: "failed",
+          error: "Audit timed out"
+        });
+        addDebugLog("error", categoryId, "Audit timed out after 5 minutes");
+      }, 300000);
+
+    } catch (error: any) {
+      updateCategoryStatus(categoryId, {
+        status: "failed", 
+        error: error.message
+      });
+      addDebugLog("error", categoryId, `Audit failed: ${error.message}`, error);
+      toast.error(`${category.name} audit failed: ${error.message}`);
     }
   };
 
-  const filtered = items.filter(item =>
-    item.name.toLowerCase().includes(search.toLowerCase()) ||
-    item.category.toLowerCase().includes(search.toLowerCase()) ||
-    item.script.toLowerCase().includes(search.toLowerCase()) ||
-    item.endpoint.toLowerCase().includes(search.toLowerCase())
-  );
+  // Run all selected audits
+  const runSelectedAudits = async () => {
+    if (selectedCategories.size === 0) {
+      toast.error('Please select at least one audit category');
+      return;
+    }
 
-  const grouped = groupByScript(filtered);
+    setIsRunningAll(true);
+    setCurrentOperation("Running selected audits...");
+    addDebugLog("info", "system", `Starting batch audit for ${selectedCategories.size} categories`);
 
-  // Helper to render a section for each script
-  function ScriptSection({ script, itemsInGroup, groupIdx }: { script: string, itemsInGroup: AuditItem[], groupIdx: number }) {
+    for (const categoryId of Array.from(selectedCategories)) {
+      await runAudit(categoryId);
+      // Small delay between audits to avoid overwhelming the system
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    setIsRunningAll(false);
+    setCurrentOperation(null);
+    addDebugLog("info", "system", "Batch audit completed");
+  };
+
+  // Run all audits
+  const runAllAudits = async () => {
+    setSelectedCategories(new Set(categories.map(c => c.id)));
+    await runSelectedAudits();
+  };
+
+  // Stop all running audits
+  const stopAllAudits = () => {
+    categories.forEach(cat => {
+      if (cat.status === "running") {
+        updateCategoryStatus(cat.id, { status: "idle", progress: 0 });
+        addDebugLog("warn", cat.id, "Audit stopped by user");
+      }
+    });
+    setIsRunningAll(false);
+    setCurrentOperation(null);
+    toast.info("All running audits have been stopped");
+  };
+
+  // Toggle category selection
+  const toggleCategorySelection = (categoryId: string) => {
+    setSelectedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
+  };
+
+  // Select all categories
+  const selectAllCategories = () => {
+    setSelectedCategories(new Set(filteredCategories.map(c => c.id)));
+  };
+
+  // Clear selection
+  const clearSelection = () => {
+    setSelectedCategories(new Set());
+  };
+
+  // Filter categories
+  const filteredCategories = categories.filter(cat => {
+    const matchesSearch = cat.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
+                         cat.description.toLowerCase().includes(searchFilter.toLowerCase());
+    const matchesStatus = statusFilter === "all" || cat.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  // Auto-refresh effect
+  useEffect(() => {
+    if (!autoRefresh) return;
+    
+    const interval = setInterval(() => {
+      // Refresh running audits
+      const runningAudits = categories.filter(cat => cat.status === "running");
+      if (runningAudits.length > 0) {
+        addDebugLog("debug", "system", `Auto-refresh check for ${runningAudits.length} running audits`);
+        // Only reload if there are running audits
+        loadCategories();
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, categories, addDebugLog, loadCategories]);
+
+  const getStatusIcon = (status: AuditStatus) => {
+    switch (status) {
+      case "completed": return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case "running": return <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />;
+      case "failed": return <XCircle className="h-4 w-4 text-red-600" />;
+      case "pending": return <Clock className="h-4 w-4 text-yellow-600" />;
+      default: return <PauseCircle className="h-4 w-4 text-gray-400" />;
+    }
+  };
+
+  const getStatusBadgeColor = (status: AuditStatus) => {
+    return statusColors[status] || statusColors.idle;
+  };
+
+  if (loading) {
   return (
-      <div key={script} className="mb-10 border rounded-lg bg-white shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50">
+      <div className="flex justify-center items-center h-screen">
           <div className="flex items-center gap-3">
-            <Terminal className="h-5 w-5 text-primary" />
-            <span className="font-mono font-bold text-lg">{script}</span>
-          </div>
-          <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => handleGroupTestApi(script)}
-                          disabled={groupTestLoading[script]}
-                        >
-              {groupTestLoading[script] ? <span className="animate-spin mr-2"><RefreshCw className="h-4 w-4" /></span> : null}
-                          Run Audit
-                        </Button>
-                        {runSuccessStatus[script]?.success && (
-                          <span className="text-xs text-green-600 ml-2 flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4" />
-                Last run: {new Date(runSuccessStatus[script]?.timestamp || '').toLocaleTimeString()}
-                          </span>
-                        )}
-          </div>
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="text-lg">Loading admin dashboard...</span>
         </div>
-        <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="bg-muted">
-                <tr>
-                <th className="px-2 py-2 text-left font-semibold w-8">#</th>
-                <th className="px-2 py-2 text-left font-semibold w-44">ID</th>
-                  <th className="px-2 py-2 text-left font-semibold">Category</th>
-                  <th className="px-2 py-2 text-left font-semibold">Name</th>
-                  <th className="px-2 py-2 text-left font-semibold">Status</th>
-                  <th className="px-2 py-2 text-left font-semibold">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                    {itemsInGroup.map((item, idx) => {
-                const globalIdx = groupIdx * 1000 + idx;
-                      return (
-                  <tr key={item.id} className={
-                              `${expanded === globalIdx ? "bg-primary/10" : idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-primary/5 cursor-pointer`}
-                            onClick={() => handleRowClick(globalIdx)}
-                            id={`item-${globalIdx}`}
-                          >
-                    <td className="px-2 py-2 font-bold">{idx + 1}</td>
-                    <td className="px-2 py-2 font-mono text-xs flex items-center gap-2">
-                              {item.id}
-                              <button
-                                className="ml-1 p-1 rounded hover:bg-gray-200"
-                                title="Copy ID"
-                                onClick={e => { e.stopPropagation(); copyToClipboard(item.id); }}
-                              >
-                                <Clipboard className="h-4 w-4 text-gray-500" />
-                              </button>
-                            </td>
-                            <td className="px-2 py-2 font-medium whitespace-nowrap max-w-[120px] overflow-hidden text-ellipsis">{item.category}</td>
-                            <td className="px-2 py-2">{item.name}</td>
-                            <td className="px-2 py-2">
-                              <span className={`inline-block rounded px-2 py-1 text-xs font-semibold ${statusColors[item.status]}`}>{item.status}</span>
-                            </td>
-                            <td className="px-2 py-2">
-                              <Button size="sm" variant="outline" onClick={e => { e.stopPropagation(); handleRowClick(globalIdx); }}>
-                                {expanded === globalIdx ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />} Details
-                              </Button>
-                            </td>
-                          </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        {/* Expanded details for items in this script */}
-        {itemsInGroup.map((item, idx) => {
-          const globalIdx = groupIdx * 1000 + idx;
-          if (expanded !== globalIdx) return null;
-          return (
-            <div key={item.id + '-details'} className="bg-primary/5 p-6 border-t">
-              <div className="flex flex-col md:flex-row gap-8">
-                                  <div className="flex-1 space-y-4 min-w-[300px]">
-                                    <Card>
-                                      <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                          <FileText className="h-5 w-5 text-primary" /> Description
-                                        </CardTitle>
-                                      </CardHeader>
-                                      <CardContent>
-                                        <div className="mb-2 text-muted-foreground">{item.description}</div>
-                                        <div className="text-xs text-muted-foreground">
-                                          Page: <a href={item.page} className="underline text-primary">{item.page}</a>
-                                        </div>
-                                      </CardContent>
-                                    </Card>
-                                    <Card>
-                                      <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                          <Terminal className="h-5 w-5 text-primary" /> Script
-                                        </CardTitle>
-                                      </CardHeader>
-                                      <CardContent>
-                                        <div className="font-mono text-xs bg-muted rounded p-2">{item.script}</div>
-                                        <div className="text-xs text-muted-foreground mt-2">Last Run: {new Date(item.lastRun).toLocaleString()}</div>
-                                        <div className="text-xs text-muted-foreground mt-2">Reviewed: {item.reviewed ? 'Yes' : 'No'}</div>
-                                        <Button size="sm" className="mt-2">View Code</Button>
-                                      </CardContent>
-                                    </Card>
-                                  </div>
-                                  <div className="flex-1 space-y-4 min-w-[300px]">
-                                    <Card>
-                                      <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                          <Server className="h-5 w-5 text-primary" /> API Endpoint
-                                        </CardTitle>
-                                      </CardHeader>
-                                      <CardContent>
-                                        <div className="font-mono text-xs bg-muted rounded p-2 mb-2 break-all">{item.endpoint}</div>
-                                        <Button size="sm" className="mr-2" onClick={e => { e.stopPropagation(); handleTestApi(item.script); }} disabled={loading}>
-                                          {loading ? <span className="animate-spin mr-2"><RefreshCw className="h-4 w-4" /></span> : null}
-                                          Test API
-                                        </Button>
-                                        <Button size="sm" variant="outline">View Docs</Button>
-                                      </CardContent>
-                                    </Card>
-                                    <Card>
-                                      <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
-                                          <BarChart3 className="h-5 w-5 text-primary" /> Results
-                                        </CardTitle>
-                                      </CardHeader>
-                                      <CardContent>
-                                        {loading && <div className="text-xs text-blue-600 mb-2">Testing API...</div>}
-                                        {testError[item.script] && <>
-                                          <div className="text-xs text-red-600 mb-2">Error: {testError[item.script]}</div>
-                                          <Button size="sm" variant="ghost" onClick={() => setShowNetworkError(prev => ({ ...prev, [item.script]: !prev[item.script] }))}>
-                                            {showNetworkError[item.script] ? 'Hide' : 'Show'} Network Error
-                                          </Button>
-                                          {showNetworkError[item.script] && <pre className="text-xs bg-red-50 rounded p-2 overflow-auto max-h-32 mt-2">{testError[item.script]}</pre>}
-                                        </>}
-                                        {runSuccessStatus[item.script]?.success && (
-                                          <div className="flex items-center text-green-600 mb-4 bg-green-50 p-2 rounded-md">
-                                            <CheckCircle2 className="h-4 w-4 mr-2" />
-                                            <span>Audit completed successfully at {new Date(runSuccessStatus[item.script]?.timestamp || '').toLocaleTimeString()}</span>
-                                          </div>
-                                        )}
-                                        {item.results && Object.keys(item.results).length > 0 && (
-                                          <Card className="mt-4">
-                                            <CardHeader>
-                                              <CardTitle>Results</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                              <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[400px]">
-                                                {JSON.stringify(item.results, null, 2)}
-                                              </pre>
-                                            </CardContent>
-                                          </Card>
-                                        )}
-                                      </CardContent>
-                                    </Card>
-                                    <Card>
-                                      <CardHeader>
-                                        <CardTitle>Status & Notes</CardTitle>
-                                      </CardHeader>
-                                      <CardContent>
-                                        <select
-                                          className="mb-2 border rounded px-2 py-1 text-sm w-full"
-                                          value={item.status}
-                                          onChange={e => handleStatusChange(globalIdx, e.target.value as keyof typeof statusColors)}
-                                        >
-                                          {Object.keys(statusColors).map(status => (
-                                            <option key={status} value={status}>{status}</option>
-                                          ))}
-                                        </select>
-                                        <textarea
-                                          className="w-full text-sm border rounded px-2 py-1"
-                                          rows={2}
-                                          value={item.notes}
-                                          onChange={e => handleNotesChange(globalIdx, e.target.value)}
-                                          placeholder="Add notes or TODOs..."
-                                        />
-                                      </CardContent>
-                                    </Card>
-                                  </div>
-                                </div>
-            </div>
-                      );
-                    })}
-          </div>
+      </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <ClipboardList className="h-7 w-7 text-primary" /> Admin Audit Inventory & QA
-        </h1>
-        <div className="flex items-center gap-4">
-          {lastRefresh && (
-            <span className="text-sm text-muted-foreground">
-              Last refreshed: {lastRefresh.toLocaleTimeString()}
-            </span>
-          )}
-          <Button 
-            variant="default"
+    <div className="flex-1 space-y-6 p-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Admin Audit Control Center</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage and monitor all audit processes across your GCP environment
+          </p>
+          </div>
+          <div className="flex items-center gap-2">
+                        <Button
+            variant="outline"
+                          size="sm"
+            onClick={() => setAutoRefresh(!autoRefresh)}
+                        >
+            {autoRefresh ? <PauseCircle className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
+            Auto Refresh
+                        </Button>
+          <Button
+            variant="outline"
             size="sm"
-            onClick={handleRunAllAudits}
-            disabled={isRunningAll}
+            onClick={loadCategories}
           >
-            {isRunningAll ? 'Running...' : 'Run All Audits'}
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={fetchAuditData}
-            disabled={loading}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Reload
+                              </Button>
+          {selectedProject && (
+            <Badge variant="outline" className="text-xs">
+              Project: {selectedProject.gcpProjectId}
+            </Badge>
+          )}
         </div>
       </div>
-      <div className="flex items-center gap-4 mb-6">
+
+      {/* Main Content */}
+      <Tabs defaultValue="dashboard" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="logs">Debug Logs</TabsTrigger>
+          <TabsTrigger value="raw-data">Raw Data</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </TabsList>
+
+        {/* Dashboard Tab */}
+        <TabsContent value="dashboard" className="space-y-6">
+          {/* Control Panel */}
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle className="flex items-center gap-2">
+                <Terminal className="h-5 w-5" />
+                Audit Control Panel
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+              <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  <Button 
+                    onClick={runAllAudits}
+                    disabled={isRunningAll || !selectedProject}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {isRunningAll ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Play className="h-4 w-4 mr-2" />}
+                    Run All Audits
+                  </Button>
+                  <Button 
+                    onClick={runSelectedAudits}
+                    disabled={selectedCategories.size === 0 || isRunningAll || !selectedProject}
+                    variant="outline"
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Run Selected ({selectedCategories.size})
+                  </Button>
+                  <Button 
+                    onClick={stopAllAudits}
+                    disabled={!categories.some(c => c.status === "running")}
+                    variant="destructive"
+                  >
+                    <Square className="h-4 w-4 mr-2" />
+                    Stop All
+                  </Button>
+                                        </div>
+                
+                <div className="flex gap-2">
+                  <Button onClick={selectAllCategories} variant="outline" size="sm">
+                    Select All
+                  </Button>
+                  <Button onClick={clearSelection} variant="outline" size="sm">
+                    Clear
+                  </Button>
+                </div>
+              </div>
+
+              {currentOperation && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-blue-800">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {currentOperation}
+                  </div>
+                </div>
+              )}
+                                      </CardContent>
+                                    </Card>
+
+          {/* Filters */}
+                                    <Card>
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                      placeholder="Search audit categories..."
+                      value={searchFilter}
+                      onChange={(e) => setSearchFilter(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value as AuditStatus | "all")}
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="idle">Idle</option>
+                    <option value="running">Running</option>
+                    <option value="completed">Completed</option>
+                    <option value="failed">Failed</option>
+                  </select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Audit Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCategories.map((category) => {
+              const Icon = category.icon;
+              const isSelected = selectedCategories.has(category.id);
+              const isRunning = category.status === "running";
+
+              return (
+                <Card 
+                  key={category.id} 
+                  className={`transition-all duration-200 hover:shadow-md cursor-pointer ${
+                    isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+                  } ${isRunning ? 'animate-pulse' : ''}`}
+                  onClick={() => toggleCategorySelection(category.id)}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-200' : 'bg-gray-100'}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{category.name}</CardTitle>
+                          <Badge className={`text-xs ${getStatusBadgeColor(category.status)}`}>
+                            {getStatusIcon(category.status)}
+                            <span className="ml-1">{category.status}</span>
+                          </Badge>
+                        </div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={(e) => e.stopPropagation()}
+                        className="h-4 w-4"
+                      />
+                    </div>
+                                      </CardHeader>
+                                      <CardContent>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {category.description}
+                    </p>
+                    
+                    {/* Progress bar for running audits */}
+                    {isRunning && category.progress !== undefined && (
+                      <div className="mb-3">
+                        <div className="flex justify-between text-xs mb-1">
+                          <span>Progress</span>
+                          <span>{category.progress}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${category.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Comments indicator */}
+                    {category.comments && category.comments.length > 0 && (
+                      <div className="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
+                        <div className="flex items-center gap-2 text-xs">
+                          <MessageSquare className="h-3 w-3 text-yellow-600" />
+                          <span className="text-yellow-700">
+                            {category.comments.length} admin comment{category.comments.length !== 1 ? 's' : ''}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-5 px-1 text-xs"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowComments(prev => ({ ...prev, [category.id]: !prev[category.id] }));
+                            }}
+                          >
+                            {showComments[category.id] ? 'Hide' : 'Show'}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Comments section */}
+                    {showComments[category.id] && (
+                      <div className="mb-4 space-y-2 border-t pt-3">
+                        {category.comments?.map((comment) => (
+                          <div key={comment.id} className="p-2 bg-gray-50 rounded text-xs">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2">
+                                <Badge className={`text-xs ${priorityColors[comment.priority as keyof typeof priorityColors]}`}>
+                                  {comment.priority}
+                                </Badge>
+                                <Badge className={`text-xs ${commentStatusColors[comment.status as keyof typeof commentStatusColors]}`}>
+                                  {comment.status}
+                                </Badge>
+                              </div>
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-5 w-5 p-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateCommentStatus(comment.id, comment.status === 'resolved' ? 'open' : 'resolved');
+                                  }}
+                                >
+                                  <CheckCircle className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-5 w-5 p-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteComment(comment.id);
+                                  }}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 mb-1">{comment.comment}</p>
+                            <div className="text-gray-500 text-xs">
+                              {comment.adminEmail} • {new Date(comment.createdAt).toLocaleDateString()}
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {/* Add new comment */}
+                        <div className="p-2 bg-blue-50 rounded space-y-2">
+                          <textarea
+                            placeholder="Add admin comment..."
+                            value={newComment[category.id]?.comment || ''}
+                            onChange={(e) => setNewComment(prev => ({
+                              ...prev,
+                              [category.id]: { ...prev[category.id], comment: e.target.value }
+                            }))}
+                            className="w-full text-xs min-h-[60px] p-2 border rounded"
+                          />
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={newComment[category.id]?.priority || 'medium'}
+                              onChange={(e) => setNewComment(prev => ({
+                                ...prev,
+                                [category.id]: { ...prev[category.id], priority: e.target.value }
+                              }))}
+                              className="text-xs px-2 py-1 border rounded"
+                            >
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                              <option value="critical">Critical</option>
+                            </select>
+                            <Input
+                              placeholder="Tags (comma separated)"
+                              value={newComment[category.id]?.tags || ''}
+                              onChange={(e) => setNewComment(prev => ({
+                                ...prev,
+                                [category.id]: { ...prev[category.id], tags: e.target.value }
+                              }))}
+                              className="text-xs"
+                            />
+                            <Button
+                              size="sm"
+                              onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                const commentData = newComment[category.id];
+                                if (commentData?.comment.trim()) {
+                                  const tags = commentData.tags.split(',').map(t => t.trim()).filter(Boolean);
+                                  addComment(category.id, commentData.comment, commentData.priority || 'medium', tags);
+                                }
+                              }}
+                              disabled={!newComment[category.id]?.comment?.trim()}
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action buttons */}
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          runAudit(category.id);
+                        }}
+                        disabled={isRunning || !selectedProject}
+                        className="flex-1"
+                      >
+                        {isRunning ? (
+                          <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                        ) : (
+                          <Play className="h-3 w-3 mr-1" />
+                        )}
+                        Run
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(category.path);
+                        }}
+                      >
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowComments(prev => ({ ...prev, [category.id]: !prev[category.id] }));
+                        }}
+                      >
+                        <MessageSquare className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          createBackup(category.id);
+                        }}
+                      >
+                        <Archive className="h-3 w-3" />
+                      </Button>
+                    </div>
+
+                    {/* Last run info */}
+                    {category.lastRun && (
+                      <div className="mt-2 pt-2 border-t text-xs text-muted-foreground">
+                        Last run: {category.lastRun.toLocaleString()}
+                        {category.duration && (
+                          <span className="ml-2">({(category.duration / 1000).toFixed(1)}s)</span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Error display */}
+                    {category.error && (
+                      <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                        {category.error}
+                      </div>
+                    )}
+                                      </CardContent>
+                                    </Card>
+              );
+            })}
+                                  </div>
+        </TabsContent>
+
+        {/* Debug Logs Tab */}
+        <TabsContent value="logs" className="space-y-6">
+                                    <Card>
+                                      <CardHeader>
+              <div className="flex items-center justify-between">
+                                        <CardTitle className="flex items-center gap-2">
+                  <Bug className="h-5 w-5" />
+                  Debug Logs ({debugLogs.length})
+                                        </CardTitle>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setDebugLogs([])}
+                  >
+                    Clear Logs
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const logData = JSON.stringify(debugLogs, null, 2);
+                      const blob = new Blob([logData], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `audit-logs-${new Date().toISOString()}.json`;
+                      a.click();
+                    }}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                </div>
+              </div>
+                                      </CardHeader>
+                                      <CardContent>
+              <div className="max-h-96 overflow-y-auto space-y-2 font-mono text-sm">
+                {debugLogs.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    No debug logs yet. Run an audit to see logs here.
+                  </div>
+                ) : (
+                  debugLogs.map((log, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`p-2 rounded border-l-4 ${
+                        log.level === 'error' ? 'border-red-500 bg-red-50' :
+                        log.level === 'warn' ? 'border-yellow-500 bg-yellow-50' :
+                        log.level === 'info' ? 'border-blue-500 bg-blue-50' :
+                        'border-gray-500 bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                        <span>{log.timestamp.toLocaleTimeString()}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {log.level}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {log.category}
+                        </Badge>
+                      </div>
+                      <div className="text-sm">{log.message}</div>
+                      {log.data && (
+                        <details className="mt-1">
+                          <summary className="text-xs cursor-pointer text-muted-foreground">
+                            View data
+                          </summary>
+                          <pre className="text-xs mt-1 p-2 bg-white rounded border overflow-x-auto">
+                            {JSON.stringify(log.data, null, 2)}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+                                      </CardContent>
+                                    </Card>
+        </TabsContent>
+
+        {/* Raw Data Tab */}
+        <TabsContent value="raw-data" className="space-y-6">
+                                    <Card>
+                                      <CardHeader>
+                                        <CardTitle className="flex items-center gap-2">
+                <Database className="h-5 w-5" />
+                Raw GCP Data & Calculations
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+              <div className="space-y-4">
+                {categories.filter(cat => cat.results || cat.rawData).map((category) => (
+                  <Card key={category.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <category.icon className="h-4 w-4" />
+                          {category.name}
+                        </CardTitle>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setShowRawData(prev => ({
+                            ...prev,
+                            [category.id]: !prev[category.id]
+                          }))}
+                        >
+                          {showRawData[category.id] ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          {showRawData[category.id] ? 'Hide' : 'Show'} Data
+                                          </Button>
+                                          </div>
+                                            </CardHeader>
+                    {showRawData[category.id] && (
+                                            <CardContent>
+                        <Tabs defaultValue="results">
+                          <TabsList>
+                            <TabsTrigger value="results">Processed Results</TabsTrigger>
+                            <TabsTrigger value="raw">Raw GCP Data</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="results" className="mt-4">
+                            <pre className="text-xs p-4 bg-gray-50 rounded border overflow-x-auto max-h-96">
+                              {JSON.stringify(category.results, null, 2) || 'No results available'}
+                                              </pre>
+                          </TabsContent>
+                          <TabsContent value="raw" className="mt-4">
+                            <pre className="text-xs p-4 bg-gray-50 rounded border overflow-x-auto max-h-96">
+                              {JSON.stringify(category.rawData, null, 2) || 'No raw data available'}
+                            </pre>
+                          </TabsContent>
+                        </Tabs>
+                                            </CardContent>
+                    )}
+                                          </Card>
+                ))}
+                
+                {categories.filter(cat => cat.results || cat.rawData).length === 0 && (
+                  <div className="text-center text-muted-foreground py-8">
+                    No audit data available. Run some audits to see results here.
+                  </div>
+                )}
+              </div>
+                                      </CardContent>
+                                    </Card>
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="space-y-6">
+                                    <Card>
+                                      <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Admin Settings
+              </CardTitle>
+                                      </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">Auto Refresh</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically refresh audit status every 10 seconds
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => setAutoRefresh(!autoRefresh)}
+                >
+                  {autoRefresh ? 'Disable' : 'Enable'}
+                </Button>
+                                  </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">Database Connection</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Status: Connected to PostgreSQL • {categories.length} categories loaded
+                  </p>
+                </div>
+          <Button 
+                  variant="outline"
+                  onClick={loadCategories}
+                >
+                  Refresh Data
+          </Button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">Backup System</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Automatic backups enabled • Local files stored in /backups/admin-audit/
+                  </p>
+                </div>
+          <Button 
+            variant="outline" 
+                  onClick={() => {
+                    categories.forEach(cat => createBackup(cat.id));
+                    toast.success("Creating backups for all categories...");
+                  }}
+                >
+                  Backup All
+          </Button>
+        </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">Log Level</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Set minimum log level for debug output
+                  </p>
+      </div>
+                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                  <option value="debug">Debug</option>
+                  <option value="info">Info</option>
+                  <option value="warn">Warning</option>
+                  <option value="error">Error</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">Max Concurrent Audits</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Maximum number of audits to run simultaneously
+                  </p>
+                </div>
         <Input
-          placeholder="Search audits, scripts, endpoints..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-96"
+                  type="number"
+                  min="1"
+                  max="10"
+                  defaultValue="3"
+                  className="w-20"
         />
       </div>
-      {/* Render a section for each script */}
-      {Object.entries(grouped).map(([script, itemsInGroup], groupIdx) => (
-        <ScriptSection key={script} script={script} itemsInGroup={itemsInGroup} groupIdx={groupIdx} />
-      ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 } 

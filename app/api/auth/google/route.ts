@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 // @ts-ignore
 import { serialize } from 'cookie'
 import crypto from 'crypto'
+import { GCP_AUDIT_SCOPES_STRING } from '@/lib/oauth-scopes'
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
@@ -22,18 +23,16 @@ export async function GET(request: Request) {
   // Generate random state
   const state = base64URLEncode(crypto.randomBytes(16))
 
+  console.log('[OAUTH] Requesting OAuth with comprehensive scopes for CloudAuditPro auditing')
+  console.log('[OAUTH] Scopes requested:', GCP_AUDIT_SCOPES_STRING.split(' ').length, 'total scopes')
+
   // Set code_verifier and state in secure, HTTP-only cookies
   const response = NextResponse.redirect(
     `https://accounts.google.com/o/oauth2/v2/auth?` +
     `client_id=${GOOGLE_CLIENT_ID}` +
     `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
     `&response_type=code` +
-    `&scope=${encodeURIComponent(
-      'openid email profile ' +
-      'https://www.googleapis.com/auth/cloud-platform.read-only ' +
-      'https://www.googleapis.com/auth/cloud-billing.readonly ' +
-      'https://www.googleapis.com/auth/logging.read'
-    )}` +
+    `&scope=${encodeURIComponent(GCP_AUDIT_SCOPES_STRING)}` +
     `&access_type=offline` +
     `&prompt=consent` +
     `&code_challenge=${code_challenge}` +

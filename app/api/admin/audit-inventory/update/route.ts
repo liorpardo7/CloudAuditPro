@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { verifyCsrf } from '@/lib/csrf';
+import { verifyCsrf } from '@/lib/csrf-server';
 import { rateLimit } from '@/lib/rate-limit';
 
 const prisma = new PrismaClient();
