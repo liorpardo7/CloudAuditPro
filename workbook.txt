@@ -1,0 +1,390 @@
+**GCP Audit Scope: MostCommonIssues Process – Detection, Solutions, and Implementation Checklist**
+
+This audit checklist, referred to as the **MostCommonIssues** process, encompasses the 20 most frequently encountered problems by GCP users. It is designed to be executed as a single unified audit, ensuring complete coverage of cost optimization, performance, security, and operational efficiency across the GCP environment.
+
+---
+
+### 1. IAM Misconfigurations
+
+**Detection**:
+
+* Use `gcloud projects get-iam-policy` to list IAM roles.
+* Flag any use of `roles/owner` or `roles/editor`.
+* Use Cloud Asset Inventory to extract IAM bindings.
+
+**Solution**:
+
+* Replace broad roles with least-privilege roles.
+* Implement custom roles where necessary.
+* Enforce Org Policies like `constraints/iam.allowedPolicyMemberDomains`.
+
+**Checklist**:
+
+* [ ] Export IAM policy
+* [ ] Identify broad roles
+* [ ] Apply least privilege
+* [ ] Enforce org policy
+
+---
+
+### 2. Quota Exceeded Errors
+
+**Detection**:
+
+* Monitor resource quotas via Cloud Monitoring.
+* Alert on metrics with `quota/usage > 90%`.
+
+**Solution**:
+
+* Submit quota increase requests before hitting limits.
+* Refactor services to reduce quota usage.
+
+**Checklist**:
+
+* [ ] Set quota usage alerts
+* [ ] Identify services nearing quota
+* [ ] Submit increase requests
+* [ ] Optimize usage
+
+---
+
+### 3. Default Network Settings
+
+**Detection**:
+
+* Use `gcloud compute networks list` and `gcloud compute firewall-rules list`.
+
+**Solution**:
+
+* Delete default VPCs.
+* Restrict firewall rules.
+* Enable VPC flow logs.
+
+**Checklist**:
+
+* [ ] Delete default VPC
+* [ ] Audit firewall rules
+* [ ] Enable flow logs
+
+---
+
+### 4. Over-Privileged Access
+
+**Detection**:
+
+* Use IAM Recommender API to suggest reduced roles.
+
+**Solution**:
+
+* Apply suggested IAM role changes.
+* Rotate service account keys.
+
+**Checklist**:
+
+* [ ] Run IAM recommender
+* [ ] Apply suggestions
+* [ ] Review service account scopes
+
+---
+
+### 5. Publicly Accessible Buckets
+
+**Detection**:
+
+* Use `gsutil iam get gs://BUCKET_NAME` to find public entries.
+
+**Solution**:
+
+* Remove `allUsers` and `allAuthenticatedUsers` permissions.
+* Apply uniform bucket-level access.
+
+**Checklist**:
+
+* [ ] List all buckets
+* [ ] Remove public access
+* [ ] Apply uniform access
+
+---
+
+### 6. Complex Platform Navigation
+
+**Detection**:
+
+* Review onboarding issues and support tickets.
+
+**Solution**:
+
+* Build internal dashboards and documentation.
+
+**Checklist**:
+
+* [ ] Create service catalog
+* [ ] Build Looker dashboard
+* [ ] Document onboarding steps
+
+---
+
+### 7. Cost Management Difficulties
+
+**Detection**:
+
+* Use billing export to BigQuery to find cost spikes.
+
+**Solution**:
+
+* Set budget alerts.
+* Buy CUDs where applicable.
+
+**Checklist**:
+
+* [ ] Export billing to BQ
+* [ ] Build cost dashboards
+* [ ] Set alerts
+* [ ] Evaluate CUDs
+
+---
+
+### 8. Security and Compliance Gaps
+
+**Detection**:
+
+* Enable Security Command Center or Forseti.
+
+**Solution**:
+
+* Enforce CMEK, audit logging, and required Org Policies.
+
+**Checklist**:
+
+* [ ] Enable SCC
+* [ ] Review encryption policies
+* [ ] Enforce audit logging
+
+---
+
+### 9. Performance Optimization Issues
+
+**Detection**:
+
+* Use Cloud Trace and Profiler.
+
+**Solution**:
+
+* Enable autoscaling and optimize service configurations.
+
+**Checklist**:
+
+* [ ] Enable tracing
+* [ ] Run profiler
+* [ ] Tune services
+
+---
+
+### 10. Scaling Resource Misconfiguration
+
+**Detection**:
+
+* Review autoscaler logs.
+
+**Solution**:
+
+* Tune min/max settings.
+
+**Checklist**:
+
+* [ ] Analyze autoscaler logs
+* [ ] Adjust parameters
+
+---
+
+### 11. Cloud SQL Connection Issues
+
+**Detection**:
+
+* Check SSL expiration and proxy logs.
+
+**Solution**:
+
+* Rotate SSL certs.
+* Update SQL Proxy.
+
+**Checklist**:
+
+* [ ] List certs
+* [ ] Update SQL proxy
+* [ ] Rotate certs
+
+---
+
+### 12. Import/Export Data Challenges
+
+**Detection**:
+
+* Review export error logs.
+
+**Solution**:
+
+* Prefer JSON; clean nulls.
+
+**Checklist**:
+
+* [ ] Use JSON exports
+* [ ] Review logs
+
+---
+
+### 13. Transaction Log and Disk Growth
+
+**Detection**:
+
+* Monitor disk size and log size.
+
+**Solution**:
+
+* Tune binary log retention.
+
+**Checklist**:
+
+* [ ] Enable disk alerts
+* [ ] Review binlog settings
+
+---
+
+### 14. Cloud SQL Admin Limitations
+
+**Detection**:
+
+* Review job operation queue
+
+**Solution**:
+
+* Schedule operations off-peak
+
+**Checklist**:
+
+* [ ] Monitor job logs
+* [ ] Re-schedule bulk jobs
+
+---
+
+### 15. SQL Mode Issues
+
+**Detection**:
+
+* Query `@@sql_mode`
+
+**Solution**:
+
+* Align SQL mode across sessions
+
+**Checklist**:
+
+* [ ] Set init\_connect
+* [ ] Adjust app queries
+
+---
+
+### 16. Monitoring and Logging Gaps
+
+**Detection**:
+
+* Identify services without alerts
+
+**Solution**:
+
+* Apply standard alert templates
+
+**Checklist**:
+
+* [ ] Audit alert policies
+* [ ] Create missing ones
+
+---
+
+### 17. Replica Storage Spikes
+
+**Detection**:
+
+* Track replication logs
+
+**Solution**:
+
+* Prune logs
+
+**Checklist**:
+
+* [ ] Monitor replica growth
+* [ ] Configure log pruning
+
+---
+
+### 18. Scheduler Misconfigurations
+
+**Detection**:
+
+* List disabled/failing jobs
+
+**Solution**:
+
+* Alert on failures
+
+**Checklist**:
+
+* [ ] Enable logging
+* [ ] Set failure alert
+
+---
+
+### 19. Build & Artifact Waste
+
+**Detection**:
+
+* List old builds/images
+
+**Solution**:
+
+* Apply retention policy
+
+**Checklist**:
+
+* [ ] Identify old artifacts
+* [ ] Set retention rules
+
+---
+
+### 20. Dataflow Inefficiencies
+
+**Detection**:
+
+* Detect no-op or idle jobs
+
+**Solution**:
+
+* Consolidate or remove
+
+**Checklist**:
+
+* [ ] Review pipeline usage
+* [ ] Disable or merge jobs
+
+---
+
+### ✅ Final Notes & Execution Strategy
+
+The **MostCommonIssues** audit process should be:
+
+* **Executed monthly or quarterly**, depending on the organization’s cloud scale and complexity.
+* Integrated into DevOps workflows (e.g., as part of CI/CD or IaC validation).
+* Tied into ticketing systems (e.g., Jira, Asana) for assignment and tracking.
+* Included in cost optimization and cloud security reviews for stakeholders.
+
+**Optional Enhancements:**
+
+* Automate checks using gcloud commands, Terraform validations, or custom scripts.
+* Assign impact scores to each finding based on cost or risk severity.
+* Generate reports per project or folder to benchmark across teams.
+* Link alerts directly to dashboards (e.g., Looker, Grafana) for real-time tracking.
+* Integrate findings into compliance audits (e.g., CIS, NIST, ISO 27001).
+* Offer executive summaries with risk/cost scoring and recommended next steps.
+
+This audit ensures that clients receive comprehensive and actionable insights across GCP’s most critical risk and optimization areas, and can act as a foundational pillar for cloud governance, automation, and proactive cost control.

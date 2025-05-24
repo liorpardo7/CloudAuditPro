@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
 import { Button } from '@/components/ui/button'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 // Placeholder for fetching audit results
 const fetchResourceUtilizationResults = async () => {
@@ -52,19 +53,55 @@ interface VM {
 }
 
 export default function ResourceUtilizationPage() {
-  const { selectedProject } = useProjectStore()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProject } = useProjectStore();
+  const [loading, setLoading] = React.useState(true);
+  const [projects, setProjects] = React.useState<any[]>([]);
   const [data, setData] = React.useState<any>(null)
-  const [loading, setLoading] = React.useState(true)
   const [tab, setTab] = React.useState("vms")
   const [raw, setRaw] = React.useState<string | null>(null)
   const [copyMsg, setCopyMsg] = React.useState("")
-  const [error, setError] = useState(null)
+  const [error, setError] = React.useState(null)
+
+  React.useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.projects) {
+          setProjects(data.user.projects);
+          const urlProjectId = searchParams.get('project');
+          let projectToSelect = null;
+          if (urlProjectId) {
+            projectToSelect = data.user.projects.find((p: any) => p.gcpProjectId === urlProjectId);
+          }
+          if (!projectToSelect && data.user.projects.length > 0) {
+            projectToSelect = data.user.projects[0];
+          }
+          if (projectToSelect && (!selectedProject || selectedProject.gcpProjectId !== projectToSelect.gcpProjectId)) {
+            setSelectedProject({
+              id: projectToSelect.id,
+              name: projectToSelect.name,
+              gcpProjectId: projectToSelect.gcpProjectId,
+            });
+            // Update URL if needed
+            if (!urlProjectId || urlProjectId !== projectToSelect.gcpProjectId) {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('project', projectToSelect.gcpProjectId);
+              router.replace(`?${params.toString()}`);
+            }
+          }
+        }
+      })
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line
+  }, []);
 
   const fetchAudit = async () => {
     if (!selectedProject) return
     setLoading(true)
     setError(null)
-    fetch(`/api/resource-utilization/summary?projectId=${selectedProject.id}`)
+    fetch(`/api/resource-utilization/summary?projectId=${selectedProject.gcpProjectId}`)
       .then(res => res.json())
       .then(json => { setData(json); setRaw(JSON.stringify(json, null, 2)) })
       .catch(err => setError(err.message))
@@ -81,6 +118,7 @@ export default function ResourceUtilizationPage() {
 
   React.useEffect(() => { fetchAudit() }, [selectedProject])
 
+  if (loading) return <div className="p-8">Loading resource utilization...</div>;
   if (!selectedProject) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -91,15 +129,11 @@ export default function ResourceUtilizationPage() {
     );
   }
 
-  if (loading) {
-    return <div className="p-8">Loading...</div>
-  }
-
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
       <div className="flex items-center gap-4 mb-4">
         {selectedProject && (
-          <RunAuditButton category="resource-utilization" projectId={selectedProject.id} onComplete={fetchAudit} />
+          <RunAuditButton category="resource-utilization" gcpProjectId={selectedProject.gcpProjectId} onComplete={fetchAudit} />
         )}
         <Button variant="outline" size="sm" onClick={handleCopy} disabled={!raw} className="ml-2">Copy Raw Response</Button>
         {copyMsg && <span className="ml-2 text-emerald-600 text-xs">{copyMsg}</span>}
@@ -296,45 +330,6 @@ export default function ResourceUtilizationPage() {
       {raw && (
         <pre className="bg-muted/30 rounded p-4 text-xs mt-4 overflow-x-auto max-h-64">{raw}</pre>
       )}
-    </div>
-  )
-}
-
-export function ResourceUtilizationSummaryPage() {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    setLoading(true)
-    fetch("/api/resource-utilization/summary")
-      .then(res => res.json())
-      .then(setData)
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return <div className="p-8">Loading resource utilization summary...</div>
-  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
-  if (!data) return <div className="p-8">No data available.</div>
-
-  return (
-    <div className="flex-1 space-y-6 p-8 pt-6">
-      <h1 className="text-2xl font-bold tracking-tight">Resource Utilization Overview</h1>
-      <p className="text-muted-foreground mt-1 max-w-2xl">Summary of cluster and VM utilization, idle resources, and optimization opportunities across your GCP environment.</p>
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">{/* Add summary cards here */}</div>
-      {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">{/* Add charts here */}</div>
-      {/* Top Recommendations */}
-      <div className="bg-card rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Top Recommendations</h2>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>Identify and decommission idle or underutilized resources.</li>
-          <li>Optimize VM and cluster sizing for cost and performance.</li>
-          <li>Monitor resource utilization trends regularly.</li>
-        </ul>
-      </div>
     </div>
   )
 } 

@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BarChart4, Cloud, Download, ChevronRight, Info, AlertTriangle, ArrowLeft } from "lucide-react"
 import { useProjectStore } from '@/lib/store'
+import { useAuthCheck } from '@/lib/useAuthCheck'
 
 export default function CdnEgressOptimizationPage() {
+  useAuthCheck();
   const { selectedProject } = useProjectStore()
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)

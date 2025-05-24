@@ -1,0 +1,11 @@
+Issue,Detection Method,Solution,CLI/Query/Tool
+IAM Misconfigurations,"Use `gcloud projects get-iam-policy`, flag broad roles like Owner/Editor, use Cloud Asset Inventory",Replace with custom roles; enforce Org Policies like `constraints/iam.allowedPolicyMemberDomains`,gcloud iam roles list; GCP Recommender; Cloud Asset Inventory export
+Quota Exceeded Errors,Monitor quota usage via Cloud Monitoring; alert on high utilization,Set up budget alerts and submit quota increase proactively,gcloud compute project-info describe; Monitoring metrics explorer
+Default Network Settings,List default VPCs and firewall rules allowing 0.0.0.0/0,Delete default VPCs; restrict firewall rules; enable flow logs,gcloud compute networks list; gcloud compute firewall-rules list
+Over-Privileged Access,Use IAM Recommender for role reduction suggestions,Apply recommendations; rotate and restrict service accounts,Recommender API; gcloud iam service-accounts list
+Publicly Accessible Buckets,Check for allUsers/allAuthenticatedUsers in IAM policy,Remove public access; enable uniform bucket-level access,gsutil iam get gs://BUCKET_NAME
+Complex Platform Navigation,Collect user feedback; audit service usage,"Create internal dashboards, documentation, service catalog",Looker Studio; Feedback forms; Billing reports
+Cost Management Difficulties,Analyze billing exports to BigQuery; identify spikes,Set budgets; use CUDs and automation,Billing export; BigQuery; gcloud billing budgets list
+Security and Compliance Gaps,Enable Security Command Center; run Forseti,"Enforce CMEK, logging, Org Policies",Security Command Center dashboard; Org Policy API
+Performance Optimization Issues,Analyze latency using Cloud Trace and Profiler,"Use autoscaling, performance tuning tools",Cloud Profiler; Cloud Trace; Cloud Monitoring
+Scaling Resource Misconfiguration,Check autoscaler logs and configurations,Set min/max bounds; simulate load,gcloud compute instance-groups managed describe

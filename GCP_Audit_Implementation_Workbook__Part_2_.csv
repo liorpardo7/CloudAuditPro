@@ -1,0 +1,11 @@
+Issue,Detection Method,Solution,CLI/Query/Tool
+Complex Platform Navigation,Collect user feedback and ticket trends,"Build internal onboarding documentation, dashboards, and service catalogs","Looker Studio, internal survey tools, Google Forms"
+Cloud SQL Connection Issues,"Monitor logs for SSL errors, failed connections, and expired certs","Rotate certs regularly, update Cloud SQL Proxy",gcloud sql ssl-certs list; Logs Explorer
+Import/Export Data Challenges,Check error logs for export formatting problems,"Use JSON for complex data, normalize handling of NULLs",gcloud sql export csv; gcloud sql operations list
+Transaction Log and Disk Growth,Track disk size over time; inspect binary log size,Tune binary log settings and backup schedules,gcloud sql instances describe; Cloud Monitoring
+Cloud SQL Admin Limitations,Query operations logs for concurrent job failures,Schedule operations outside peak hours,gcloud sql operations list
+SQL Mode Issues,Query `@@sql_mode` and compare to application behavior,Standardize modes or handle logic in application code,Cloud SQL query editor or client; init_connect
+Monitoring and Logging Gaps,Check for services without alert policies or notification channels,"Implement standard alert templates for latency, downtime, and error rate",gcloud monitoring policies list; Alerting dashboard
+Replica Storage Spikes,Track WAL log growth; monitor suspended replication,Avoid pausing replication; prune logs proactively,gcloud sql instances describe; Cloud Monitoring logs
+Scheduler Misconfigurations,Audit disabled or failing jobs in Cloud Scheduler,Enable logs; set failure alerts,gcloud scheduler jobs list; Logs Explorer
+Build & Pipeline Inefficiencies,Check build history and storage usage in Artifact Registry,Apply retention policies; delete unused containers and jobs,gcloud builds list; gcloud artifacts docker images list

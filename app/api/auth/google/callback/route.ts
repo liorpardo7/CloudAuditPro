@@ -29,13 +29,13 @@ export async function GET(request: Request) {
 
   if (error) {
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/settings?error=${encodeURIComponent(error)}`
+      `${process.env.NEXT_PUBLIC_APP_URL}/?error=${encodeURIComponent(error)}`
     )
   }
 
   if (!code || !codeVerifier) {
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/settings?error=${encodeURIComponent('Missing required parameters')}`
+      `${process.env.NEXT_PUBLIC_APP_URL}/?error=${encodeURIComponent('Missing required parameters')}`
     )
   }
 
@@ -105,10 +105,75 @@ export async function GET(request: Request) {
       },
     });
 
+    // --- Fetch and save GCP projects for the user ---
+    try {
+      const resourceManagerRes = await fetch('https://cloudresourcemanager.googleapis.com/v1/projects', {
+        headers: { Authorization: `Bearer ${tokens.access_token}` },
+      });
+      if (resourceManagerRes.ok) {
+        const gcpData = await resourceManagerRes.json();
+        const gcpProjects = gcpData.projects || [];
+        for (const gcpProject of gcpProjects) {
+          // Find project by name and userId
+          const existing = await prisma.project.findFirst({
+            where: { name: gcpProject.name, userId: user.id },
+          });
+          let dbProject;
+          if (existing) {
+            dbProject = await prisma.project.update({
+              where: { id: existing.id },
+              data: {
+                status: 'active',
+                lastSync: new Date(),
+                gcpProjectId: gcpProject.projectId,
+              },
+            });
+          } else {
+            dbProject = await prisma.project.create({
+              data: {
+                name: gcpProject.name,
+                status: 'active',
+                lastSync: new Date(),
+                userId: user.id,
+                gcpProjectId: gcpProject.projectId,
+              },
+            });
+          }
+          // Upsert OAuthToken for this user/project
+          if (dbProject) {
+            const existingToken = await prisma.oAuthToken.findFirst({ where: { projectId: dbProject.id } });
+            if (existingToken) {
+              await prisma.oAuthToken.update({
+                where: { id: existingToken.id },
+                data: {
+                  accessToken: tokens.access_token,
+                  refreshToken: tokens.refresh_token,
+                  expiry: new Date(Date.now() + (tokens.expires_in || 3600) * 1000),
+                  scopes: tokens.scope || '',
+                },
+              });
+            } else {
+              await prisma.oAuthToken.create({
+                data: {
+                  projectId: dbProject.id,
+                  accessToken: tokens.access_token,
+                  refreshToken: tokens.refresh_token,
+                  expiry: new Date(Date.now() + (tokens.expires_in || 3600) * 1000),
+                  scopes: tokens.scope || '',
+                },
+              });
+            }
+          }
+        }
+      } else {
+        console.error('Failed to fetch GCP projects:', await resourceManagerRes.text());
+      }
+    } catch (err) {
+      console.error('Error fetching/saving GCP projects:', err);
+    }
+
     // Set tokens in HTTP-only cookies and return a 200 HTML response with JS redirect
-    // --- Do NOT fetch and save GCP projects for the user here ---
-    // Instead, redirect to settings with selectProject param so user can select projects
-    const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=${process.env.NEXT_PUBLIC_APP_URL}/settings?selectProject=1" /></head><body>If you are not redirected, <a href="${process.env.NEXT_PUBLIC_APP_URL}/settings?selectProject=1">click here</a>.</body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=${process.env.NEXT_PUBLIC_APP_URL}/?success=true" /></head><body>If you are not redirected, <a href="${process.env.NEXT_PUBLIC_APP_URL}/?success=true">click here</a>.</body></html>`;
     const response = new NextResponse(html, {
       status: 200,
       headers: {
@@ -156,7 +221,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('OAuth callback error:', error)
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/settings?error=${encodeURIComponent('Failed to complete authentication')}`
+      `${process.env.NEXT_PUBLIC_APP_URL}/?error=${encodeURIComponent('Failed to complete authentication')}`
     )
   }
 } 

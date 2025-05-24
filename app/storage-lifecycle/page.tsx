@@ -4,6 +4,8 @@ import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { Database, AlertTriangle, Clock } from "lucide-react"
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useProjectStore } from '@/lib/store'
 
 type StorageLifecycleData = {
   buckets: {
@@ -71,9 +73,29 @@ const fetchStorageLifecycleResults = async (): Promise<StorageLifecycleData> => 
 }
 
 export default function StorageLifecyclePage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [data, setData] = React.useState<StorageLifecycleData | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [tab, setTab] = React.useState("buckets")
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   React.useEffect(() => {
     fetchStorageLifecycleResults().then((res) => {

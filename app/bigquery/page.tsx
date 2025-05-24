@@ -31,9 +31,14 @@ import {
 import { RunAuditButton } from "@/components/RunAuditButton"
 import { useProjectStore } from '@/lib/store'
 import { useEffect, useState } from "react"
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function BigQueryPage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("datasets")
   // Audit cards state (from audit-process)
@@ -43,6 +48,23 @@ export default function BigQueryPage() {
   const [auditError, setAuditError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
   const [data, setData] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   // Refactor data fetching into a function
   const fetchData = React.useCallback(() => {
@@ -583,25 +605,4 @@ export default function BigQueryPage() {
       </Link>
     </div>
   )
-}
-
-export function BigQuerySummaryPage() {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    setLoading(true)
-    fetch("/api/bigquery/summary")
-      .then(res => res.json())
-      .then(setData)
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return <div className="p-8">Loading BigQuery summary...</div>
-  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
-  if (!data) return <div className="p-8">No data available.</div>
-
-  // ... render summary cards, charts, and recommendations using 'data' ...
 } 

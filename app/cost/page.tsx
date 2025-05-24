@@ -31,20 +31,58 @@ import {
 import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function CostSummaryPage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProject } = useProjectStore();
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [raw, setRaw] = useState(null)
+  const [raw, setRaw] = useState<string>("")
   const [copyMsg, setCopyMsg] = useState("")
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.projects) {
+          setProjects(data.user.projects);
+          const urlProjectId = searchParams.get('project');
+          let projectToSelect: any = null;
+          if (urlProjectId) {
+            projectToSelect = data.user.projects.find((p: any) => p.gcpProjectId === urlProjectId);
+          }
+          if (!projectToSelect && data.user.projects.length > 0) {
+            projectToSelect = data.user.projects[0];
+          }
+          if (projectToSelect && (!selectedProject || selectedProject.gcpProjectId !== projectToSelect.gcpProjectId)) {
+            setSelectedProject({
+              id: projectToSelect.id,
+              name: projectToSelect.name,
+              gcpProjectId: projectToSelect.gcpProjectId,
+            });
+            // Update URL if needed
+            if (!urlProjectId || urlProjectId !== projectToSelect.gcpProjectId) {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('project', projectToSelect.gcpProjectId);
+              router.replace(`?${params.toString()}`);
+            }
+          }
+        }
+      });
+    // eslint-disable-next-line
+  }, []);
 
   const fetchAudit = async () => {
     if (!selectedProject) return
     setLoading(true)
     setError(null)
-    fetch(`/api/cost/summary?projectId=${selectedProject.id}`)
+    fetch(`/api/cost/summary?projectId=${selectedProject.gcpProjectId}`)
       .then(res => res.json())
       .then(json => { setData(json); setRaw(JSON.stringify(json, null, 2)) })
       .catch(err => setError(err.message))
@@ -79,7 +117,7 @@ export default function CostSummaryPage() {
     <div className="flex-1 space-y-6 p-8 pt-6">
       <div className="flex items-center gap-4 mb-4">
         {selectedProject && (
-          <RunAuditButton category="cost" projectId={selectedProject.id} onComplete={fetchAudit} />
+          <RunAuditButton category="cost" gcpProjectId={selectedProject.gcpProjectId} onComplete={fetchAudit} />
         )}
         <Button variant="outline" size="sm" onClick={handleCopy} disabled={!raw} className="ml-2">Copy Raw Response</Button>
         {copyMsg && <span className="ml-2 text-emerald-600 text-xs">{copyMsg}</span>}

@@ -26,9 +26,14 @@ import {
 import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function StoragePage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("buckets")
   const [raw, setRaw] = React.useState<string | null>(null)
@@ -178,6 +183,23 @@ export default function StoragePage() {
       setTimeout(() => setCopyMsg(""), 1200)
     }
   }
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   React.useEffect(() => { fetchAudit() }, [selectedProject])
 
@@ -595,25 +617,4 @@ export default function StoragePage() {
       )}
     </div>
   )
-}
-
-export function StorageSummaryPage() {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    setLoading(true)
-    fetch("/api/storage/summary")
-      .then(res => res.json())
-      .then(setData)
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return <div className="p-8">Loading storage summary...</div>
-  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
-  if (!data) return <div className="p-8">No data available.</div>
-
-  // ... render summary cards, charts, and recommendations using 'data' ...
 }

@@ -5,9 +5,14 @@ import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
 import { Button } from '@/components/ui/button'
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function ComplianceSummaryPage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -32,6 +37,23 @@ export default function ComplianceSummaryPage() {
       setTimeout(() => setCopyMsg(""), 1200)
     }
   }
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   useEffect(() => { fetchAudit() }, [selectedProject])
 

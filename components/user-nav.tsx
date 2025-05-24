@@ -65,8 +65,16 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
-            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-            window.location.href = '/settings';
+            console.log('[AUTH] User clicked logout from nav menu')
+            try {
+              await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+              console.log('[AUTH] Logout successful, redirecting to login')
+              window.location.href = '/login';
+            } catch (error) {
+              console.error('[AUTH] Logout error:', error)
+              // Redirect anyway to clear client state
+              window.location.href = '/login';
+            }
           }}
         >
           <svg

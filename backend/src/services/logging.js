@@ -1,7 +1,7 @@
-import winston from 'winston';
-import { format } from 'winston';
-import path from 'path';
-import fs from 'fs';
+const winston = require('winston');
+const { format } = require('winston');
+const path = require('path');
+const fs = require('fs');
 
 // Ensure logs directory exists
 const logsDir = path.join(process.cwd(), 'logs');
@@ -58,7 +58,7 @@ const logger = winston.createLogger({
 });
 
 // Add request logging middleware
-export const requestLogger = (req: any, res: any, next: any) => {
+const requestLogger = (req, res, next) => {
   const start = Date.now();
 
   res.on('finish', () => {
@@ -83,7 +83,7 @@ export const requestLogger = (req: any, res: any, next: any) => {
 };
 
 // Add error logging middleware
-export const errorLogger = (err: any, req: any, res: any, next: any) => {
+const errorLogger = (err, req, res, next) => {
   logger.error('Unhandled error', {
     error: err.message,
     stack: err.stack,
@@ -97,7 +97,7 @@ export const errorLogger = (err: any, req: any, res: any, next: any) => {
 };
 
 // Log rotation function
-export const rotateLogs = () => {
+const rotateLogs = () => {
   const files = fs.readdirSync(logsDir);
   const maxSize = 5242880; // 5MB
 
@@ -113,5 +113,30 @@ export const rotateLogs = () => {
   });
 };
 
-// Export logger instance
-export default logger; 
+// Prisma query event handler (to be used in index.js)
+const prismaQueryLogger = (prisma) => {
+  prisma.$on('query', (e) => {
+    logger.info({
+      message: 'Prisma Query',
+      query: e.query,
+      params: e.params,
+      duration: e.duration,
+      target: e.target
+    });
+  });
+  prisma.$on('error', (e) => {
+    logger.error({
+      message: 'Prisma Error',
+      error: e.message,
+      target: e.target
+    });
+  });
+};
+
+module.exports = {
+  requestLogger,
+  errorLogger,
+  rotateLogs,
+  prismaQueryLogger,
+  default: logger
+};

@@ -8,20 +8,58 @@ import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
 import { Button } from "@/components/ui/button"
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function SecuritySummaryPage() {
-  const { selectedProject } = useProjectStore()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProject } = useProjectStore();
+  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<any[]>([]);
   const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [raw, setRaw] = useState(null)
   const [copyMsg, setCopyMsg] = useState("")
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.projects) {
+          setProjects(data.user.projects);
+          const urlProjectId = searchParams.get('project');
+          let projectToSelect = null;
+          if (urlProjectId) {
+            projectToSelect = data.user.projects.find((p: any) => p.gcpProjectId === urlProjectId);
+          }
+          if (!projectToSelect && data.user.projects.length > 0) {
+            projectToSelect = data.user.projects[0];
+          }
+          if (projectToSelect && (!selectedProject || selectedProject.gcpProjectId !== projectToSelect.gcpProjectId)) {
+            setSelectedProject({
+              id: projectToSelect.id,
+              name: projectToSelect.name,
+              gcpProjectId: projectToSelect.gcpProjectId,
+            });
+            // Update URL if needed
+            if (!urlProjectId || urlProjectId !== projectToSelect.gcpProjectId) {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('project', projectToSelect.gcpProjectId);
+              router.replace(`?${params.toString()}`);
+            }
+          }
+        }
+      })
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line
+  }, []);
 
   const fetchAudit = async () => {
     if (!selectedProject) return
     setLoading(true)
     setError(null)
-    fetch(`/api/security/summary?projectId=${selectedProject.id}`)
+    fetch(`/api/security/summary?projectId=${selectedProject.gcpProjectId}`)
       .then(res => res.json())
       .then(json => { setData(json); setRaw(JSON.stringify(json, null, 2)) })
       .catch(err => setError(err.message))
@@ -37,16 +75,6 @@ export default function SecuritySummaryPage() {
   }
 
   useEffect(() => { fetchAudit() }, [selectedProject])
-
-  if (!selectedProject) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full gap-4">
-        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
-        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
-        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
-      </div>
-    );
-  }
 
   if (loading) return <div className="p-8">Loading security summary...</div>
   if (error) return <div className="p-8 text-red-500">Error: {error}</div>

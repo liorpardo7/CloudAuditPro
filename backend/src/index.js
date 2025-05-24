@@ -3,11 +3,13 @@ const cors = require('cors');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { limiter, csrfProtection, securityHeaders, cookieMiddleware } = require('./middleware/security');
-const gcp = require('./scripts/gcp-audit/gcpClient');
+const { limiter, securityHeaders, cookieMiddleware } = require('./middleware/security');
+const gcpClient = require('../../shared-scripts/gcp-audit/gcpClient');
 const auditRoutes = require('./routes/audit');
 const { PrismaClient } = require('./generated/prisma');
-const { runFullAudit } = require('./scripts/gcp-audit/run-full-gcp-checklist-audit');
+const runFullGcpChecklistAudit = require('../../shared-scripts/gcp-audit/run-full-gcp-checklist-audit');
+const { requestLogger, errorLogger, prismaQueryLogger } = require('./services/logging');
+const logger = require('./services/logging').default;
 require('dotenv').config();
 
 // Validate required environment variables
@@ -36,7 +38,7 @@ app.use(cookieMiddleware);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: process.env.CORS_ORIGIN || 'https://local.cloudauditpro.com:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
@@ -45,7 +47,16 @@ app.use(cors({
 // Apply rate limiting to all routes
 app.use(limiter);
 
-// Apply CSRF protection to all routes except auth
+// Add logging middleware before CSRF protection
+app.use((req, res, next) => {
+  console.log('Incoming cookies:', req.headers.cookie);
+  console.log('Incoming x-csrf-token:', req.headers['x-csrf-token']);
+  next();
+});
+
+// Apply CSRF protection to all routes except auth, using a consistent cookie name
+const csurf = require('csurf');
+const csrfProtection = csurf({ cookie: { key: 'csrf_token' } });
 app.use((req, res, next) => {
   if (req.path.startsWith('/auth/')) {
     next();
@@ -86,9 +97,35 @@ function getCookieOptions() {
   };
 }
 
+// Enable Prisma query logging
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error']
+});
+prismaQueryLogger(prisma);
+
+// Add request logging middleware
+app.use(requestLogger);
+
 // API routes
 app.get('/api/health', (req, res) => {
+  logger.info({ message: 'Health check', status: 'ok', timestamp: new Date().toISOString() });
   res.json({ status: 'ok', message: 'Server is running' });
+});
+
+// CSRF token endpoint - this will automatically generate a token through csurf middleware
+app.get('/api/csrf-token', (req, res) => {
+  console.log('[BACKEND-CSRF] CSRF token requested');
+  console.log('[BACKEND-CSRF] Cookies:', req.headers.cookie);
+  console.log('[BACKEND-CSRF] Available token:', req.csrfToken ? req.csrfToken() : 'NOT_AVAILABLE');
+  
+  try {
+    const csrfToken = req.csrfToken();
+    console.log('[BACKEND-CSRF] Generated CSRF token:', csrfToken);
+    res.json({ csrfToken });
+  } catch (error) {
+    console.error('[BACKEND-CSRF] Error generating CSRF token:', error);
+    res.status(500).json({ error: 'Failed to generate CSRF token' });
+  }
 });
 
 // Login route
@@ -138,9 +175,16 @@ app.post('/auth/logout', (req, res) => {
 
 // --- API: Cloud Accounts ---
 app.get('/api/cloud-accounts', authenticateToken, async (req, res) => {
+  logger.info({
+    message: 'Fetching cloud accounts',
+    user: req.user,
+    timestamp: new Date().toISOString()
+  });
   try {
-    const resourceManager = gcp.getResourceManager();
+    const resourceManager = gcpClient.getResourceManager();
+    logger.info({ message: 'Calling GCP ResourceManager.projects.list', user: req.user });
     const result = await resourceManager.projects.list();
+    logger.info({ message: 'GCP projects.list result', result: result.data });
     const projects = (result.data.projects || []).map(p => ({
       id: p.projectId,
       name: p.name,
@@ -149,9 +193,15 @@ app.get('/api/cloud-accounts', authenticateToken, async (req, res) => {
       labels: p.labels,
       parent: p.parent
     }));
+    logger.info({ message: 'Returning projects', count: projects.length });
     res.json(projects);
   } catch (err) {
-    console.error('GCP API error (cloud-accounts):', err);
+    logger.error({
+      message: 'GCP API error (cloud-accounts)',
+      error: err.message,
+      stack: err.stack,
+      user: req.user
+    });
     res.json({ accounts: [], noAccounts: true, error: 'No cloud accounts connected or GCP unavailable.' });
   }
 });
@@ -182,7 +232,7 @@ app.post('/api/cloud-accounts/:id/scan', async (req, res) => {
 // --- API: Findings ---
 app.get('/api/findings', authenticateToken, async (req, res) => {
   try {
-    const securityCenter = gcp.getSecurityCenter();
+    const securityCenter = gcpClient.getSecurityCenter();
     const orgId = 'organizations/your-org-id';
     const sources = await securityCenter.organizations.sources.list({ parent: orgId });
     if (!sources.data.sources || sources.data.sources.length === 0) {
@@ -200,8 +250,8 @@ app.get('/api/findings', authenticateToken, async (req, res) => {
 // --- API: Insights ---
 app.get('/api/insights', authenticateToken, async (req, res) => {
   try {
-    const recommender = gcp.getRecommender();
-    const projectId = gcp.auth._cachedProjectId || gcp.auth.jsonContent.project_id;
+    const recommender = gcpClient.getRecommender();
+    const projectId = gcpClient.auth._cachedProjectId || gcpClient.auth.jsonContent.project_id;
     const parent = `projects/${projectId}/locations/global/recommenders/google.compute.instance.MachineTypeRecommender`;
     const result = await recommender.projects.locations.recommenders.recommendations.list({ parent });
     res.json(result.data.recommendations || []);
@@ -220,8 +270,8 @@ app.put('/api/insights/:id/status', authenticateToken, (req, res) => {
 // --- API: Monitoring ---
 app.get('/api/monitoring/:tab', authenticateToken, async (req, res) => {
   try {
-    const monitoring = gcp.getMonitoring();
-    const projectId = gcp.auth._cachedProjectId || gcp.auth.jsonContent.project_id;
+    const monitoring = gcpClient.getMonitoring();
+    const projectId = gcpClient.auth._cachedProjectId || gcpClient.auth.jsonContent.project_id;
     const result = await monitoring.projects.monitoredResourceDescriptors.list({ name: `projects/${projectId}` });
     res.json(result.data.resourceDescriptors || []);
   } catch (err) {
@@ -250,9 +300,6 @@ app.get('/api/v2/cloud-accounts', authenticateToken, (req, res) => {
 // Register routes
 app.use('/api/audit', auditRoutes);
 
-// Add a placeholder for /api/audits/run endpoint with detailed logging for token lookup
-const prisma = new PrismaClient();
-
 app.post('/api/audits/run', authenticateToken, async (req, res) => {
   const { projectId } = req.body;
   const userId = req.user?.id || req.user?.username || 'unknown';
@@ -268,7 +315,7 @@ app.post('/api/audits/run', authenticateToken, async (req, res) => {
     console.log(`[AUDIT] Found OAuth tokens for userId=${userId}, projectId=${projectId}`);
     // Run the full audit and return results
     console.log(`[AUDIT] Starting full audit for userId=${userId}, projectId=${projectId}`);
-    const results = await runFullAudit(projectId, tokenRecord);
+    const results = await runFullGcpChecklistAudit(projectId, tokenRecord);
     console.log(`[AUDIT] Full audit complete for userId=${userId}, projectId=${projectId}`);
     res.json({ success: true, results });
   } catch (err) {
@@ -277,34 +324,8 @@ app.post('/api/audits/run', authenticateToken, async (req, res) => {
   }
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  // Log error details
-  console.error('Error:', {
-    message: err.message,
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
-    timestamp: new Date().toISOString()
-  });
-
-  // Determine if we're in production
-  const isProduction = process.env.NODE_ENV === 'production';
-
-  // Prepare error response
-  const errorResponse = {
-    error: isProduction ? 'Internal server error' : err.message,
-    code: err.status || 500
-  };
-
-  // Only include stack trace in development
-  if (!isProduction) {
-    errorResponse.stack = err.stack;
-  }
-
-  // Send error response
-  res.status(errorResponse.code).json(errorResponse);
-});
+// Add error logging middleware (should be after all routes)
+app.use(errorLogger);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

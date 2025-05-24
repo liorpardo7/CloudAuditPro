@@ -6,6 +6,7 @@ const { PrismaClient } = require('@prisma/client');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const gcpClient = require('../../shared-scripts/gcp-audit/gcpClient');
 
 const prisma = new PrismaClient();
 

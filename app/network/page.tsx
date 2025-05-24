@@ -27,9 +27,14 @@ import {
 import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function NetworkPage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [searchQuery, setSearchQuery] = React.useState("")
   const [currentTab, setCurrentTab] = React.useState("vpcs")
   const [data, setData] = useState(null)
@@ -67,6 +72,23 @@ export default function NetworkPage() {
   }, [])
 
   React.useEffect(() => { fetchAudit() }, [selectedProject])
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   // Mock data - would come from API in a real application
   const networkResources = {

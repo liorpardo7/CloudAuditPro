@@ -1,20 +1,40 @@
-// @ts-ignore: No type definitions for 'cookie'
-import { serialize } from 'cookie';
 import { NextResponse } from 'next/server';
-import crypto from 'crypto';
 
-export async function GET() {
-  // Generate a secure random CSRF token
-  const csrfToken = crypto.randomBytes(32).toString('hex');
-  // Set as HTTP-only cookie
-  const cookie = serialize('csrf_token', csrfToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-    path: '/',
-    maxAge: 60 * 60 // 1 hour
-  });
-  const response = NextResponse.json({ csrfToken });
-  response.headers.append('Set-Cookie', cookie);
-  return response;
+export async function GET(request: Request) {
+  console.log('[CSRF] Frontend requesting CSRF token from backend...')
+  
+  try {
+    // Proxy the CSRF token request to the backend
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:7778';
+    const response = await fetch(`${backendUrl}/api/csrf-token`, {
+      method: 'GET',
+      headers: {
+        'Cookie': request.headers.get('cookie') || ''
+      },
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      console.error('[CSRF] Backend CSRF request failed:', response.status)
+      throw new Error('Failed to get CSRF token from backend');
+    }
+
+    const data = await response.json();
+    console.log('[CSRF] Got CSRF token from backend:', data.csrfToken)
+    
+    // Forward any cookies set by the backend
+    const nextResponse = NextResponse.json(data);
+    const setCookieHeader = response.headers.get('set-cookie');
+    if (setCookieHeader) {
+      nextResponse.headers.set('set-cookie', setCookieHeader);
+    }
+    
+    return nextResponse;
+  } catch (error) {
+    console.error('[CSRF] Error getting CSRF token:', error);
+    return NextResponse.json(
+      { error: 'Failed to get CSRF token' }, 
+      { status: 500 }
+    );
+  }
 } 

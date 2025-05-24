@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Clean Next.js build cache
+rm -rf .next
+
 # Install dependencies for root (frontend) and backend
 
 echo "Installing root (frontend) dependencies..."

@@ -4,8 +4,29 @@ import * as React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SummaryStatistics } from "@/components/summary-statistics"
 import { Shield, Lock, AlertTriangle, CheckCircle, FileCheck, GitBranch, Package, Settings } from "lucide-react"
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useProjectStore } from '@/lib/store'
 
 export default function DevOpsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
+
   return (
     <div className="flex-1 space-y-6 p-8 pt-0">
       <div className="flex items-center justify-between">

@@ -16,12 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from 'react'
 import { useProjectStore } from '@/lib/store'
+import { useAuthCheck } from '@/lib/useAuthCheck'
 
 interface Project {
   id: string
   name: string
   status: 'active' | 'inactive'
   lastSync: string
+  gcpProjectId: string
 }
 
 const AUDIT_CATEGORIES = [
@@ -36,7 +38,10 @@ const AUDIT_CATEGORIES = [
 ]
 
 export default function SettingsPage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [projects, setProjects] = React.useState<Project[]>([])
   const [isAddProjectOpen, setIsAddProjectOpen] = React.useState(false)
   const [addProjectInitialStep, setAddProjectInitialStep] = React.useState<'start' | 'select'>('start')
@@ -46,8 +51,6 @@ export default function SettingsPage() {
   const [runningJob, setRunningJob] = React.useState<string | null>(null)
   const { toast } = useToast()
   const [progressOpen, setProgressOpen] = React.useState(false)
-  const router = useRouter()
-  const searchParams = useSearchParams();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   React.useEffect(() => {
@@ -106,12 +109,45 @@ export default function SettingsPage() {
     return () => clearInterval(interval)
   }, [runningJob, router, toast])
 
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
+
   const handleLogout = async () => {
-    await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-    window.location.href = '/settings';
+    console.log('[AUTH] User clicked logout from settings')
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      console.log('[AUTH] Logout successful, redirecting to login')
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('[AUTH] Logout error:', error)
+      // Redirect anyway to clear client state
+      window.location.href = '/login';
+    }
   };
 
   const handleRunAudit = async (projectId: string, category: string) => {
+    if (!projectId) {
+      toast({
+        title: "Error",
+        description: "No project selected or project is missing a GCP Project ID.",
+        variant: "destructive"
+      });
+      return;
+    }
     setIsLoading(true)
     setProgressProject(projectId)
     setProgressOpen(true)
@@ -140,13 +176,10 @@ export default function SettingsPage() {
   }
 
   if (!isAuthenticated) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full gap-4">
-        <h2 className="text-2xl font-bold">Connect your Google Account</h2>
-        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google account.</p>
-        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Account</Button>
-      </div>
-    );
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    return null;
   }
 
   return (
@@ -178,8 +211,8 @@ export default function SettingsPage() {
               <div className="mb-4">
                 <Button
                   variant="default"
-                  onClick={() => handleRunAudit(projects[0].id, 'all')}
-                  disabled={isLoading && progressProject === projects[0].id}
+                  onClick={() => handleRunAudit(projects[0].gcpProjectId, 'all')}
+                  disabled={!projects[0].gcpProjectId || (isLoading && progressProject === projects[0].gcpProjectId)}
                 >
                   Run All Audits
                 </Button>
@@ -232,10 +265,10 @@ export default function SettingsPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            disabled={isLoading && progressProject === project.id}
+                            disabled={!project.gcpProjectId || (isLoading && progressProject === project.gcpProjectId)}
                             className="flex items-center gap-1"
                           >
-                            {isLoading && progressProject === project.id ? (
+                            {isLoading && progressProject === project.gcpProjectId ? (
                               <Loader2 className="h-4 w-4 animate-spin mr-1" />
                             ) : (
                               <PlayCircle className="h-4 w-4 mr-1" />
@@ -248,7 +281,7 @@ export default function SettingsPage() {
                           {AUDIT_CATEGORIES.map((cat) => (
                             <DropdownMenuItem
                               key={cat.key}
-                              onClick={() => handleRunAudit(project.id, cat.key)}
+                              onClick={() => handleRunAudit(project.gcpProjectId, cat.key)}
                             >
                               {cat.label}
                             </DropdownMenuItem>

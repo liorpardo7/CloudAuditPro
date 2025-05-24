@@ -9,8 +9,60 @@ import { ResourceMetrics } from "@/components/resource-metrics"
 import { SummaryStatistics } from "@/components/summary-statistics"
 import { Button } from "@/components/ui/button"
 import { ArrowUp, ArrowUpRight, Shield, Coins, Activity, LineChart, BarChart, PlayCircle, ClipboardList } from "lucide-react"
+import { useProjectStore } from '@/lib/store'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProject } = useProjectStore();
+  const [loading, setLoading] = React.useState(true);
+  const [projects, setProjects] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.projects) {
+          setProjects(data.user.projects);
+          const urlProjectId = searchParams.get('project');
+          let projectToSelect = null;
+          if (urlProjectId) {
+            projectToSelect = data.user.projects.find((p: any) => p.gcpProjectId === urlProjectId);
+          }
+          if (!projectToSelect && data.user.projects.length > 0) {
+            projectToSelect = data.user.projects[0];
+          }
+          if (projectToSelect && (!selectedProject || selectedProject.gcpProjectId !== projectToSelect.gcpProjectId)) {
+            setSelectedProject({
+              id: projectToSelect.id,
+              name: projectToSelect.name,
+              gcpProjectId: projectToSelect.gcpProjectId,
+            });
+            // Update URL if needed
+            if (!urlProjectId || urlProjectId !== projectToSelect.gcpProjectId) {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('project', projectToSelect.gcpProjectId);
+              router.replace(`?${params.toString()}`);
+            }
+          }
+        }
+      })
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line
+  }, []);
+
+  if (loading) return <div className="p-8">Loading dashboard...</div>;
+  if (!selectedProject) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <h2 className="text-2xl font-bold">Connect your Google Project</h2>
+        <p className="text-muted-foreground">To use CloudAuditPro, please connect your Google project.</p>
+        <Button onClick={() => window.location.href = '/api/auth/google'}>Connect Project</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
       <div className="flex items-center justify-between">

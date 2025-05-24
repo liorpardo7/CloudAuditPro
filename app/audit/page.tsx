@@ -10,8 +10,9 @@ import { Label } from "@/components/ui/label"
 import { CheckCircle2, CloudCog, LayoutDashboard, FileText, Server, Database, Clock, Shield, Loader2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Progress } from "@/components/ui/progress"
+import { useProjectStore } from "@/stores/project"
 
 interface AuditProgress {
   status: 'running' | 'completed' | 'error';
@@ -74,13 +75,21 @@ function AuditPageContent() {
     progress: 0
   })
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore()
   const { toast } = useToast()
 
   const handleStartAudit = async () => {
+    console.log('[AUDIT] ===== Starting audit process =====')
+    
     // Gather selected categories
     const categories = Object.entries(selectedServices)
       .filter(([_, v]) => v)
       .map(([k]) => k)
+    
+    console.log('[AUDIT] Selected categories:', categories)
+    console.log('[AUDIT] Selected project from store:', selectedProject)
+    
     setIsLoading(true)
     setProgressOpen(true)
     setProgress({
@@ -89,29 +98,65 @@ function AuditPageContent() {
       progress: 0
     })
 
-    // Always use the test project for now
-    const projectId = 'dba-inventory-services-prod'
+    // Always use the selected project from store if available
+    const projectId = selectedProject?.gcpProjectId || 'dba-inventory-services-prod'
+    console.log('[AUDIT] Using project ID:', projectId)
+    
+    if (!projectId) {
+      console.error('[AUDIT] No project ID available!')
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No project selected. Please select a project first."
+      })
+      setIsLoading(false)
+      setProgressOpen(false)
+      return
+    }
+    
     // If all categories are selected, use 'all'
     const category = categories.length === 5 ? 'all' : categories[0] // For now, only support one or all
+    console.log('[AUDIT] Using audit category:', category)
+    
+    const requestPayload = { projectId, category }
+    console.log('[AUDIT] Request payload:', requestPayload)
     
     try {
+      console.log('[AUDIT] Making API request to /api/audits/run...')
+      
       const res = await fetch('/api/audits/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId, category })
+        body: JSON.stringify(requestPayload)
       })
       
+      console.log('[AUDIT] API response status:', res.status)
+      console.log('[AUDIT] API response headers:', Object.fromEntries(res.headers.entries()))
+      
       if (!res.ok) {
+        const errorText = await res.text()
+        console.error('[AUDIT] API request failed:', {
+          status: res.status,
+          statusText: res.statusText,
+          responseText: errorText
+        })
         throw new Error(`Failed to start audit: ${res.statusText}`)
       }
       
       const data = await res.json()
+      console.log('[AUDIT] API response data:', data)
+      
       if (data.jobId) {
+        console.log('[AUDIT] Audit job started successfully with ID:', data.jobId)
         setRunningJob(data.jobId)
       } else {
+        console.error('[AUDIT] No job ID returned:', data)
         throw new Error(data.error || 'Failed to start audit')
       }
     } catch (error: any) {
+      console.error('[AUDIT] Error during audit start:', error)
+      console.error('[AUDIT] Error stack:', error.stack)
+      
       setIsLoading(false)
       setProgressOpen(false)
       toast({
@@ -125,19 +170,32 @@ function AuditPageContent() {
   React.useEffect(() => {
     if (!runningJob) return
     
+    console.log('[AUDIT] Starting status polling for job:', runningJob)
     setProgressOpen(true)
     let interval: NodeJS.Timeout
     
     const poll = async () => {
       try {
+        console.log('[AUDIT] Polling job status for:', runningJob)
+        
         const res = await fetch(`/api/audits/status?id=${runningJob}`)
+        console.log('[AUDIT] Status poll response status:', res.status)
+        
         if (!res.ok) {
+          const errorText = await res.text()
+          console.error('[AUDIT] Status poll failed:', {
+            status: res.status,
+            statusText: res.statusText,
+            responseText: errorText
+          })
           throw new Error(`Failed to check status: ${res.statusText}`)
         }
         
         const data = await res.json()
+        console.log('[AUDIT] Status poll data:', data)
         
         if (data.status === 'completed') {
+          console.log('[AUDIT] Audit completed successfully!')
           setRunningJob(null)
           setIsLoading(false)
           setProgressOpen(false)
@@ -147,6 +205,7 @@ function AuditPageContent() {
           })
           router.push(`/audits/${runningJob}`)
         } else if (data.status === 'error') {
+          console.error('[AUDIT] Audit failed with error:', data.error)
           setRunningJob(null)
           setIsLoading(false)
           setProgressOpen(false)
@@ -156,6 +215,10 @@ function AuditPageContent() {
             description: data.error || 'Audit failed'
           })
         } else if (data.status === 'running') {
+          console.log('[AUDIT] Audit still running:', {
+            currentStep: data.currentStep,
+            progress: data.progress
+          })
           // Update progress
           setProgress({
             status: 'running',
@@ -164,6 +227,7 @@ function AuditPageContent() {
           })
         }
       } catch (error: any) {
+        console.error('[AUDIT] Error during status polling:', error)
         setRunningJob(null)
         setIsLoading(false)
         setProgressOpen(false)
@@ -178,6 +242,28 @@ function AuditPageContent() {
     interval = setInterval(poll, 2000)
     return () => clearInterval(interval)
   }, [runningJob, router, toast])
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    console.log('[AUDIT] URL project parameter:', urlProject)
+    console.log('[AUDIT] Current selected project:', selectedProject)
+    
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      console.log('[AUDIT] Setting project from URL parameter:', urlProject)
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      console.log('[AUDIT] Updating URL parameter for project:', selectedProject.gcpProjectId)
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   return (
     <div className="container mx-auto py-8">

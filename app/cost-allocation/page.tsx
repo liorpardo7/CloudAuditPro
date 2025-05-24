@@ -4,6 +4,8 @@ import * as React from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
 import { BarChart3, AlertTriangle, Tag } from "lucide-react"
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useProjectStore } from '@/lib/store'
 
 type CostAllocationData = {
   taggingCoverage: { total: number; tagged: number; percentage: number };
@@ -32,9 +34,29 @@ const fetchCostAllocationResults = async (): Promise<CostAllocationData> => {
 }
 
 export default function CostAllocationPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
   const [data, setData] = React.useState<CostAllocationData | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [tab, setTab] = React.useState("resources")
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   React.useEffect(() => {
     fetchCostAllocationResults().then((res) => {

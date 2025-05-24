@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Server, Database, FileText, BarChart3, ClipboardList, ChevronDown, ChevronUp, Terminal, RefreshCw, Clipboard, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useProjectStore } from '@/lib/store'
 
 // TODO: Replace with real auth check
 const ADMIN_EMAIL = "admin@cloudauditpro.com";
@@ -64,6 +66,25 @@ function groupByScript(items: AuditItem[]) {
 }
 
 export default function AdminAuditInventoryPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore();
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
+
   // TODO: Replace with real auth check
   if (currentUserEmail && currentUserEmail !== ADMIN_EMAIL) {
     return <div className="p-8 text-center text-lg text-red-600">Access denied. Admins only.</div>;
@@ -247,13 +268,15 @@ export default function AdminAuditInventoryPage() {
     try {
       // Use the script name directly, removing .js extension
       const scriptName = script.replace('.js', '');
+      // TODO: Replace with real project selection logic
+      const projectId = 'demo-project-123';
       const response = await fetch(`/api/audits/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          projectId: 'demo-project-123', // Can be made dynamic with a projectId state
+          projectId,
           category: scriptName
         })
       });

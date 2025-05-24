@@ -8,9 +8,14 @@ import { useEffect, useState } from "react"
 import { useProjectStore } from '@/lib/store'
 import { RunAuditButton } from '@/components/RunAuditButton'
 import { Button } from '@/components/ui/button'
+import { useAuthCheck } from '@/lib/useAuthCheck'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function ServerlessAuditLandingPage() {
-  const { selectedProject } = useProjectStore()
+  useAuthCheck();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { selectedProject, setSelectedProjectByGcpId } = useProjectStore()
   const [raw, setRaw] = React.useState<string | null>(null)
   const [copyMsg, setCopyMsg] = React.useState("")
   const [loading, setLoading] = React.useState(false)
@@ -34,6 +39,23 @@ export default function ServerlessAuditLandingPage() {
       setTimeout(() => setCopyMsg(""), 1200)
     }
   }
+
+  React.useEffect(() => {
+    // On mount, sync ?project= param to store
+    const urlProject = searchParams.get('project');
+    if (urlProject && (!selectedProject || selectedProject.gcpProjectId !== urlProject)) {
+      setSelectedProjectByGcpId(urlProject);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // When project changes, update URL param
+    if (selectedProject && searchParams.get('project') !== selectedProject.gcpProjectId) {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.set('project', selectedProject.gcpProjectId);
+      router.replace(`?${params.toString()}`);
+    }
+  }, [selectedProject]);
 
   React.useEffect(() => { fetchAudit() }, [selectedProject])
 
@@ -80,45 +102,6 @@ export default function ServerlessAuditLandingPage() {
       {raw && (
         <pre className="bg-muted/30 rounded p-4 text-xs mt-4 overflow-x-auto max-h-64">{raw}</pre>
       )}
-    </div>
-  )
-}
-
-export function ServerlessSummaryPage() {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    setLoading(true)
-    fetch("/api/serverless/summary")
-      .then(res => res.json())
-      .then(setData)
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
-
-  if (loading) return <div className="p-8">Loading serverless summary...</div>
-  if (error) return <div className="p-8 text-red-500">Error: {error}</div>
-  if (!data) return <div className="p-8">No data available.</div>
-
-  return (
-    <div className="flex-1 space-y-6 p-8 pt-6">
-      <h1 className="text-2xl font-bold tracking-tight">Serverless Overview</h1>
-      <p className="text-muted-foreground mt-1 max-w-2xl">Summary of Cloud Functions and Cloud Run resource and concurrency optimization across your GCP environment.</p>
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">{/* Add summary cards here */}</div>
-      {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">{/* Add charts here */}</div>
-      {/* Top Recommendations */}
-      <div className="bg-card rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Top Recommendations</h2>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>Review memory/CPU allocation and concurrency settings for all serverless workloads.</li>
-          <li>Monitor execution trends and optimize for cost and performance.</li>
-          <li>Review security and access controls for serverless resources.</li>
-        </ul>
-      </div>
     </div>
   )
 } 

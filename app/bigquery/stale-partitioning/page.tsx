@@ -1,7 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useAuthCheck } from '@/lib/useAuthCheck'
 
 export default function StalePartitioningPage() {
+  useAuthCheck();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
