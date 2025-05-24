@@ -1,0 +1,23 @@
+{
+  "id": "2b1bf2e0-f235-4b77-b5e4-0d9daa615898",
+  "categoryId": "compute",
+  "name": "Compute Engine",
+  "path": "/compute",
+  "description": "VM instances, machine types, and compute optimization",
+  "subcategories": [
+    "VM Instance Inventory",
+    "Machine Type Analysis",
+    "Instance Utilization",
+    "Compute Recommendations",
+    "Preemptible Instance Usage"
+  ],
+  "status": "idle",
+  "lastRun": null,
+  "duration": null,
+  "progress": null,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.440Z",
+  "updatedAt": "2025-05-24T19:08:51.440Z"
+}

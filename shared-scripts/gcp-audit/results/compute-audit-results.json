@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-24T18:43:01.092Z",
+  "timestamp": "2025-05-24T20:13:52.233Z",
   "projectId": "cloudauditpro",
   "findings": [],
   "summary": {
@@ -9,7 +9,7 @@
   },
   "errors": [
     {
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "id": "99a50b37-ba1e-4fdc-8fdd-dae4780776d7",
+  "categoryId": "security",
+  "name": "Security & IAM",
+  "path": "/security",
+  "description": "IAM policies, security findings, and compliance",
+  "subcategories": [
+    "IAM Analysis",
+    "Service Accounts",
+    "Security Findings",
+    "Policy Violations",
+    "Compliance Status"
+  ],
+  "status": "idle",
+  "lastRun": null,
+  "duration": null,
+  "progress": null,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.453Z",
+  "updatedAt": "2025-05-24T19:08:51.453Z"
+}

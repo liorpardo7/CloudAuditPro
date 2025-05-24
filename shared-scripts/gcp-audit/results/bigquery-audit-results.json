@@ -1,49 +1,37 @@
 {
-  "timestamp": "2025-05-24T19:19:26.027Z",
+  "timestamp": "2025-05-24T20:13:47.912Z",
   "projectId": "cloudauditpro",
-  "findings": [
+  "findings": [],
+  "summary": {
+    "totalChecks": 6,
+    "passed": 0,
+    "failed": 6,
+    "costSavingsPotential": 0
+  },
+  "errors": [
     {
       "check": "Stale Partitioning",
-      "result": "0 tables with stale partitioning",
-      "passed": true,
-      "details": []
+      "error": "invalid_request"
     },
     {
       "check": "Deprecated UDFs",
-      "result": "0 deprecated UDFs found",
-      "passed": true,
-      "details": []
+      "error": "invalid_request"
     },
     {
       "check": "Query Optimization",
-      "result": "0 recent queries analyzed",
-      "passed": false,
-      "details": []
+      "error": "invalid_request"
     },
     {
       "check": "Cost Optimization",
-      "result": "0 large tables identified",
-      "passed": true,
-      "details": []
+      "error": "invalid_request"
     },
     {
       "check": "Dataset Access Controls",
-      "result": "0 datasets reviewed",
-      "passed": false,
-      "details": []
+      "error": "invalid_request"
     },
     {
       "check": "Job Monitoring",
-      "result": "0 running jobs",
-      "passed": false,
-      "details": []
+      "error": "invalid_request"
     }
-  ],
-  "summary": {
-    "totalChecks": 6,
-    "passed": 3,
-    "failed": 3,
-    "costSavingsPotential": 0
-  },
-  "errors": []
+  ]
 }

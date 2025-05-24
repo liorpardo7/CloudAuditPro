@@ -1,0 +1,23 @@
+{
+  "id": "47b8e912-1da7-4333-a8de-b36ee75f3534",
+  "categoryId": "data-protection",
+  "name": "Data Protection",
+  "path": "/data-protection",
+  "description": "Data governance, backup, and disaster recovery",
+  "subcategories": [
+    "Backup Policies",
+    "Data Classification",
+    "Encryption Status",
+    "Recovery Planning",
+    "Data Governance"
+  ],
+  "status": "idle",
+  "lastRun": null,
+  "duration": null,
+  "progress": null,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.458Z",
+  "updatedAt": "2025-05-24T19:08:51.458Z"
+}

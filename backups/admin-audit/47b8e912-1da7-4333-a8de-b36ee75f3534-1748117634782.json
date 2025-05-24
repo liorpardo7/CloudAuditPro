@@ -1,0 +1,34 @@
+{
+  "id": "47b8e912-1da7-4333-a8de-b36ee75f3534",
+  "categoryId": "data-protection",
+  "name": "Data Protection",
+  "path": "/data-protection",
+  "description": "Data governance, backup, and disaster recovery",
+  "subcategories": [
+    "Backup Policies",
+    "Data Classification",
+    "Encryption Status",
+    "Recovery Planning",
+    "Data Governance"
+  ],
+  "status": "failed",
+  "lastRun": "2025-05-24T19:58:49.867Z",
+  "duration": 2643,
+  "progress": 100,
+  "results": {
+    "status": "completed",
+    "summary": {
+      "passed": 0,
+      "failures": 5,
+      "warnings": 0,
+      "total_checks": 5,
+      "potential_savings": "Security improvement"
+    },
+    "category": "data-protection",
+    "findings": []
+  },
+  "rawData": null,
+  "error": "Audit timed out",
+  "createdAt": "2025-05-24T19:08:51.458Z",
+  "updatedAt": "2025-05-24T20:03:50.524Z"
+}

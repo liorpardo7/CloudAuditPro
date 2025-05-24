@@ -1,0 +1,89 @@
+{
+  "id": "59944186-be88-4064-8a6d-5fb344720f5b",
+  "categoryId": "bigquery",
+  "name": "BigQuery",
+  "path": "/bigquery",
+  "description": "Data warehouse optimization and query analysis",
+  "subcategories": [
+    "Dataset Inventory",
+    "Query Performance",
+    "Slot Utilization",
+    "Table Partitioning",
+    "Cost Optimization"
+  ],
+  "status": "failed",
+  "lastRun": "2025-05-24T19:09:36.795Z",
+  "duration": 3291,
+  "progress": 100,
+  "results": {
+    "status": "completed",
+    "summary": {
+      "passed": 3,
+      "failures": 3,
+      "warnings": 3,
+      "total_checks": 6,
+      "potential_savings": "$225/month"
+    },
+    "category": "bigquery",
+    "findings": [
+      {
+        "id": "bq-yacic4zfr",
+        "title": "Stale Partitioning",
+        "resource": "N/A",
+        "severity": "low",
+        "description": "0 tables with stale partitioning",
+        "cost_savings": "$20-80/month",
+        "recommendation": "Review and update table partitioning strategy or archive old data"
+      },
+      {
+        "id": "bq-tl5g6xwac",
+        "title": "Deprecated UDFs",
+        "resource": "N/A",
+        "severity": "low",
+        "description": "0 deprecated UDFs found",
+        "cost_savings": "N/A",
+        "recommendation": "Update or replace deprecated user-defined functions"
+      },
+      {
+        "id": "bq-baicw9g1q",
+        "title": "Query Optimization",
+        "resource": "N/A",
+        "severity": "medium",
+        "description": "0 recent queries analyzed",
+        "cost_savings": "$100-500/month",
+        "recommendation": "Optimize queries to reduce data processed and improve performance"
+      },
+      {
+        "id": "bq-v32w2d9el",
+        "title": "Cost Optimization",
+        "resource": "N/A",
+        "severity": "low",
+        "description": "0 large tables identified",
+        "cost_savings": "$200-1000/month",
+        "recommendation": "Review large tables for archival opportunities or compression"
+      },
+      {
+        "id": "bq-wag52d54d",
+        "title": "Dataset Access Controls",
+        "resource": "N/A",
+        "severity": "medium",
+        "description": "0 datasets reviewed",
+        "cost_savings": "N/A",
+        "recommendation": "Review and tighten dataset access permissions"
+      },
+      {
+        "id": "bq-hhv5y2mb2",
+        "title": "Job Monitoring",
+        "resource": "N/A",
+        "severity": "medium",
+        "description": "0 running jobs",
+        "cost_savings": "N/A",
+        "recommendation": "Review finding details for optimization opportunities"
+      }
+    ]
+  },
+  "rawData": null,
+  "error": "Audit timed out",
+  "createdAt": "2025-05-24T19:08:51.451Z",
+  "updatedAt": "2025-05-24T19:14:38.428Z"
+}

@@ -1,20 +1,18 @@
 {
-  "timestamp": "2025-05-24T18:43:01.242Z",
+  "timestamp": "2025-05-24T20:13:49.103Z",
   "projectId": "cloudauditpro",
-  "findings": [
-    {
-      "check": "Bucket Inventory",
-      "result": "Found 0 storage buckets",
-      "passed": true,
-      "details": []
-    }
-  ],
+  "findings": [],
   "summary": {
     "totalChecks": 1,
-    "passed": 1,
-    "failed": 0,
+    "passed": 0,
+    "failed": 1,
     "warnings": 0,
     "costSavingsPotential": 0
   },
-  "errors": []
+  "errors": [
+    {
+      "check": "Storage Audit",
+      "error": "invalid_request"
+    }
+  ]
 }

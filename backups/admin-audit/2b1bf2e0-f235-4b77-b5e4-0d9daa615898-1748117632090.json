@@ -1,0 +1,43 @@
+{
+  "id": "2b1bf2e0-f235-4b77-b5e4-0d9daa615898",
+  "categoryId": "compute",
+  "name": "Compute Engine",
+  "path": "/compute",
+  "description": "VM instances, machine types, and compute optimization",
+  "subcategories": [
+    "VM Instance Inventory",
+    "Machine Type Analysis",
+    "Instance Utilization",
+    "Compute Recommendations",
+    "Preemptible Instance Usage"
+  ],
+  "status": "failed",
+  "lastRun": "2025-05-24T19:58:47.206Z",
+  "duration": 2219,
+  "progress": 100,
+  "results": {
+    "status": "error",
+    "summary": {
+      "passed": 0,
+      "failures": 1,
+      "warnings": 0,
+      "total_checks": 1,
+      "potential_savings": "N/A"
+    },
+    "category": "compute",
+    "findings": [
+      {
+        "id": "error-001",
+        "error": "invalid_request",
+        "title": "Audit Execution Error",
+        "severity": "high",
+        "description": "Failed to run compute audit: invalid_request",
+        "recommendation": "Check your GCP project permissions and try again"
+      }
+    ]
+  },
+  "rawData": null,
+  "error": "Audit timed out",
+  "createdAt": "2025-05-24T19:08:51.440Z",
+  "updatedAt": "2025-05-24T20:03:47.444Z"
+}

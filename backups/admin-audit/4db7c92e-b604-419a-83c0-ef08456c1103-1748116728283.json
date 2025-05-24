@@ -1,0 +1,23 @@
+{
+  "id": "4db7c92e-b604-419a-83c0-ef08456c1103",
+  "categoryId": "compliance",
+  "name": "Compliance",
+  "path": "/compliance",
+  "description": "Compliance frameworks and policy adherence",
+  "subcategories": [
+    "Policy Compliance",
+    "Regulatory Requirements",
+    "Audit Trails",
+    "Risk Assessment",
+    "Remediation Actions"
+  ],
+  "status": "running",
+  "lastRun": "2025-05-24T19:58:46.018Z",
+  "duration": null,
+  "progress": 0,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.457Z",
+  "updatedAt": "2025-05-24T19:58:46.167Z"
+}

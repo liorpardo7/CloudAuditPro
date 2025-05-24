@@ -1,0 +1,23 @@
+{
+  "id": "2f5bb767-eebe-470f-98b7-30f0ebb3cd91",
+  "categoryId": "devops",
+  "name": "DevOps & CI/CD",
+  "path": "/devops",
+  "description": "Build pipelines, deployments, and automation",
+  "subcategories": [
+    "Cloud Build",
+    "Deployment Pipelines",
+    "Container Registry",
+    "Source Repositories",
+    "Automation Status"
+  ],
+  "status": "idle",
+  "lastRun": null,
+  "duration": null,
+  "progress": null,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.456Z",
+  "updatedAt": "2025-05-24T19:08:51.456Z"
+}

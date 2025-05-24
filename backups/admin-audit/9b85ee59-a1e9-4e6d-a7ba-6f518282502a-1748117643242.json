@@ -1,0 +1,34 @@
+{
+  "id": "9b85ee59-a1e9-4e6d-a7ba-6f518282502a",
+  "categoryId": "serverless",
+  "name": "Serverless",
+  "path": "/serverless",
+  "description": "Cloud Functions, App Engine, and serverless optimization",
+  "subcategories": [
+    "Cloud Functions",
+    "App Engine Apps",
+    "Performance Metrics",
+    "Cost Analysis",
+    "Security Review"
+  ],
+  "status": "failed",
+  "lastRun": "2025-05-24T19:58:57.958Z",
+  "duration": 2163,
+  "progress": 100,
+  "results": {
+    "status": "completed",
+    "summary": {
+      "passed": 0,
+      "failures": 1,
+      "warnings": 0,
+      "total_checks": 0,
+      "potential_savings": "$0/month"
+    },
+    "category": "serverless",
+    "findings": []
+  },
+  "rawData": null,
+  "error": "Audit timed out",
+  "createdAt": "2025-05-24T19:08:51.455Z",
+  "updatedAt": "2025-05-24T20:03:58.132Z"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "888fe280-0b3f-4da9-8f75-461b5464c13b",
+  "categoryId": "network",
+  "name": "Networking",
+  "path": "/network",
+  "description": "VPC, firewall rules, and network optimization",
+  "subcategories": [
+    "VPC Configuration",
+    "Firewall Rules",
+    "Load Balancers",
+    "Network Security",
+    "Traffic Analysis"
+  ],
+  "status": "running",
+  "lastRun": "2025-05-24T19:58:55.729Z",
+  "duration": null,
+  "progress": 0,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.452Z",
+  "updatedAt": "2025-05-24T19:58:55.788Z"
+}

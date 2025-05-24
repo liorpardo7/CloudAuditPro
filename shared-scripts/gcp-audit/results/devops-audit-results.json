@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-05-24T20:13:56.706Z",
+  "projectId": "cloudauditpro",
+  "findings": [],
+  "summary": {
+    "totalChecks": 2,
+    "passed": 0,
+    "failed": 2,
+    "costSavingsPotential": 0
+  },
+  "errors": [
+    {
+      "check": "Cloud Build Audit",
+      "error": "invalid_request"
+    },
+    {
+      "check": "Source Repository Audit",
+      "error": "invalid_request"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "99a50b37-ba1e-4fdc-8fdd-dae4780776d7",
+  "categoryId": "security",
+  "name": "Security & IAM",
+  "path": "/security",
+  "description": "IAM policies, security findings, and compliance",
+  "subcategories": [
+    "IAM Analysis",
+    "Service Accounts",
+    "Security Findings",
+    "Policy Violations",
+    "Compliance Status"
+  ],
+  "status": "failed",
+  "lastRun": "2025-05-24T19:58:56.894Z",
+  "duration": 2087,
+  "progress": 100,
+  "results": {
+    "status": "completed",
+    "summary": {
+      "passed": 3,
+      "failures": 2,
+      "warnings": 0,
+      "total_checks": 5,
+      "potential_savings": "N/A"
+    },
+    "category": "security",
+    "findings": [
+      {
+        "id": "security-4qzr9mbre",
+        "title": "IAM Policy Check",
+        "resource": "N/A",
+        "severity": "low",
+        "description": "No description available",
+        "cost_savings": "N/A",
+        "recommendation": "Review finding details for optimization opportunities"
+      },
+      {
+        "id": "security-dfzqgb6hc",
+        "title": "Service Account Key Rotation",
+        "resource": "N/A",
+        "severity": "high",
+        "description": "No description available",
+        "cost_savings": "N/A",
+        "recommendation": "Rotate service account keys every 90 days"
+      },
+      {
+        "id": "security-kur0z5n7x",
+        "title": "Public Bucket Access",
+        "resource": "N/A",
+        "severity": "high",
+        "description": "No description available",
+        "cost_savings": "N/A",
+        "recommendation": "Review and restrict public access to buckets"
+      },
+      {
+        "id": "security-4xhnmhow2",
+        "title": "Firewall Rules",
+        "resource": "N/A",
+        "severity": "low",
+        "description": "No description available",
+        "cost_savings": "N/A",
+        "recommendation": "Review finding details for optimization opportunities"
+      },
+      {
+        "id": "security-k9tambw1q",
+        "title": "Encryption at Rest",
+        "resource": "N/A",
+        "severity": "low",
+        "description": "No description available",
+        "cost_savings": "N/A",
+        "recommendation": "Review finding details for optimization opportunities"
+      }
+    ]
+  },
+  "rawData": null,
+  "error": "Audit timed out",
+  "createdAt": "2025-05-24T19:08:51.453Z",
+  "updatedAt": "2025-05-24T20:03:57.000Z"
+}

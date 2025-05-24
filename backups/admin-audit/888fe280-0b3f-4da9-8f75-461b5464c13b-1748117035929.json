@@ -1,0 +1,43 @@
+{
+  "id": "888fe280-0b3f-4da9-8f75-461b5464c13b",
+  "categoryId": "network",
+  "name": "Networking",
+  "path": "/network",
+  "description": "VPC, firewall rules, and network optimization",
+  "subcategories": [
+    "VPC Configuration",
+    "Firewall Rules",
+    "Load Balancers",
+    "Network Security",
+    "Traffic Analysis"
+  ],
+  "status": "completed",
+  "lastRun": "2025-05-24T19:58:55.729Z",
+  "duration": 2198,
+  "progress": 100,
+  "results": {
+    "status": "error",
+    "summary": {
+      "passed": 0,
+      "failures": 1,
+      "warnings": 0,
+      "total_checks": 1,
+      "potential_savings": "N/A"
+    },
+    "category": "network",
+    "findings": [
+      {
+        "id": "error-001",
+        "error": "invalid_request",
+        "title": "Audit Execution Error",
+        "severity": "high",
+        "description": "Failed to run network audit: invalid_request",
+        "recommendation": "Check your GCP project permissions and try again"
+      }
+    ]
+  },
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.452Z",
+  "updatedAt": "2025-05-24T19:58:57.960Z"
+}

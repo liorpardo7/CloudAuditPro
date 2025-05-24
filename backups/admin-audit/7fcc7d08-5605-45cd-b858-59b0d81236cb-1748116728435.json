@@ -1,0 +1,23 @@
+{
+  "id": "7fcc7d08-5605-45cd-b858-59b0d81236cb",
+  "categoryId": "cost",
+  "name": "Cost Management",
+  "path": "/cost",
+  "description": "Cost analysis, budgets, and optimization",
+  "subcategories": [
+    "Cost Breakdown",
+    "Budget Analysis",
+    "Cost Trends",
+    "Recommendations",
+    "Billing Alerts"
+  ],
+  "status": "idle",
+  "lastRun": null,
+  "duration": null,
+  "progress": null,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.454Z",
+  "updatedAt": "2025-05-24T19:08:51.454Z"
+}

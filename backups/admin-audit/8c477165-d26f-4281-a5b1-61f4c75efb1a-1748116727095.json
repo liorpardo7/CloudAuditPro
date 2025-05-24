@@ -1,0 +1,23 @@
+{
+  "id": "8c477165-d26f-4281-a5b1-61f4c75efb1a",
+  "categoryId": "storage",
+  "name": "Cloud Storage",
+  "path": "/storage",
+  "description": "Storage buckets, lifecycle, and cost optimization",
+  "subcategories": [
+    "Storage Bucket Inventory",
+    "Lifecycle Policies",
+    "Storage Classes",
+    "Access Patterns",
+    "Cost Analysis"
+  ],
+  "status": "running",
+  "lastRun": "2025-05-24T19:58:44.853Z",
+  "duration": null,
+  "progress": 0,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.450Z",
+  "updatedAt": "2025-05-24T19:58:44.903Z"
+}

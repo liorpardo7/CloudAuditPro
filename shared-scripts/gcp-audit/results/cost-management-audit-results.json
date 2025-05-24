@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-24T18:43:03.556Z",
+  "timestamp": "2025-05-24T20:13:53.701Z",
   "projectId": "cloudauditpro",
   "findings": [],
   "summary": {
@@ -11,15 +11,15 @@
   "errors": [
     {
       "check": "Idle VMs",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Unattached Disks",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Budget Alerts",
-      "error": "Cannot read properties of undefined (reading 'list')"
+      "error": "invalid_request"
     },
     {
       "check": "Committed Use Discounts",
@@ -27,7 +27,7 @@
     },
     {
       "check": "Oversized Instances",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     }
   ]
 }

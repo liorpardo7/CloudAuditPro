@@ -1,0 +1,34 @@
+{
+  "id": "4db7c92e-b604-419a-83c0-ef08456c1103",
+  "categoryId": "compliance",
+  "name": "Compliance",
+  "path": "/compliance",
+  "description": "Compliance frameworks and policy adherence",
+  "subcategories": [
+    "Policy Compliance",
+    "Regulatory Requirements",
+    "Audit Trails",
+    "Risk Assessment",
+    "Remediation Actions"
+  ],
+  "status": "failed",
+  "lastRun": "2025-05-24T19:58:46.018Z",
+  "duration": 2223,
+  "progress": 100,
+  "results": {
+    "status": "completed",
+    "summary": {
+      "passed": 0,
+      "failures": 0,
+      "warnings": 0,
+      "total_checks": 0,
+      "potential_savings": "Compliance improvement"
+    },
+    "category": "compliance",
+    "findings": []
+  },
+  "rawData": null,
+  "error": "Audit timed out",
+  "createdAt": "2025-05-24T19:08:51.457Z",
+  "updatedAt": "2025-05-24T20:03:46.266Z"
+}

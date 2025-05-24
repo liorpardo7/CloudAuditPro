@@ -1,0 +1,23 @@
+{
+  "id": "328facfb-204a-4524-ac48-cf6fe6edad9c",
+  "categoryId": "gke",
+  "name": "Kubernetes Engine",
+  "path": "/gke",
+  "description": "GKE clusters, nodes, and workload optimization",
+  "subcategories": [
+    "Cluster Health",
+    "Node Utilization",
+    "Workload Analysis",
+    "Security Policies",
+    "Cost Optimization"
+  ],
+  "status": "running",
+  "lastRun": "2025-05-24T19:58:52.739Z",
+  "duration": null,
+  "progress": 0,
+  "results": null,
+  "rawData": null,
+  "error": null,
+  "createdAt": "2025-05-24T19:08:51.454Z",
+  "updatedAt": "2025-05-24T19:58:52.813Z"
+}

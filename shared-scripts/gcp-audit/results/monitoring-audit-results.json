@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-05-24T18:43:06.111Z",
+  "timestamp": "2025-05-24T20:13:59.890Z",
   "projectId": "cloudauditpro",
   "findings": [],
   "summary": {
@@ -15,27 +15,27 @@
     },
     {
       "check": "Cost Anomaly Alerts",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Critical Alerts Coverage",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Alert Notification Channels",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Alert Coverage Analysis",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Custom Metrics",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Alert Effectiveness",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Monitoring Security",
@@ -43,11 +43,11 @@
     },
     {
       "check": "Monitoring Automation",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     },
     {
       "check": "Monitoring Cost Optimization",
-      "error": "Insufficient Permission"
+      "error": "invalid_request"
     }
   ]
 }
